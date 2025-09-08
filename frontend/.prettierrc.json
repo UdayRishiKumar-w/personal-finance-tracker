@@ -1,0 +1,9 @@
+{
+	"$schema": "https://json.schemastore.org/prettierrc",
+	"tabWidth": 4,
+	"useTabs": true,
+	"printWidth": 120,
+	"plugins": ["prettier-plugin-organize-imports", "prettier-plugin-tailwindcss"],
+	"tailwindStylesheet": "src/index.css",
+	"tailwindFunctions": ["clsx"]
+}

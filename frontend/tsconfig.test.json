@@ -1,0 +1,8 @@
+{
+	"extends": "./tsconfig.app.json",
+	"include": ["tests"],
+	"compilerOptions": {
+		"typeRoots": ["node_modules"],
+		"types": ["vitest/globals", "vite/client"]
+	}
+}

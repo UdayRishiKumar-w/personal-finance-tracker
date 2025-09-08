@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Personal Finance Tracker</title>
+		<meta charset="UTF-8" />
+		<link rel="icon" type="image/svg+xml" href="/finance-tracker.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="theme-color" content="#000000" />
+		<meta name="description" content="Personal Finance Tracker" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<!-- Fonts to support Material Design -->
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+		/>
+		<!-- Icons to support Material Design -->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+		<style type="text/css">
+			.masked {
+				overflow: hidden;
+				position: relative;
+			}
+
+			.mask {
+				position: absolute;
+				top: 0;
+				left: 0;
+				z-index: 100;
+				width: 100%;
+				height: 100%;
+				background-color: #fff;
+				background-color: rgba(255, 255, 255, 0.8);
+			}
+
+			.mask-wrapper {
+				width: 100%;
+				height: 100%;
+				text-align: center;
+				display: table;
+			}
+
+			.mask-content {
+				display: table-cell;
+				margin: auto;
+				vertical-align: middle;
+			}
+
+			.mask-content .spinner,
+			.mask-content .text {
+				vertical-align: middle;
+				display: inline-block;
+			}
+
+			.mask-content .text {
+				padding: 5px;
+				color: #3d3d3d;
+				font-family: Arial, Helvetica, sans-serif;
+			}
+
+			.spinner {
+				vertical-align: middle;
+				height: 25px;
+				padding: 5px;
+			}
+
+			.spinner-bar {
+				background-color: #005686;
+				height: 100%;
+				width: 3px;
+				display: inline-block;
+				vertical-align: top;
+			}
+
+			.spinning .spinner-bar {
+				-webkit-animation: stretchdelay 1s infinite ease-in-out;
+				animation: stretchdelay 1s infinite ease-in-out;
+			}
+
+			.spinning .spinner-bar1 {
+				-webkit-animation-delay: -0.9s;
+				animation-delay: -0.9s;
+			}
+
+			.spinning .spinner-bar2 {
+				-webkit-animation-delay: -0.8s;
+				animation-delay: -0.8s;
+			}
+
+			.spinning .spinner-bar3 {
+				-webkit-animation-delay: -0.7s;
+				animation-delay: -0.7s;
+			}
+
+			.spinner.fade {
+				transition-duration: 0.3s;
+			}
+		</style>
+	</head>
+
+	<body>
+		<noscript
+			><strong
+				>We're sorry but application doesn't work properly without JavaScript enabled. Please enable it to
+				continue.</strong
+			></noscript
+		>
+		<div id="root">
+			<div class="app-loading-screen mask" style="height: 100%">
+				<div class="mask-wrapper">
+					<div class="mask-content">
+						<div class="spinner spinning fade">
+							<span class="spinner-bar"></span>
+							<span class="spinner-bar spinner-bar1"></span>
+							<span class="spinner-bar spinner-bar2"></span>
+							<span class="spinner-bar spinner-bar3"></span>
+						</div>
+						<span class="text">Personal Finance Tracker app is loading. Please wait...</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="module" src="/src/main.tsx"></script>
+	</body>
+</html>
