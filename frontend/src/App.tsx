@@ -9,7 +9,7 @@ function App() {
 		<>
 			<div>
 				<a href="https://react.dev" target="_blank">
-					<img src={reactLogo as string} className={clsx(["logo react", "flex-row"])} alt="React logo" />
+					<img src={reactLogo} className={clsx(["logo react", "flex-row"])} alt="React logo" />
 				</a>
 			</div>
 			<h2>Vite + React</h2>

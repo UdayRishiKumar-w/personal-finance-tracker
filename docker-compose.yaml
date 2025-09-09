@@ -31,7 +31,7 @@ services:
         ports:
             - "8080:8080"
 
-    # --- React + Vite Frontend ---
+    # --- React + Nginx Frontend ---
     frontend:
         build: ./frontend
         container_name: finance-frontend

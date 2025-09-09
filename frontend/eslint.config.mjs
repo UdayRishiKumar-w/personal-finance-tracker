@@ -52,6 +52,7 @@ export default defineConfig(
 			"@typescript-eslint/no-unsafe-return": "off",
 			"@typescript-eslint/no-unsafe-argument": "off",
 			"@typescript-eslint/no-misused-promises": "off",
+			"@typescript-eslint/no-floating-promises": "off",
 		},
 		settings: {
 			react: {
