@@ -9,10 +9,20 @@ export default function Login() {
 	const [password, setPassword] = useState("");
 	const [err, setErr] = useState("");
 
+	const validateEmail = (email: string) => {
+		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		return re.test(email);
+	};
+
 	const submit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		try {
+			if (!validateEmail(email)) {
+				setErr("Invalid email format");
+				return;
+			}
 			const data = await login(email, password);
+			console.log(data);
 			dispatch(setCredentials({ token: data.accessToken, user: data.user }));
 		} catch (err) {
 			setErr((err as Error).message || "Login failed");
@@ -21,8 +31,8 @@ export default function Login() {
 
 	return (
 		<div className="flex min-h-screen items-center justify-center">
-			<form onSubmit={submit} className="w-96 rounded bg-white p-6 shadow">
-				<h2 className="mb-4 text-xl">Sign in</h2>
+			<form onSubmit={submit} className="bg-grey w-96 rounded p-6 shadow">
+				<h2 className="mb-4 text-xl">Sign in / Sign up</h2>
 				{err && <div className="text-red-600">{err}</div>}
 				<input
 					value={email}
