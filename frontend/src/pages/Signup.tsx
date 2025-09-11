@@ -1,14 +1,16 @@
 import { Box, Button, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { login } from "@/api/authApi";
+import { signup } from "@/api/authApi";
 import { setCredentials } from "@/store/authSlice";
 import { Link } from "react-router-dom";
 
 const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-export default function Login() {
+export default function Signup() {
 	const dispatch = useDispatch();
+	const [firstName, setFirstName] = useState("");
+	const [lastName, setLastName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [err, setErr] = useState("");
@@ -18,23 +20,45 @@ export default function Login() {
 		setErr("");
 
 		if (!validateEmail(email)) return setErr("Invalid email format");
+		if (!firstName.trim()) return setErr("First name is required");
+		if (!lastName.trim()) return setErr("Last name is required");
+		if (password.length < 10) return setErr("Password must be at least 10 characters");
 
 		try {
-			const data = await login({ email, password });
+			const data = await signup({ firstName, lastName, email, password });
 			if (data) {
 				dispatch(setCredentials({ token: data.accessToken, user: data.user }));
 			}
 		} catch (err) {
-			setErr((err as Error).message || "Login failed");
+			setErr((err as Error).message || "Signup failed");
 		}
 	};
 
 	return (
 		<div className="flex min-h-screen items-center justify-center bg-white">
 			<form onSubmit={handleSubmit} className="w-full max-w-md rounded p-8 shadow-2xl">
-				<h2 className="mb-6 text-center text-2xl font-bold text-black">Login</h2>
+				<h2 className="mb-6 text-center text-2xl font-bold text-black">Sign Up</h2>
 
 				{err && <div className="mb-4 text-red-600">{err}</div>}
+
+				<Box className="mb-4 flex gap-4">
+					<TextField
+						required
+						label="First Name"
+						variant="outlined"
+						fullWidth
+						value={firstName}
+						onChange={(e) => setFirstName(e.target.value)}
+					/>
+					<TextField
+						required
+						label="Last Name"
+						variant="outlined"
+						fullWidth
+						value={lastName}
+						onChange={(e) => setLastName(e.target.value)}
+					/>
+				</Box>
 
 				<Box className="space-y-4 mb-4">
 					<TextField
@@ -46,7 +70,6 @@ export default function Login() {
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
 					/>
-
 					<TextField
 						required
 						label="Password"
@@ -59,13 +82,13 @@ export default function Login() {
 				</Box>
 
 				<Button variant="contained" color="primary" fullWidth type="submit" className="mb-4">
-					Login
+					Sign Up
 				</Button>
 
 				<div className="text-center text-sm text-black">
-					Don't have an account?{" "}
-					<Button component={Link} to="/signup" variant="text" className="underline">
-						Sign Up
+					Already have an account?{" "}
+					<Button component={Link} to="/login" variant="text" className="underline">
+						Login
 					</Button>
 				</div>
 			</form>
