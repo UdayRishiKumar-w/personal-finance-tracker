@@ -1,9 +1,22 @@
-import BalanceChart from "../components/charts/BalanceChart";
+import BalanceChart from "@/components/charts/BalanceChart";
+import TopBar from "@/components/TopBar";
+import { clearCredentials } from "@/store/authSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
 	return (
-		<div className="flex flex-col align-center h-full w-full p-6 bg-white" place-items="center">
-			<h1 className="mb-4 text-2xl text-black font-bold">Dashboard</h1>
+		<div className="align-center flex h-full w-full flex-col gap-10 bg-white p-6">
+			<TopBar
+				text="Dashboard"
+				onLogout={() => {
+					dispatch(clearCredentials());
+					navigate("/login", { replace: true });
+				}}
+			/>
 			<BalanceChart />
 		</div>
 	);

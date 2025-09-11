@@ -10,7 +10,7 @@
 		"lint:styles:fix": "stylelint \"src/**/*.{css,scss,tsx,jsx}\" --fix",
 		"preview": "vite preview",
 		"format": "prettier --write .",
-		"build-commit": "npm run lint:fix && npm run lint:styles:fix && npm run format && npm run build",
+		"build-commit": "tsc -b && npm run lint:fix && npm run lint:styles:fix && npm run format && vite build",
 		"test": "vitest",
 		"test:ui": "vitest --ui",
 		"test:watch": "vitest --watch",

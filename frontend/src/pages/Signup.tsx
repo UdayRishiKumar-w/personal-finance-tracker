@@ -1,8 +1,8 @@
+import { signup } from "@/api/authApi";
+import { setCredentials } from "@/store/authSlice";
 import { Box, Button, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { signup } from "@/api/authApi";
-import { setCredentials } from "@/store/authSlice";
 import { Link } from "react-router-dom";
 
 const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -60,7 +60,7 @@ export default function Signup() {
 					/>
 				</Box>
 
-				<Box className="space-y-4 mb-4">
+				<Box className="mb-4 space-y-4">
 					<TextField
 						required
 						label="Email"

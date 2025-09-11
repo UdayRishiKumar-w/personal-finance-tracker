@@ -1,8 +1,8 @@
+import { login } from "@/api/authApi";
+import { setCredentials } from "@/store/authSlice";
 import { Box, Button, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { login } from "@/api/authApi";
-import { setCredentials } from "@/store/authSlice";
 import { Link } from "react-router-dom";
 
 const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -36,7 +36,7 @@ export default function Login() {
 
 				{err && <div className="mb-4 text-red-600">{err}</div>}
 
-				<Box className="space-y-4 mb-4">
+				<Box className="mb-4 space-y-4">
 					<TextField
 						required
 						label="Email"

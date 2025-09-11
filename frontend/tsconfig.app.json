@@ -27,7 +27,7 @@
 		"erasableSyntaxOnly": true,
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedSideEffectImports": true,
-		"typeRoots": ["node_modules/@types/"]
+		"types": ["react", "react-dom"]
 	},
 	"include": ["src", ".env.d.ts", "vite-env.d.ts"]
 }
