@@ -2,14 +2,50 @@ import axios from "axios";
 
 const api = axios.create({ baseURL: import.meta.env.VITE_API_BASE || "http://localhost:8080/api" });
 
-export const login = (email: string, password: string) =>
-	api.post("/auth/signup", { email, password }).then((res) => {
-		console.log(res);
+export const login = ({ email, password }: { email: string; password: string }) =>
+	api
+		.post("/auth/login", { email, password })
+		.then((res) => {
+			console.log(res);
 
-		return {
-			user: res.data.user.email,
-			accessToken: res.data.accessToken,
-		};
-	});
+			return {
+				user: res.data.user.email,
+				accessToken: res.data.accessToken,
+			};
+		})
+		.catch((err) => {
+			console.log(err);
+			if (err.response.data.message) {
+				throw new Error(err.response.data.message);
+			}
+		});
+
+export const signup = ({
+	email,
+	password,
+	firstName,
+	lastName,
+}: {
+	email: string;
+	password: string;
+	firstName: string;
+	lastName: string;
+}) =>
+	api
+		.post("/auth/signup", { email, password, firstName, lastName })
+		.then((res) => {
+			console.log(res);
+
+			return {
+				user: res.data.user.email,
+				accessToken: res.data.accessToken,
+			};
+		})
+		.catch((err) => {
+			console.log(err);
+			if (err.response.data.message) {
+				throw new Error(err.response.data.message);
+			}
+		});
 
 export default api;

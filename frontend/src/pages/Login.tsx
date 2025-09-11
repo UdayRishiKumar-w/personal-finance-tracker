@@ -1,53 +1,144 @@
+import { Box, Button, TextField } from "@mui/material";
+import clsx from "clsx/lite";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { login } from "../features/auth/authApi";
+import { login, signup } from "../features/auth/authApi";
 import { setCredentials } from "../features/auth/authSlice";
 
-export default function Login() {
+const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+export default function AuthForm() {
 	const dispatch = useDispatch();
+	const [isLogin, setIsLogin] = useState(true);
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [firstName, setFirstName] = useState("");
+	const [lastName, setLastName] = useState("");
 	const [err, setErr] = useState("");
 
-	const validateEmail = (email: string) => {
-		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		return re.test(email);
+	const resetForm = () => {
+		setEmail("");
+		setPassword("");
+		setFirstName("");
+		setLastName("");
+		setErr("");
 	};
 
-	const submit = async (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
+		setErr("");
+
+		// === VALIDATIONS ===
+		if (!validateEmail(email)) return setErr("Invalid email format");
+
+		if (!isLogin) {
+			if (password.length < 10) return setErr("Password must be at least 10 characters");
+			if (!firstName.trim()) return setErr("First name is required");
+			if (!lastName.trim()) return setErr("Last name is required");
+		}
+
 		try {
-			if (!validateEmail(email)) {
-				setErr("Invalid email format");
-				return;
+			if (isLogin) {
+				const data = await login({ email, password });
+				if (data) {
+					dispatch(setCredentials({ token: data.accessToken, user: data.user }));
+				}
+			} else {
+				const data = await signup({ email, password, firstName, lastName });
+				if (data) {
+					dispatch(setCredentials({ token: data.accessToken, user: data.user }));
+				}
 			}
-			const data = await login(email, password);
-			console.log(data);
-			dispatch(setCredentials({ token: data.accessToken, user: data.user }));
+			resetForm();
 		} catch (err) {
-			setErr((err as Error).message || "Login failed");
+			setErr((err as Error).message || "Authentication failed");
 		}
 	};
 
 	return (
-		<div className="flex min-h-screen items-center justify-center">
-			<form onSubmit={submit} className="bg-grey w-96 rounded p-6 shadow">
-				<h2 className="mb-4 text-xl">Sign in / Sign up</h2>
-				{err && <div className="text-red-600">{err}</div>}
-				<input
-					value={email}
-					onChange={(e) => setEmail(e.target.value)}
-					placeholder="Email"
-					className="mb-2 w-full border p-2"
-				/>
-				<input
-					type="password"
-					value={password}
-					onChange={(e) => setPassword(e.target.value)}
-					placeholder="Password"
-					className="mb-4 w-full border p-2"
-				/>
-				<button className="w-full rounded bg-blue-600 py-2 text-white">Login</button>
+		<div className="flex min-h-screen items-center justify-center bg-white">
+			<form onSubmit={handleSubmit} className={clsx("w-full max-w-md rounded p-8 shadow-2xl")}>
+				<h2 className="mb-6 text-center text-2xl font-bold text-black">{isLogin ? "Login" : "Sign Up"}</h2>
+
+				{err && <div className="mb-4 text-red-600">{err}</div>}
+
+				<Box className="mb-4 space-y-4">
+					{!isLogin && (
+						<Box className="flex gap-4">
+							<TextField
+								required
+								id="outlined-required"
+								label="First Name"
+								variant="outlined"
+								fullWidth
+								value={firstName}
+								onChange={(e) => setFirstName(e.target.value)}
+							/>
+							<TextField
+								required
+								id="outlined-required"
+								label="Last Name"
+								variant="outlined"
+								fullWidth
+								value={lastName}
+								onChange={(e) => setLastName(e.target.value)}
+							/>
+						</Box>
+					)}
+
+					<Box>
+						<TextField
+							required
+							id="outlined-required"
+							label="Email"
+							type="email"
+							variant="outlined"
+							fullWidth
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+						/>
+					</Box>
+
+					<Box>
+						<TextField
+							required
+							id="outlined-required"
+							label="Password"
+							type="password"
+							variant="outlined"
+							fullWidth
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+						/>
+					</Box>
+				</Box>
+
+				<Button variant="contained" color="primary" fullWidth type="submit" className="mb-4">
+					{isLogin ? "Login" : "Sign Up"}
+				</Button>
+
+				<div className="text-center text-sm text-black">
+					{isLogin ? (
+						<>
+							Don't have an account?{" "}
+							<Button
+								type="button"
+								variant="text"
+								onClick={() => setIsLogin(false)}
+								className="underline"
+							>
+								Sign Up
+							</Button>
+						</>
+					) : (
+						<>
+							Already have an account?{" "}
+							<Button type="button" variant="text" onClick={() => setIsLogin(true)} className="underline">
+								Login
+							</Button>
+						</>
+					)}
+				</div>
 			</form>
 		</div>
 	);
