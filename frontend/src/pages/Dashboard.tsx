@@ -13,6 +13,8 @@ export default function Dashboard() {
 			<TopBar
 				text="Dashboard"
 				onLogout={() => {
+					sessionStorage.removeItem("token");
+					sessionStorage.removeItem("user");
 					dispatch(clearCredentials());
 					navigate("/login", { replace: true });
 				}}
