@@ -2,6 +2,10 @@
 	"extends": "./tsconfig.app.json",
 	"include": ["tests"],
 	"compilerOptions": {
+		"paths": {
+			"@/*": ["src/*"],
+			"@tests/*": ["tests/*"]
+		},
 		"typeRoots": ["node_modules"],
 		"types": ["vitest/globals", "vite/client"]
 	}

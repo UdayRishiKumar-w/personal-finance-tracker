@@ -11,5 +11,13 @@ export default {
 		"custom-property-pattern": null,
 		"number-max-precision": null,
 	},
-	ignoreFiles: ["**/node_modules/**", "**/dist/**", "**/*.js", "**/*.ts"],
+	ignoreFiles: [
+		"/node_modules/**",
+		"/dist/**",
+		"**/*.js",
+		"**/*.ts",
+		"/coverage/**",
+		"/playwright-report/**",
+		"/test-results/**",
+	],
 };

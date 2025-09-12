@@ -14,14 +14,14 @@ export default function AppRouter() {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		if(!token) {
+		if (!token) {
 			const sessionToken = sessionStorage.getItem("token");
 			const user = sessionStorage.getItem("user");
 			if (sessionToken && user) {
 				dispatch(setCredentials({ token: sessionToken, user: JSON.parse(user) }));
 			}
 		}
-	},[])
+	}, []);
 
 	return (
 		<Suspense fallback={<div className="p-4 text-center">Loading...</div>}>
