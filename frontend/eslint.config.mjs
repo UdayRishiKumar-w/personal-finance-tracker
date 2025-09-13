@@ -53,6 +53,20 @@ export default defineConfig(
 			"@typescript-eslint/no-unsafe-argument": "off",
 			"@typescript-eslint/no-misused-promises": "off",
 			"@typescript-eslint/no-floating-promises": "off",
+
+			"prefer-arrow-callback": "error",
+			"no-else-return": ["error", { allowElseIf: false }],
+			"no-lonely-if": "error",
+			"no-useless-return": "error",
+			"object-shorthand": "error",
+			"operator-assignment": "error",
+			"prefer-destructuring": "error",
+			"logical-assignment-operators": "error",
+
+			"@typescript-eslint/consistent-indexed-object-style": "error",
+			"@typescript-eslint/prefer-optional-chain": "error",
+			"@typescript-eslint/prefer-readonly": "error",
+			"@typescript-eslint/promise-function-async": "error",
 		},
 		settings: {
 			react: {

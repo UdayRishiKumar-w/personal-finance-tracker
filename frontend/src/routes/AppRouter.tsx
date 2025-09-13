@@ -5,9 +5,9 @@ import { lazy, Suspense, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
 
-const Dashboard = lazy(() => import("@/pages/Dashboard"));
-const Login = lazy(() => import("@/pages/Login"));
-const Signup = lazy(() => import("@/pages/Signup"));
+const Dashboard = lazy(async () => import("@/pages/Dashboard"));
+const Login = lazy(async () => import("@/pages/Login"));
+const Signup = lazy(async () => import("@/pages/Signup"));
 
 export default function AppRouter() {
 	const token = useSelector((s: RootState) => s.auth.token);

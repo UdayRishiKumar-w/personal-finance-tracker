@@ -4,3 +4,7 @@ build
 coverage
 playwright-report
 test-results
+**/.git
+**/.svn
+**/.vscode
+**/public

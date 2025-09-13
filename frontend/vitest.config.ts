@@ -1,11 +1,8 @@
 /// <reference types="vitest" />
 import react from "@vitejs/plugin-react-swc";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
+import { fileURLToPath, URL } from "node:url";
 import { configDefaults, defineConfig } from "vitest/config";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 export default defineConfig({
 	plugins: [react()],
@@ -22,11 +19,17 @@ export default defineConfig({
 		},
 		printConsoleTrace: true,
 		// reporters: ["html"],
+		// typecheck: {
+		// 	enabled: true,
+		// 	allowJs: true,
+		// },
+		// sequence: { concurrent: true },
 	},
 	resolve: {
 		alias: {
-			"@": resolve(__dirname, "./src"),
-			"@tests": resolve(__dirname, "./tests"),
+			"@": fileURLToPath(new URL("./src", import.meta.url)),
+			"@tests": fileURLToPath(new URL("./tests", import.meta.url)),
+			"src/function": resolve(__dirname, "./tests/mockFunctions.ts"),
 		},
 	},
 });

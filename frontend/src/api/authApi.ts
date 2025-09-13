@@ -10,7 +10,7 @@ api.interceptors.request.use((config) => {
 	return config;
 });
 
-export const login = ({ email, password }: { email: string; password: string }) =>
+export const login = async ({ email, password }: { email: string; password: string }) =>
 	api
 		.post("/auth/login", { email, password })
 		.then((res) => {
@@ -28,7 +28,7 @@ export const login = ({ email, password }: { email: string; password: string }) 
 			}
 		});
 
-export const signup = ({
+export const signup = async ({
 	email,
 	password,
 	firstName,

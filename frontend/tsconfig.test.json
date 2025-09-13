@@ -7,6 +7,6 @@
 			"@tests/*": ["tests/*"]
 		},
 		"typeRoots": ["node_modules"],
-		"types": ["vitest/globals", "vite/client"]
+		"types": ["vitest/globals", "vite/client", "vitest/jsdom", "node"]
 	}
 }
