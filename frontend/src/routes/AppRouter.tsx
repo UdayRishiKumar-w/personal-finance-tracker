@@ -1,4 +1,5 @@
 import PrivateRoute from "@/components/common/PrivateRoute";
+import Loader from "@/components/Loader";
 import { setCredentials } from "@/store/authSlice";
 import type { RootState } from "@/store/store";
 import { lazy, Suspense, useEffect } from "react";
@@ -24,7 +25,7 @@ export default function AppRouter() {
 	}, []);
 
 	return (
-		<Suspense fallback={<div className="p-4 text-center">Loading...</div>}>
+		<Suspense fallback={<Loader />}>
 			<Routes>
 				<Route path="/signup" element={!token ? <Signup /> : <Navigate to="/dashboard" replace />} />
 				<Route path="/login" element={!token ? <Login /> : <Navigate to="/dashboard" replace />} />

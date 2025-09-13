@@ -18,7 +18,7 @@ export default defineConfig({
 			exclude: [...configDefaults.exclude, "*.config.*"],
 		},
 		printConsoleTrace: true,
-		// reporters: ["html"],
+		// reporters: ['text', "html"],
 		// typecheck: {
 		// 	enabled: true,
 		// 	allowJs: true,

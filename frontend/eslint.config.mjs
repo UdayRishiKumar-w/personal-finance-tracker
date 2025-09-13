@@ -4,24 +4,33 @@ import eslintPluginJsxA11y from "eslint-plugin-jsx-a11y";
 import eslintPluginPrettier from "eslint-plugin-prettier";
 import eslintPluginReact from "eslint-plugin-react";
 import eslintPluginReactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
+import globals from "globals";
 import tseslint from "typescript-eslint";
 // import eslintPluginTailwindcss from "eslint-plugin-tailwindcss";
+import eslintPluginReactRedux from "eslint-plugin-react-redux";
 import eslintPluginPlaywright from "eslint-plugin-playwright";
 import eslintPluginVitest from "eslint-plugin-vitest";
-import { defineConfig } from "eslint/config";
+import testingLibrary from "eslint-plugin-testing-library";
+import { defineConfig, globalIgnores } from "eslint/config";
 
-export default defineConfig(
+export default defineConfig([
+	globalIgnores(["dist", "coverage", "playwright-report", "test-results"]),
 	// Base JS rules
 	eslintPluginJs.configs.recommended,
 
 	// TypeScript rules
 	tseslint.configs.recommendedTypeChecked,
+	// ...eslintPluginTailwindcss.configs["flat/recommended"],
 	{
 		languageOptions: {
 			parserOptions: {
 				parser: tseslint.parser,
 				projectService: true,
 				tsconfigRootDir: import.meta.dirname,
+			},
+			globals: {
+				...globals.node,
 			},
 		},
 	},
@@ -30,20 +39,27 @@ export default defineConfig(
 		extends: [tseslint.configs.disableTypeChecked],
 	},
 	{
+		...eslintPluginReactRedux.configs.recommended,
 		files: ["src/**/*.ts", "src/**/*.tsx"],
 		languageOptions: {
+			ecmaVersion: "latest",
+			globals: {
+				...globals.browser,
+				...globals.es2025,
+				...globals.serviceworker
+			},
 			parserOptions: {
 				ecmaFeatures: {
 					jsx: true,
 				},
 			},
 		},
+		extends: [reactRefresh.configs.vite],
 		plugins: {
 			react: eslintPluginReact,
 			"react-hooks": eslintPluginReactHooks,
 			"jsx-a11y": eslintPluginJsxA11y,
 			prettier: eslintPluginPrettier,
-			// tailwindcss: eslintPluginTailwindcss,
 		},
 		rules: {
 			"@typescript-eslint/no-unsafe-call": "off",
@@ -53,6 +69,10 @@ export default defineConfig(
 			"@typescript-eslint/no-unsafe-argument": "off",
 			"@typescript-eslint/no-misused-promises": "off",
 			"@typescript-eslint/no-floating-promises": "off",
+
+			// "tailwindcss/no-custom-classname": "off",
+
+			"react-hooks/rules-of-hooks": "error",
 
 			"prefer-arrow-callback": "error",
 			"no-else-return": ["error", { allowElseIf: false }],
@@ -67,6 +87,8 @@ export default defineConfig(
 			"@typescript-eslint/prefer-optional-chain": "error",
 			"@typescript-eslint/prefer-readonly": "error",
 			"@typescript-eslint/promise-function-async": "error",
+			"no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
+			"no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
 		},
 		settings: {
 			react: {
@@ -85,6 +107,7 @@ export default defineConfig(
 	// React Testing Library + Vitest unit tests
 	{
 		files: ["tests/**/*.ts", "tests/**/*.tsx"],
+		...testingLibrary.configs['flat/react'],
 		languageOptions: {
 			parser: tseslint.parser,
 			parserOptions: {
@@ -114,4 +137,4 @@ export default defineConfig(
 			...eslintPluginPlaywright.configs["flat/recommended"].rules,
 		},
 	},
-);
+]);

@@ -1,5 +1,4 @@
 import cssnano from "cssnano";
-import process from "node:process";
 
 export default {
 	plugins: [

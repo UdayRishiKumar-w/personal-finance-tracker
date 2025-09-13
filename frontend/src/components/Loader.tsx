@@ -1,4 +1,4 @@
-const Loader = ({ text }: { text: string }) => {
+const Loader = ({ text = "Loading..." }: { text?: string }) => {
 	return (
 		<div className="mask">
 			<div className="mask-wrapper">
