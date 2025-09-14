@@ -15,7 +15,7 @@ import eslintPluginVitest from "eslint-plugin-vitest";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-	globalIgnores(["dist", "coverage", "playwright-report", "test-results"]),
+	globalIgnores(["dist", "dev-dist", "coverage", "playwright-report", "test-results"]),
 	// Base JS rules
 	eslintPluginJs.configs.recommended,
 
