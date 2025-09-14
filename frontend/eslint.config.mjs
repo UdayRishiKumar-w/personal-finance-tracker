@@ -8,10 +8,10 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 // import eslintPluginTailwindcss from "eslint-plugin-tailwindcss";
-import eslintPluginReactRedux from "eslint-plugin-react-redux";
 import eslintPluginPlaywright from "eslint-plugin-playwright";
-import eslintPluginVitest from "eslint-plugin-vitest";
+import eslintPluginReactRedux from "eslint-plugin-react-redux";
 import testingLibrary from "eslint-plugin-testing-library";
+import eslintPluginVitest from "eslint-plugin-vitest";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
@@ -46,7 +46,7 @@ export default defineConfig([
 			globals: {
 				...globals.browser,
 				...globals.es2025,
-				...globals.serviceworker
+				...globals.serviceworker,
 			},
 			parserOptions: {
 				ecmaFeatures: {
@@ -107,7 +107,7 @@ export default defineConfig([
 	// React Testing Library + Vitest unit tests
 	{
 		files: ["tests/**/*.ts", "tests/**/*.tsx"],
-		...testingLibrary.configs['flat/react'],
+		...testingLibrary.configs["flat/react"],
 		languageOptions: {
 			parser: tseslint.parser,
 			parserOptions: {

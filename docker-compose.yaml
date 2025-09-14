@@ -11,6 +11,12 @@ services:
             - "5432:5432"
         volumes:
             - db_data:/var/lib/postgresql/data
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U finance_user -d finance_db"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 30s
 
     backend:
         build: ./backend
@@ -23,11 +29,18 @@ services:
             SPRING_JPA_HIBERNATE_DDL_AUTO: update
             SPRING_PROFILES_ACTIVE: docker
         depends_on:
-            - db
+            db:
+                condition: service_healthy
         ports:
             - "8080:8080"
+        volumes:
+            - backend-logs:/app/logs
         healthcheck:
-            test: ["CMD-SHELL", "pg_isready -U finance_user -h db"]
+            test:
+                [
+                    "CMD-SHELL",
+                    "wget -q --spider http://localhost:8080/actuator/health || exit 1",
+                ]
             interval: 10s
             timeout: 5s
             retries: 5
@@ -42,9 +55,10 @@ services:
         ports:
             - "3000:80"
         depends_on:
-            - backend
+            backend:
+                condition: service_healthy
         healthcheck:
-            test: ["CMD-SHELL", "curl -f http://localhost/index.html || exit 1"]
+            test: ["CMD-SHELL", "pgrep nginx || exit 1"]
             interval: 10s
             timeout: 5s
             retries: 3
@@ -52,3 +66,4 @@ services:
 
 volumes:
     db_data:
+    backend-logs:
