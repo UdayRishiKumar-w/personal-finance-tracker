@@ -27,7 +27,7 @@ services:
             SPRING_DATASOURCE_USERNAME: finance_user
             SPRING_DATASOURCE_PASSWORD: finance_pass
             SPRING_JPA_HIBERNATE_DDL_AUTO: update
-            SPRING_PROFILES_ACTIVE: docker
+            SPRING_PROFILES_ACTIVE: prod
         depends_on:
             db:
                 condition: service_healthy
