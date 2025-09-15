@@ -30,8 +30,7 @@
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedSideEffectImports": true,
 		"forceConsistentCasingInFileNames": true,
-		"typeRoots": ["node_modules", "node_modules/@types"],
-		"types": ["vite/client", "react", "react-dom"]
+		"types": ["vite/client", "react", "react-dom", "vite-plugin-pwa/react"]
 	},
-	"include": ["src", "vite-env.d.ts", ".env.d.ts", "pwa-assets.config.ts", "node_modules/vite-plugin-pwa/react.d.ts"]
+	"include": ["src", "vite-env.d.ts", ".env.d.ts", "pwa-assets.config.ts"]
 }

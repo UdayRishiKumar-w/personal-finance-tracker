@@ -6,7 +6,6 @@
 			"@/*": ["src/*"],
 			"@tests/*": ["tests/*"]
 		},
-		"typeRoots": ["node_modules", "node_modules/@types"],
 		"types": ["vitest/globals", "vite/client", "vitest/jsdom", "node"]
 	}
 }

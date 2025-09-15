@@ -59,7 +59,7 @@
 		"eslint-plugin-react-redux": "^4.2.2",
 		"eslint-plugin-react-refresh": "^0.4.20",
 		"eslint-plugin-tailwindcss": "^4.0.0-beta.0",
-		"eslint-plugin-testing-library": "^7.7.0",
+		"eslint-plugin-testing-library": "^7.8.0",
 		"eslint-plugin-vitest": "^0.5.4",
 		"globals": "^16.4.0",
 		"jsdom": "^27.0.0",

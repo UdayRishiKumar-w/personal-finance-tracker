@@ -2,7 +2,6 @@
 	"extends": "./tsconfig.app.json",
 	"include": ["e2e"],
 	"compilerOptions": {
-		"typeRoots": ["node_modules", "node_modules/@types"],
 		"types": ["@playwright/test", "node"]
 	}
 }

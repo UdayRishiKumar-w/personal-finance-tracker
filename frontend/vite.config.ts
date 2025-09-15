@@ -12,7 +12,7 @@ export default defineConfig({
 		tailwindcss(),
 		VitePWA({
 			registerType: "autoUpdate",
-			injectRegister: false,
+			injectRegister: false, //'script-defer'
 
 			includeAssets: ["favicon.svg", "favicon.ico", "robots.txt", "icons/apple-icon-180.png"],
 			pwaAssets: {
@@ -66,6 +66,9 @@ export default defineConfig({
 								maxEntries: 10,
 								maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
 							},
+							cacheableResponse: {
+								statuses: [0, 200],
+							},
 						},
 					},
 					{
@@ -76,6 +79,9 @@ export default defineConfig({
 							expiration: {
 								maxEntries: 10,
 								maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+							},
+							cacheableResponse: {
+								statuses: [0, 200],
 							},
 						},
 					},
