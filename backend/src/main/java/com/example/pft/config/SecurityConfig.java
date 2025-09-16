@@ -27,6 +27,7 @@ public class SecurityConfig {
 		// http.addFilterBefore(jwtAuthenticationFilter(),
 		// UsernamePasswordAuthenticationFilter.class);
 
+		return http.build();
 	}
 
 	// To expose AuthenticationManager for login handling
