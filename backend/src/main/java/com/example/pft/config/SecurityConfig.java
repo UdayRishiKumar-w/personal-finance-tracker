@@ -19,6 +19,7 @@ public class SecurityConfig {
 						.requestMatchers("/api/auth/**").permitAll() // allow auth endpoints
 						.anyRequest().permitAll() // allow all requests
 				)
+				.headers(headers -> headers.frameOptions(frame -> frame.disable()))
 				.sessionManagement(session -> session
 						.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // no session, stateless API
 				);
