@@ -87,7 +87,8 @@ export default defineConfig([
 			"@typescript-eslint/prefer-optional-chain": "error",
 			"@typescript-eslint/prefer-readonly": "error",
 			"@typescript-eslint/promise-function-async": "error",
-			"no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
+			// "no-console": process.env.NODE_ENV === "production" ? "warn" : "off", // as using no console plugin
+			"no-console": "off",
 			"no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
 		},
 		settings: {

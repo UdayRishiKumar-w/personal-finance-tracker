@@ -2,7 +2,12 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react-swc";
 import { fileURLToPath, URL } from "node:url";
 import { defineConfig } from "vite";
+import { imagetools } from "vite-imagetools"; // https://github.com/JonasKruckenberg/imagetools/blob/main/docs/_media/getting-started.md
+import cdn from "vite-plugin-cdn-import";
+import VitePluginChecker from "vite-plugin-checker";
+import preload from "vite-plugin-preload";
 import { VitePWA } from "vite-plugin-pwa";
+import removeConsole from "vite-plugin-remove-console";
 
 // https://vite.dev/config/
 /** @type {import('vite').UserConfig} */
@@ -55,7 +60,7 @@ export default defineConfig({
 				globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
 				cleanupOutdatedCaches: true,
 				clientsClaim: true,
-				sourcemap: true,
+				sourcemap: false,
 				runtimeCaching: [
 					{
 						urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -85,6 +90,20 @@ export default defineConfig({
 							},
 						},
 					},
+					{
+						urlPattern: /^https:\/\/cdn\.jsdelivr\.net\/.*/i,
+						handler: "CacheFirst",
+						options: {
+							cacheName: "jsdelivr-cdn-js-files",
+							expiration: {
+								maxEntries: 10,
+								maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+							},
+							cacheableResponse: {
+								statuses: [0, 200],
+							},
+						},
+					},
 				],
 			},
 
@@ -93,6 +112,21 @@ export default defineConfig({
 				navigateFallback: "index.html",
 				suppressWarnings: true,
 				type: "module",
+			},
+		}),
+		imagetools(),
+		removeConsole(),
+		preload(),
+		cdn({
+			modules: ["react", "react-dom", "react-router-dom", "axios"],
+		}), //Default: https://cdn.jsdelivr.net/npm/{name}@{version}/{path},
+		VitePluginChecker({
+			typescript: true, // Enable TypeScript checking
+			// eslint: {
+			// 	lintCommand: 'eslint "./src/**/*.{ts,tsx,js,jsx}"', // Stop the build on ESLint warnings
+			// },
+			stylelint: {
+				lintCommand: 'stylelint "src/**/*.{css,scss,tsx,jsx}"  --max-warnings 0',
 			},
 		}),
 	],

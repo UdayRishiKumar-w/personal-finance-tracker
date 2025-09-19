@@ -10,6 +10,7 @@ import { store } from "./store/store";
 import PWABadge from "@/PWABadge";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import { StyledEngineProvider } from "@mui/material/styles";
+import { reportWebVitals } from './reportWebVitals';
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
@@ -26,3 +27,5 @@ createRoot(document.getElementById("root")!).render(
 		</StyledEngineProvider>
 	</StrictMode>,
 );
+
+reportWebVitals();
