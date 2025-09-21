@@ -1,4 +1,5 @@
 import { Box, Button, Typography } from "@mui/material";
+import { clsx } from "clsx/lite";
 import { useEffect, useState } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
 
@@ -28,7 +29,6 @@ function PWABadge() {
 		},
 	});
 
-	// Track current offline state
 	const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
 	useEffect(() => {
@@ -59,7 +59,13 @@ function PWABadge() {
 		<Box
 			role="alert"
 			aria-labelledby="toast-message"
-			className="fixed right-4 bottom-4 z-50 flex flex-col items-center rounded border border-gray-300 bg-white p-4 shadow-lg"
+			className={clsx(
+				"fixed right-4 bottom-4 z-50 flex flex-col items-center rounded border border-gray-300 bg-white p-4 shadow-lg transition-transform duration-500",
+				{
+					"translate-y-0 opacity-100": isOffline || needRefresh,
+					"translate-y-20 opacity-0": !(isOffline || needRefresh),
+				},
+			)}
 		>
 			<Typography id="toast-message" className="mb-2 text-center text-gray-800">
 				{isOffline
