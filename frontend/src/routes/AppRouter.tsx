@@ -1,5 +1,5 @@
+import Loader from "@/components/common/Loader";
 import PrivateRoute from "@/components/common/PrivateRoute";
-import Loader from "@/components/Loader";
 import { setCredentials } from "@/store/authSlice";
 import type { RootState } from "@/store/store";
 import { lazy, Suspense, useEffect } from "react";

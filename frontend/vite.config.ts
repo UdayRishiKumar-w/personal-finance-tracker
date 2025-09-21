@@ -23,6 +23,9 @@ export default defineConfig(({ mode }) => {
 	const isDev = mode === "development";
 	//   const env = loadEnv(mode, process.cwd(), '');
 	return {
+		html: {
+			cspNonce: "NGINX_CSP_NONCE", // Replace with nginx dynamic nonce
+		},
 		server: {
 			open: isDev,
 		},
@@ -46,20 +49,41 @@ export default defineConfig(({ mode }) => {
 					theme_color: "#1e40af",
 					background_color: "#ffffff",
 					display: "standalone",
+					orientation: "landscape-primary",
 					scope: "/",
 					start_url: "/",
 					icons: [
 						{
 							src: "favicon.ico",
-							sizes: "64x64 32x32 24x24 16x16",
+							sizes: "64x64",
 							type: "image/x-icon",
 							purpose: "any",
 						},
 						{
 							src: "favicon.ico",
-							sizes: "64x64 32x32 24x24 16x16",
+							sizes: "64x64",
 							type: "image/x-icon",
 							purpose: "maskable",
+						},
+						{
+							src: "android-64x64.png", // replace pwa- with android-
+							sizes: "64x64",
+							type: "image/png",
+						},
+						{
+							src: "android-192x192.png",
+							sizes: "192x192",
+							type: "image/png",
+						},
+						{
+							src: "android-256x256.png",
+							sizes: "256x256",
+							type: "image/png",
+						},
+						{
+							src: "android-512x512.png",
+							sizes: "512x512",
+							type: "image/png",
 						},
 						{
 							src: "icons/manifest-icon-192.maskable.png",
@@ -86,10 +110,24 @@ export default defineConfig(({ mode }) => {
 							purpose: "maskable",
 						},
 					],
+					screenshots: [
+						{
+							src: "images/Mobile.png",
+							type: "image/png",
+							sizes: "750x1334",
+							form_factor: "narrow",
+						},
+						{
+							src: "images/Desktop.png",
+							type: "image/png",
+							sizes: "1918x870",
+							form_factor: "wide",
+						},
+					],
 				},
 
 				workbox: {
-					globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
+					globPatterns: ["**/*.{js,css,html,ico,png,svg,jpg,jpeg,json,txt}"],
 					cleanupOutdatedCaches: true,
 					clientsClaim: true,
 					sourcemap: false,
@@ -150,11 +188,22 @@ export default defineConfig(({ mode }) => {
 								},
 							},
 						},
+						{
+							urlPattern: /^\/api\//,
+							handler: "NetworkOnly",
+							options: {
+								cacheName: "api-calls",
+							},
+						},
+					],
+					navigateFallback: "/index.html",
+					navigateFallbackAllowlist: [
+						/^\/(?!api).*/, // allow ALL navigations except those starting with /api
 					],
 				},
 
 				devOptions: {
-					enabled: true,
+					enabled: isDev,
 					navigateFallback: "index.html",
 					suppressWarnings: true,
 					type: "module",

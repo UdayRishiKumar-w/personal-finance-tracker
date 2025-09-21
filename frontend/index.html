@@ -5,7 +5,6 @@
 		<meta http-equiv="content-language" content="en" />
 		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="theme-color" content="#1e40af" />
 		<meta
 			name="description"
 			content="Track your income, expenses, savings, and financial goals easily with our personal finance tracker app. Stay on top of your finances!"
@@ -14,19 +13,7 @@
 			name="keywords"
 			content="personal finance, expense tracker, budgeting, savings, financial goals, money management"
 		/>
-		<meta name="robots" content="index, follow" />
-		<meta name="author" content="Ganji Uday Rishi Kumar" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="mobile-web-app-capable" content="yes" />
-		<meta property="og:title" content="Personal Finance Tracker" />
-		<meta
-			property="og:description"
-			content="Track your income, expenses, savings, and financial goals easily with our personal finance tracker app."
-		/>
-		<meta property="og:image" content="/pwa-512x512.png" />
-		<!-- <meta property="og:url" content="https://" /> -->
-		<meta property="og:type" content="website" />
+		<meta name="emotion-insertion-point" />
 		<title>Personal Finance Tracker</title>
 
 		<style type="text/css">
@@ -86,8 +73,8 @@
 			}
 
 			.spinning .spinner-bar {
-				-webkit-animation: stretchdelay 1s infinite ease-in-out;
-				animation: stretchdelay 1s infinite ease-in-out;
+				-webkit-animation: stretch-delay 1s infinite ease-in-out;
+				animation: stretch-delay 1s infinite ease-in-out;
 			}
 
 			.spinning .spinner-bar1 {
@@ -108,6 +95,32 @@
 			.spinner.fade {
 				transition-duration: 0.3s;
 			}
+
+			@-webkit-keyframes stretch-delay {
+				0%,
+				100%,
+				40% {
+					-webkit-transform: scaleY(1);
+				}
+
+				20% {
+					-webkit-transform: scaleY(1.7);
+				}
+			}
+
+			@keyframes stretch-delay {
+				0%,
+				100%,
+				40% {
+					-webkit-transform: scaleY(1);
+					transform: scaleY(1);
+				}
+
+				15% {
+					-webkit-transform: scaleY(1.7);
+					transform: scaleY(1.7);
+				}
+			}
 		</style>
 		<link rel="preconnect" crossorigin="anonymous" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" crossorigin="anonymous" href="https://fonts.gstatic.com" />
@@ -117,7 +130,6 @@
 		<link rel="dns-prefetch" href="https://fonts.gstatic.com" />
 		<link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
 		<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
-		<link rel="icon" type="image/svg+xml" href="/finance-tracker.svg" />
 		<!-- Preload + async styles -->
 		<!-- Fonts to support Material Design -->
 		<link
@@ -142,8 +154,34 @@
 		/>
 
 		<!-- PWA - setup -->
+		<meta name="theme-color" content="#1e40af" />
+		<meta name="robots" content="index, follow" />
+		<meta name="author" content="Ganji Uday Rishi Kumar" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<link rel="icon" href="/favicon.ico" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-title" content="Personal Finance Tracker" />
+		<meta name="application-name" content="Personal Finance Tracker" />
+		<meta name="msapplication-TileColor" content="#ffffff" />
+		<meta name="msapplication-TileImage" content="/favicon-144x144.png" />
+		<meta property="og:title" content="Personal Finance Tracker" />
+		<meta
+			property="og:description"
+			content="Track your income, expenses, savings, and financial goals easily with our personal finance tracker app."
+		/>
+		<meta property="og:image" content="images/Desktop.png" />
+		<!-- <meta property="og:url" content="https://" /> -->
+		<meta property="og:type" content="website" />
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="/favicon-32x32.png" sizes="32x32" />
+		<link rel="icon" href="/favicon-48x48.ico" sizes="48x48" />
+		<link rel="icon" href="/favicon-48x48.png" sizes="48x48" />
+		<link rel="icon" href="/favicon.ico" sizes="64x64" />
+		<link rel="icon" href="/favicon-96x96.png" sizes="96x96" />
+		<link rel="icon" href="/favicon-144x144.png" sizes="144x144" />
+		<link rel="icon" href="/favicon-192x192.png" sizes="192x192" />
+		<link rel="icon" href="/favicon-256x256.png" sizes="256x256" />
+		<link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml" />
 		<link rel="mask-icon" href="/mask-icon.svg" color="#FFFFFF" />
 		<link rel="apple-touch-icon" href="icons/apple-icon-180.png" />
 		<link rel="apple-touch-icon-precomposed" href="icons/apple-icon-180.png" />

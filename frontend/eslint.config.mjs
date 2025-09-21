@@ -22,6 +22,19 @@ export default defineConfig([
 	// TypeScript rules
 	tseslint.configs.recommendedTypeChecked,
 	// ...eslintPluginTailwindcss.configs["flat/recommended"],
+
+	{
+		rules: {
+			"@typescript-eslint/no-unsafe-call": "off",
+			"@typescript-eslint/no-unsafe-assignment": "off",
+			"@typescript-eslint/no-unsafe-member-access": "off",
+			"@typescript-eslint/no-unsafe-return": "off",
+			"@typescript-eslint/no-unsafe-argument": "off",
+			"@typescript-eslint/no-misused-promises": "off",
+			"@typescript-eslint/no-floating-promises": "off",
+			"@typescript-eslint/promise-function-async": "off",
+		},
+	},
 	{
 		languageOptions: {
 			parserOptions: {
@@ -62,18 +75,11 @@ export default defineConfig([
 			prettier: eslintPluginPrettier,
 		},
 		rules: {
-			"@typescript-eslint/no-unsafe-call": "off",
-			"@typescript-eslint/no-unsafe-assignment": "off",
-			"@typescript-eslint/no-unsafe-member-access": "off",
-			"@typescript-eslint/no-unsafe-return": "off",
-			"@typescript-eslint/no-unsafe-argument": "off",
-			"@typescript-eslint/no-misused-promises": "off",
-			"@typescript-eslint/no-floating-promises": "off",
-
+			...eslintPluginReactHooks.configs.recommended.rules,
 			// "tailwindcss/no-custom-classname": "off",
 
 			"react-hooks/rules-of-hooks": "error",
-
+			"react-hooks/exhaustive-deps": "off",
 			"prefer-arrow-callback": "error",
 			"no-else-return": ["error", { allowElseIf: false }],
 			"no-lonely-if": "error",
@@ -86,7 +92,6 @@ export default defineConfig([
 			"@typescript-eslint/consistent-indexed-object-style": "error",
 			"@typescript-eslint/prefer-optional-chain": "error",
 			"@typescript-eslint/prefer-readonly": "error",
-			"@typescript-eslint/promise-function-async": "error",
 			// "no-console": process.env.NODE_ENV === "production" ? "warn" : "off", // as using no console plugin
 			"no-console": "off",
 			"no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",

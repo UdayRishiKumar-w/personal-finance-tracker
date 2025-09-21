@@ -1,5 +1,5 @@
 import { login } from "@/api/authApi";
-import Loader from "@/components/Loader";
+import Loader from "@/components/common/Loader";
 import { setCredentials } from "@/store/authSlice";
 import { Box, Button, TextField } from "@mui/material";
 import React, { useState } from "react";
