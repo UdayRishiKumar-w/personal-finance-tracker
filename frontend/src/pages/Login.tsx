@@ -39,9 +39,9 @@ export default function Login() {
 
 	return (
 		<>
-			<div className="flex min-h-screen items-center justify-center bg-white">
+			<div className="flex min-h-screen items-center justify-center ">
 				<form onSubmit={handleSubmit} className="w-full max-w-md rounded p-8 shadow-2xl">
-					<h2 className="mb-6 text-center text-2xl font-bold text-black">Login</h2>
+					<h2 className="mb-6 text-center text-2xl font-bold ">Login</h2>
 
 					{err && <div className="mb-4 text-red-600">{err}</div>}
 
@@ -71,7 +71,7 @@ export default function Login() {
 						Login
 					</Button>
 
-					<div className="text-center text-sm text-black">
+					<div className="text-center text-sm">
 						Don't have an account?{" "}
 						<Button component={Link} to="/signup" variant="text" className="underline">
 							Sign Up

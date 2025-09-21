@@ -9,7 +9,7 @@ export default function Dashboard() {
 	const navigate = useNavigate();
 
 	return (
-		<div className="align-center flex h-full w-full flex-col gap-10 bg-white p-6">
+		<div className="align-center flex h-full w-full flex-col gap-10 p-6">
 			<TopBar
 				text="Dashboard"
 				onLogout={() => {

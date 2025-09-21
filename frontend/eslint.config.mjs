@@ -77,6 +77,7 @@ export default defineConfig([
 		rules: {
 			...eslintPluginReactHooks.configs.recommended.rules,
 			// "tailwindcss/no-custom-classname": "off",
+			"react-refresh/only-export-components": "off",
 
 			"react-hooks/rules-of-hooks": "error",
 			"react-hooks/exhaustive-deps": "off",

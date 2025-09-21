@@ -2,6 +2,30 @@
 
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+	/* Light mode */
+	--bg-light: #fff;
+	--text-light: #000;
+	--shadow-light: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+	/* Dark mode */
+	--bg-dark: #121212;
+	--text-dark: #fff;
+	--shadow-dark: 0 4px 6px rgba(255, 255, 255, 0.1);
+}
+
+@layer base {
+	html {
+		@apply bg-[var(--bg-light)] text-[var(--text-light)];
+	}
+
+	html.dark {
+		@apply bg-[var(--bg-dark)] text-[var(--text-dark)];
+	}
+}
+
 @theme inline {
 	/* Material UI typography */
 	--font-h1: var(--mui-font-h1);

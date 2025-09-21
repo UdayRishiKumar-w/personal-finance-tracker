@@ -5,7 +5,7 @@ import { defineConfig } from "vite";
 // import { analyzer } from "vite-bundle-analyzer";
 import { imagetools } from "vite-imagetools"; // https://github.com/JonasKruckenberg/imagetools/blob/main/docs/_media/getting-started.md
 import cdn from "vite-plugin-cdn-import";
-import VitePluginChecker from "vite-plugin-checker";
+// import VitePluginChecker from "vite-plugin-checker";
 import preload from "vite-plugin-preload";
 import { VitePWA } from "vite-plugin-pwa";
 import removeConsole from "vite-plugin-remove-console";
@@ -203,7 +203,7 @@ export default defineConfig(({ mode }) => {
 				},
 
 				devOptions: {
-					enabled: isDev,
+					enabled: false,
 					navigateFallback: "index.html",
 					suppressWarnings: true,
 					type: "module",
@@ -248,15 +248,15 @@ export default defineConfig(({ mode }) => {
 					},
 				],
 			}), //Default: https://cdn.jsdelivr.net/npm/{name}@{version}/{path},
-			VitePluginChecker({
-				typescript: true, // Enable TypeScript checking
-				// eslint: {
-				// 	lintCommand: 'eslint "./src/**/*.{ts,tsx,js,jsx}"', // Stop the build on ESLint warnings
-				// },
-				stylelint: {
-					lintCommand: 'stylelint "src/**/*.{css,scss,tsx,jsx}"  --max-warnings 0',
-				},
-			}),
+			// VitePluginChecker({
+			// 	typescript: true, // Enable TypeScript checking
+			// 	// eslint: {
+			// 	// 	lintCommand: 'eslint "./src/**/*.{ts,tsx,js,jsx}"', // Stop the build on ESLint warnings
+			// 	// },
+			// 	stylelint: {
+			// 		lintCommand: 'stylelint "src/**/*.{css,scss,tsx,jsx}"  --max-warnings 0',
+			// 	},
+			// }),
 			// analyzer(),
 		],
 		resolve: {
