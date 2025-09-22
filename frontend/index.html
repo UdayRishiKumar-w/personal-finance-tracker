@@ -121,7 +121,25 @@
 					transform: scaleY(1.7);
 				}
 			}
+
+			html.dark {
+				.mask {
+					background-color: rgba(0, 0, 0, 0.8);
+				}
+
+				.mask-content .text {
+					color: #e5e5e5;
+				}
+			}
 		</style>
+		<script>
+			(function () {
+				const theme = localStorage.getItem("theme");
+				if (theme === "dark") {
+					document.documentElement.classList.add("dark");
+				}
+			})();
+		</script>
 		<link rel="preconnect" crossorigin="anonymous" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" crossorigin="anonymous" href="https://fonts.gstatic.com" />
 		<link rel="preconnect" crossorigin="anonymous" href="https://cdn.jsdelivr.net" />
