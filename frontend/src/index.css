@@ -19,3 +19,11 @@
 ::after {
 	box-sizing: border-box;
 } */
+
+.mask {
+	@apply dark:bg-black/80;
+}
+
+.mask-content .text {
+	@apply dark:text-gray-200;
+}

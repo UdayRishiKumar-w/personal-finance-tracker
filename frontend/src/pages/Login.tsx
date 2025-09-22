@@ -1,10 +1,10 @@
 import { login } from "@/api/authApi";
 import Loader from "@/components/common/Loader";
 import { setCredentials } from "@/store/authSlice";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, Link, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -39,9 +39,9 @@ export default function Login() {
 
 	return (
 		<>
-			<div className="flex min-h-screen items-center justify-center ">
-				<form onSubmit={handleSubmit} className="w-full max-w-md rounded p-8 shadow-2xl">
-					<h2 className="mb-6 text-center text-2xl font-bold ">Login</h2>
+			<div className="flex min-h-screen items-center justify-center">
+				<form onSubmit={handleSubmit} className="w-full max-w-md rounded p-8 shadow-2xl dark:shadow-white">
+					<h2 className="mb-6 text-center text-2xl font-bold">Login</h2>
 
 					{err && <div className="mb-4 text-red-600">{err}</div>}
 
@@ -73,9 +73,9 @@ export default function Login() {
 
 					<div className="text-center text-sm">
 						Don't have an account?{" "}
-						<Button component={Link} to="/signup" variant="text" className="underline">
+						<Link component={RouterLink} to="/signup">
 							Sign Up
-						</Button>
+						</Link>
 					</div>
 				</form>
 			</div>

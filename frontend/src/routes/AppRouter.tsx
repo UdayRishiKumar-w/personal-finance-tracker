@@ -37,8 +37,7 @@ export default function AppRouter() {
 						</PrivateRoute>
 					}
 				/>
-				<Route path="/" element={<Navigate to={token ? "/dashboard" : "/login"} replace />} />
-				<Route path="*" element={<Navigate to="/login" replace />} />
+				<Route path="*" element={<Navigate to="/dashboard" replace />} />
 			</Routes>
 		</Suspense>
 	);

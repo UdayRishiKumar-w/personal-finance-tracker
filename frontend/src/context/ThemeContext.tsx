@@ -1,7 +1,7 @@
 import { ThemeMode } from "@/types/globalTypes";
 import { createTheme, CssBaseline, ThemeProvider as MuiThemeProvider } from "@mui/material";
 import type { Theme } from "@mui/material/styles";
-import type { ReactNode } from "react";
+import type {  PropsWithChildren } from "react";
 import { createContext, FC, useContext, useEffect, useMemo, useState } from "react";
 
 interface ThemeContextPropsType {
@@ -14,13 +14,9 @@ export const ThemeContext = createContext<ThemeContextPropsType>({
 	toggleTheme: () => {},
 });
 
-interface ThemeProviderProps {
-	children: ReactNode;
-}
-
 export const useTheme = () => useContext(ThemeContext);
 
-export const ThemeProvider: FC<ThemeProviderProps> = ({ children }) => {
+export const ThemeProvider: FC<PropsWithChildren> = ({ children }) => {
 	const [mode, setMode] = useState<ThemeMode>("light");
 
 	useEffect(() => {
