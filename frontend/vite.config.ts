@@ -9,6 +9,7 @@ import cdn from "vite-plugin-cdn-import";
 import preload from "vite-plugin-preload";
 import { VitePWA } from "vite-plugin-pwa";
 import removeConsole from "vite-plugin-remove-console";
+import { ViteMinifyPlugin } from 'vite-plugin-minify'
 
 const sriHashes: Record<string, string> = {
 	react: "sha512-Fpy3gN6679IxNCKdpQGYyYF/QoXTWctUB5jtb+DipQXBLFzkzCrTbNlZPT3rcuc7ARVPLAQtmFyNOx0h5/7MVA==",
@@ -211,7 +212,9 @@ export default defineConfig(({ mode }) => {
 			}),
 			imagetools(),
 			removeConsole(),
-			preload(),
+			preload({
+				mode: "prefetch",
+			}),
 			cdn({
 				generateScriptTag: (name, scriptUrl) => {
 					return {
@@ -258,6 +261,7 @@ export default defineConfig(({ mode }) => {
 			// 	},
 			// }),
 			// analyzer(),
+			ViteMinifyPlugin()
 		],
 		resolve: {
 			alias: {
@@ -265,7 +269,7 @@ export default defineConfig(({ mode }) => {
 			},
 		},
 		build: {
-			sourcemap: isDev,
+			minify: 'terser',
 			rollupOptions: {
 				external: ["react", "react-dom", "react-router-dom", "axios"],
 				output: {
