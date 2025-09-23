@@ -11,7 +11,7 @@ export default function BalanceChart() {
 
 	return (
 		<div className="w-full max-w-3xl">
-			<Line data={data} className="dark:brightness-0 dark:invert"/>
+			<Line data={data} className="dark:brightness-0 dark:invert" />
 		</div>
 	);
 }

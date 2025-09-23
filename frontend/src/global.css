@@ -1,7 +1,6 @@
 @layer theme, base, mui, components, utilities;
 
 @import "tailwindcss";
-
 @import "tw-animate-css";
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -10,12 +9,12 @@
 	/* Light mode */
 	--bg-light: #fff;
 	--text-light: #000;
-	--shadow-light: 0 4px 6px rgba(0, 0, 0, 0.1);
+	--shadow-light: 0 4px 6px rgb(0 0 0 / 10%);
 
 	/* Dark mode */
 	--bg-dark: #121212;
 	--text-dark: #fff;
-	--shadow-dark: 0 4px 6px rgba(255, 255, 255, 0.1);
+	--shadow-dark: 0 4px 6px rgb(255 255 255 / 10%);
 }
 
 @layer base {

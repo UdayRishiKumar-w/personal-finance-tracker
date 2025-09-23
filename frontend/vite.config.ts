@@ -6,10 +6,10 @@ import { defineConfig } from "vite";
 import { imagetools } from "vite-imagetools"; // https://github.com/JonasKruckenberg/imagetools/blob/main/docs/_media/getting-started.md
 import cdn from "vite-plugin-cdn-import";
 // import VitePluginChecker from "vite-plugin-checker";
+import { ViteMinifyPlugin } from "vite-plugin-minify";
 import preload from "vite-plugin-preload";
 import { VitePWA } from "vite-plugin-pwa";
 import removeConsole from "vite-plugin-remove-console";
-import { ViteMinifyPlugin } from 'vite-plugin-minify'
 
 const sriHashes: Record<string, string> = {
 	react: "sha512-Fpy3gN6679IxNCKdpQGYyYF/QoXTWctUB5jtb+DipQXBLFzkzCrTbNlZPT3rcuc7ARVPLAQtmFyNOx0h5/7MVA==",
@@ -261,7 +261,7 @@ export default defineConfig(({ mode }) => {
 			// 	},
 			// }),
 			// analyzer(),
-			ViteMinifyPlugin()
+			ViteMinifyPlugin(),
 		],
 		resolve: {
 			alias: {
@@ -269,7 +269,7 @@ export default defineConfig(({ mode }) => {
 			},
 		},
 		build: {
-			minify: 'terser',
+			minify: "terser",
 			rollupOptions: {
 				external: ["react", "react-dom", "react-router-dom", "axios"],
 				output: {

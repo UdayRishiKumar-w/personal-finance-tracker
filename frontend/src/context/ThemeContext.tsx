@@ -1,7 +1,7 @@
 import { ThemeMode } from "@/types/globalTypes";
 import { createTheme, CssBaseline, ThemeProvider as MuiThemeProvider } from "@mui/material";
 import type { Theme } from "@mui/material/styles";
-import type {  PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import { createContext, FC, useContext, useEffect, useMemo, useState } from "react";
 
 interface ThemeContextPropsType {
