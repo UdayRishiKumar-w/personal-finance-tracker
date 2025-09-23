@@ -1,5 +1,6 @@
 import Loader from "@/components/common/Loader";
 import PrivateRoute from "@/components/common/PrivateRoute";
+import NotFound from "@/pages/NotFound";
 import { setCredentials } from "@/store/authSlice";
 import type { RootState } from "@/store/store";
 import { lazy, Suspense, useEffect } from "react";
@@ -29,15 +30,10 @@ export default function AppRouter() {
 			<Routes>
 				<Route path="/signup" element={!token ? <Signup /> : <Navigate to="/dashboard" replace />} />
 				<Route path="/login" element={!token ? <Login /> : <Navigate to="/dashboard" replace />} />
-				<Route
-					path="/dashboard"
-					element={
-						<PrivateRoute>
-							<Dashboard />
-						</PrivateRoute>
-					}
-				/>
-				<Route path="*" element={<Navigate to="/dashboard" replace />} />
+				<Route element={<PrivateRoute />}>
+					<Route path="/dashboard" element={<Dashboard />}></Route>
+				</Route>
+				<Route path="*" element={<NotFound />} />
 			</Routes>
 		</Suspense>
 	);
