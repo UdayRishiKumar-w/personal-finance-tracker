@@ -8,7 +8,7 @@ export default function TopBar({ onLogout, text }: Readonly<{ onLogout: () => vo
 					{text}
 				</Typography>
 
-				<IconButton edge="end" color="inherit" aria-label="logout" onClick={onLogout} title="Logout">
+				<IconButton edge="end" color="inherit" aria-label="logout" className="mr-5 text-red-600" onClick={onLogout} title="Logout">
 					<span className="material-icons">logout</span>
 				</IconButton>
 			</Toolbar>
