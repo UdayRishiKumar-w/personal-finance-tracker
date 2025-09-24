@@ -33,6 +33,7 @@ export default function AppRouter() {
 				<Route element={<PrivateRoute />}>
 					<Route path="/dashboard" element={<Dashboard />}></Route>
 				</Route>
+				<Route path="/" element={<Navigate to="/dashboard" replace />} />
 				<Route path="*" element={<NotFound />} />
 			</Routes>
 		</Suspense>
