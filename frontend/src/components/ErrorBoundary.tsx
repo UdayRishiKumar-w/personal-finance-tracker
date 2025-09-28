@@ -37,7 +37,7 @@ export default class ErrorBoundary extends Component<Props, State> {
 						Something went wrong!
 					</Typography>
 					<Typography variant="body1" className="mb-4 text-gray-600">
-						{this.state.error?.message || "An unexpected error occurred."}
+						{import.meta.env.DEV ? this.state.error?.message : "An unexpected error occurred."}
 					</Typography>
 					<Button variant="contained" color="primary" onClick={this.handleReload} className="!mt-4">
 						Reload App
