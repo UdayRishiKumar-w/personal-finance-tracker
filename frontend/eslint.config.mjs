@@ -93,6 +93,10 @@ export default defineConfig([
 			"@typescript-eslint/consistent-indexed-object-style": "error",
 			"@typescript-eslint/prefer-optional-chain": "error",
 			"@typescript-eslint/prefer-readonly": "error",
+			"@typescript-eslint/consistent-type-exports": "error",
+			"@typescript-eslint/consistent-type-imports": "error",
+			"@typescript-eslint/no-this-alias": "error",
+			"@typescript-eslint/no-unnecessary-boolean-literal-compare": "error",
 			// "no-console": process.env.NODE_ENV === "production" ? "warn" : "off", // as using no console plugin
 			"no-console": "off",
 			"no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",

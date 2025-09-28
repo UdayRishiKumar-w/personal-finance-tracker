@@ -1,7 +1,7 @@
 import { useTheme } from "@/context/ThemeContext";
 import { Switch } from "@mui/material";
 import clsx from "clsx/lite";
-import { FC } from "react";
+import type { FC } from "react";
 
 const ToggleTheme: FC = () => {
 	const { mode, toggleTheme } = useTheme();

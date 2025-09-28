@@ -1,6 +1,7 @@
 import ToggleTheme from "@/components/ToggleTheme";
 import clsx from "clsx/lite";
-import { FC, useState } from "react";
+import type { FC } from "react";
+import { useState } from "react";
 
 export const Menu: FC = () => {
 	const [menuOpen, setMenuOpen] = useState(false);
