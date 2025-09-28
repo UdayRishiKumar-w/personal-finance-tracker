@@ -9,3 +9,7 @@ test-results
 **/.svn
 **/.vscode
 **/public
+**/.idea
+.gitignore
+package-lock.json
+*.log

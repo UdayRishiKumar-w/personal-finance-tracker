@@ -6,6 +6,6 @@
 			"@/*": ["src/*"],
 			"@tests/*": ["tests/*"]
 		},
-		"types": ["vitest/globals", "vite/client", "vitest/jsdom", "node"]
+		"types": ["vitest/globals", "vite/client", "vitest/jsdom", "node", "@testing-library/jest-dom"]
 	}
 }

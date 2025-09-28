@@ -1,9 +1,11 @@
 {
 	"name": "personal-finance-tracker",
+	"description": "Track your income, expenses, savings, and financial goals easily with our personal finance tracker app.",
 	"private": true,
 	"version": "1.0.0",
 	"type": "module",
 	"scripts": {
+		"typecheck": "tsc --build",
 		"dev": "vite",
 		"build": "tsc -b && vite build",
 		"generate-pwa-assets": "pwa-assets-generator",
@@ -103,5 +105,10 @@
 			"last 1 firefox version",
 			"last 1 safari version"
 		]
+	},
+	"author": {
+		"name": "Ganji Uday Rishi Kumar",
+		"email": "udayrishi.ganji.w@gmail.com",
+		"url": "https://github.com/UdayRishiKumar-w"
 	}
 }

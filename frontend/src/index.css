@@ -9,6 +9,7 @@
 	overflow: hidden;
 	clip-path: inset(0 0 0 0);
 	border: 0;
+	white-space: nowrap;
 }
 
 /* * {

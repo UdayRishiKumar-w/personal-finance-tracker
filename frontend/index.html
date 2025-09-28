@@ -1,10 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html dir="ltr" lang="en">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta http-equiv="content-language" content="en" />
 		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="color-scheme" content="light dark" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 		<meta
 			name="description"
 			content="Track your income, expenses, savings, and financial goals easily with our personal finance tracker app. Stay on top of your finances!"
@@ -117,19 +118,20 @@
 				}
 			}
 
-			html.dark {
-				.mask {
-					background-color: rgba(0, 0, 0, 0.8);
-				}
+			html.dark .mask {
+				background-color: rgba(0, 0, 0, 0.8);
+			}
 
-				.mask-content .text {
-					color: #e5e5e5;
-				}
+			html.dark .mask-content .text {
+				color: #e5e5e5;
 			}
 		</style>
 		<script>
 			(function () {
 				const theme = localStorage.getItem("theme");
+				if (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+					document.documentElement.classList.add("dark");
+				}
 				if (theme === "dark") {
 					document.documentElement.classList.add("dark");
 				}
@@ -178,15 +180,20 @@
 		<meta name="application-name" content="Personal Finance Tracker" />
 		<meta name="msapplication-TileColor" content="#ffffff" />
 		<meta name="msapplication-TileImage" content="/favicon-144x144.png" />
+		<meta name="msapplication-navbutton-color" content="#3d3d3d" />
 		<meta property="og:title" content="Personal Finance Tracker" />
 		<meta
 			property="og:description"
 			content="Track your income, expenses, savings, and financial goals easily with our personal finance tracker app."
 		/>
+		<meta property="og:image:alt" content="Personal Finance Tracker" />
 		<meta property="og:image" content="images/desktop.png" />
 		<!-- <meta property="og:url" content="https://" /> -->
 		<meta property="og:type" content="website" />
-		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+		<meta property="og:locale" content="en" />
+		<meta name="locale" content="en" />
+		<link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml" />
+		<link rel="shortcut icon alternate" href="/favicon.ico" type="image/x-icon" />
 		<link rel="icon" href="/favicon-32x32.png" sizes="32x32" />
 		<link rel="icon" href="/favicon-48x48.ico" sizes="48x48" />
 		<link rel="icon" href="/favicon-48x48.png" sizes="48x48" />
@@ -195,7 +202,6 @@
 		<link rel="icon" href="/favicon-144x144.png" sizes="144x144" />
 		<link rel="icon" href="/favicon-192x192.png" sizes="192x192" />
 		<link rel="icon" href="/favicon-256x256.png" sizes="256x256" />
-		<link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml" />
 		<link rel="mask-icon" href="/mask-icon.svg" color="#FFFFFF" />
 		<link rel="apple-touch-icon" href="icons/apple-icon-180.png" />
 		<link rel="apple-touch-icon-precomposed" href="icons/apple-icon-180.png" />

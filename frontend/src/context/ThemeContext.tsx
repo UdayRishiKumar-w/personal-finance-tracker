@@ -60,11 +60,11 @@ export const getMuiTheme = (mode: ThemeMode): Theme =>
 			...(mode === "dark"
 				? {
 						background: { default: "#121212", paper: "#1e1e1e" },
-						text: { primary: "#ffffff" },
+						text: { primary: "#fff" },
 					}
 				: {
-						background: { default: "#f5f5f5", paper: "#ffffff" },
-						text: { primary: "#000000" },
+						background: { default: "#f5f5f5", paper: "#fff" },
+						text: { primary: "#000" },
 					}),
 		},
 	});

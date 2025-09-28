@@ -1,5 +1,11 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const PORT = process.env.CI ? 4173 : 5173;
+const BASE_URL = `http://localhost:${PORT}`;
+
+/**
+ * See https://playwright.dev/docs/test-configuration.
+ */
 export default defineConfig({
 	testDir: "e2e",
 	timeout: 30_000,
@@ -12,7 +18,7 @@ export default defineConfig({
 		timeout: 5_000,
 	},
 	use: {
-		baseURL: "http://localhost:5173", // Vite default port
+		baseURL: BASE_URL, // Vite default port
 		headless: !!process.env.CI,
 		viewport: { width: 1280, height: 720 },
 		actionTimeout: 0,
@@ -21,9 +27,11 @@ export default defineConfig({
 		video: "retain-on-failure",
 	},
 	webServer: {
-		command: "npm run dev",
-		port: 5173,
+		command: process.env.CI ? "npm run build && npm run preview" : "npm run dev",
+		port: PORT,
 		reuseExistingServer: !process.env.CI,
+		timeout: 120_000,
+		stdout: "pipe",
 	},
 	projects: [
 		{

@@ -4,19 +4,19 @@ import { fileURLToPath, URL } from "node:url";
 import { defineConfig } from "vite";
 // import { analyzer } from "vite-bundle-analyzer";
 import { imagetools } from "vite-imagetools"; // https://github.com/JonasKruckenberg/imagetools/blob/main/docs/_media/getting-started.md
-import cdn from "vite-plugin-cdn-import";
+// import cdn from "vite-plugin-cdn-import";
 // import VitePluginChecker from "vite-plugin-checker";
 import { ViteMinifyPlugin } from "vite-plugin-minify";
 import preload from "vite-plugin-preload";
 import { VitePWA } from "vite-plugin-pwa";
 import removeConsole from "vite-plugin-remove-console";
 
-const sriHashes: Record<string, string> = {
-	react: "sha512-Fpy3gN6679IxNCKdpQGYyYF/QoXTWctUB5jtb+DipQXBLFzkzCrTbNlZPT3rcuc7ARVPLAQtmFyNOx0h5/7MVA==",
-	"react-dom": "sha512-iTbBPaHNYnlkn+GZ8cJWUJyqcxL49EbnNehu1fA7lcTaucWjtdFfj1F6qQwaGmCQRBOX1vSU8+4EC8aE+I70Ug==",
-	"react-router-dom": "",
-	axios: "sha256-9UiRtJ3cNB91qdVSArvgPVFvPO84K24aze2J0b7NKu0=",
-};
+// const sriHashes: Record<string, string> = {
+// 	react: "sha512-Fpy3gN6679IxNCKdpQGYyYF/QoXTWctUB5jtb+DipQXBLFzkzCrTbNlZPT3rcuc7ARVPLAQtmFyNOx0h5/7MVA==",
+// 	"react-dom": "sha512-iTbBPaHNYnlkn+GZ8cJWUJyqcxL49EbnNehu1fA7lcTaucWjtdFfj1F6qQwaGmCQRBOX1vSU8+4EC8aE+I70Ug==",
+// 	"react-router-dom": "",
+// 	axios: "sha256-9UiRtJ3cNB91qdVSArvgPVFvPO84K24aze2J0b7NKu0=",
+// };
 
 // https://vite.dev/config/
 /** @type {import('vite').UserConfig} */
@@ -35,7 +35,7 @@ export default defineConfig(({ mode }) => {
 			tailwindcss(),
 			VitePWA({
 				registerType: "autoUpdate",
-				injectRegister: false, //'script-defer'
+				injectRegister: "script-defer",
 
 				includeAssets: ["favicon.svg", "favicon.ico", "robots.txt", "icons/apple-icon-180.png"],
 				pwaAssets: {
@@ -215,42 +215,42 @@ export default defineConfig(({ mode }) => {
 			preload({
 				mode: "prefetch",
 			}),
-			cdn({
-				generateScriptTag: (name, scriptUrl) => {
-					return {
-						attrs: {
-							src: scriptUrl,
-							defer: true,
-							crossorigin: "anonymous",
-							referrerpolicy: "no-referrer",
-							integrity: sriHashes[name] || "", // optional map of SRI hashes
-						},
-					};
-				},
-				modules: [
-					{
-						name: "react",
-						var: "React",
-						path: "https://cdnjs.cloudflare.com/ajax/libs/react/19.1.1/cjs/react.production.min.js",
-					},
-					{
-						name: "react-dom",
-						var: "ReactDOM",
-						path: "https://cdnjs.cloudflare.com/ajax/libs/react-dom/19.1.1/cjs/react-dom.production.min.js",
-						alias: ["react-dom/client"],
-					},
-					{
-						name: "react-router-dom",
-						var: "ReactRouterDOM",
-						path: "https://cdn.jsdelivr.net/npm/react-router-dom@7.9.1/dist/index.min.js",
-					},
-					{
-						name: "axios",
-						var: "axios",
-						path: "https://cdn.jsdelivr.net/npm/axios@1.12.2/dist/axios.min.js",
-					},
-				],
-			}), //Default: https://cdn.jsdelivr.net/npm/{name}@{version}/{path},
+			// cdn({
+			// 	generateScriptTag: (_, scriptUrl) => {
+			// 		return {
+			// 			attrs: {
+			// 				src: scriptUrl,
+			// 				defer: true,
+			// 				crossorigin: "anonymous",
+			// 				referrerpolicy: "no-referrer",
+			// 				// integrity: sriHashes[name] || "", // optional map of SRI hashes
+			// 			},
+			// 		};
+			// 	},
+			// 	modules: [
+			// 		{
+			// 			name: "react",
+			// 			var: "React",
+			// 			path: "https://cdn.jsdelivr.net/npm/react@19.1.1/umd/react.production.min.js",
+			// 		},
+			// 		{
+			// 			name: "react-dom",
+			// 			var: "ReactDOM",
+			// 			path: "https://cdn.jsdelivr.net/npm/react-dom@19.1.1/umd/react-dom.production.min.js",
+			// 			alias: ["react-dom/client"],
+			// 		},
+			// 		{
+			// 			name: "react-router-dom",
+			// 			var: "ReactRouterDOM",
+			// 			path: "https://cdn.jsdelivr.net/npm/react-router-dom@7.9.1/dist/umd/react-router-dom.production.min.js",
+			// 		},
+			// 		{
+			// 			name: "axios",
+			// 			var: "axios",
+			// 			path: "https://cdn.jsdelivr.net/npm/axios@1.12.2/dist/axios.min.js",
+			// 		},
+			// 	],
+			// }), //Default: https://cdn.jsdelivr.net/npm/{name}@{version}/{path},
 			// VitePluginChecker({
 			// 	typescript: true, // Enable TypeScript checking
 			// 	// eslint: {
@@ -271,29 +271,29 @@ export default defineConfig(({ mode }) => {
 		build: {
 			minify: "terser",
 			rollupOptions: {
-				external: ["react", "react-dom", "react-router-dom", "axios"],
-				output: {
-					globals: {
-						react: "React",
-						"react-dom": "ReactDOM",
-						"react-router-dom": "ReactRouterDOM",
-						axios: "axios",
-					},
-					// manualChunks(id) {
-					// 	if (id.includes("node_modules")) {
-					// 		if (id.includes("@mui") || id.includes("@emotion")) {
-					// 			return "mui-emotion";
-					// 		}
-					// 		if (id.includes("chart.js") || id.includes("react-chartjs-2")) {
-					// 			return "chartjs";
-					// 		}
-					// 		if (id.includes("@reduxjs/toolkit") || id.includes("react-redux")) {
-					// 			return "redux";
-					// 		}
-					// 		return "vendor";
-					// 	}
-					// },
-				},
+				// external: ["react", "react-dom", "react-router-dom", "axios"],
+				// output: {
+				// 	globals: {
+				// 		react: "React",
+				// 		"react-dom": "ReactDOM",
+				// 		"react-router-dom": "ReactRouterDOM",
+				// 		axios: "axios",
+				// 	},
+				// 	// manualChunks(id) {
+				// 	// 	if (id.includes("node_modules")) {
+				// 	// 		if (id.includes("@mui") || id.includes("@emotion")) {
+				// 	// 			return "mui-emotion";
+				// 	// 		}
+				// 	// 		if (id.includes("chart.js") || id.includes("react-chartjs-2")) {
+				// 	// 			return "chartjs";
+				// 	// 		}
+				// 	// 		if (id.includes("@reduxjs/toolkit") || id.includes("react-redux")) {
+				// 	// 			return "redux";
+				// 	// 		}
+				// 	// 		return "vendor";
+				// 	// 	}
+				// 	// },
+				// },
 			},
 		},
 		optimizeDeps: {
