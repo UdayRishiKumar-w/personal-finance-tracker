@@ -1,5 +1,5 @@
 import { useTheme } from "@/context/ThemeContext";
-import { Switch } from "@mui/material";
+import Switch from "@mui/material/Switch";
 import clsx from "clsx/lite";
 import type { FC } from "react";
 

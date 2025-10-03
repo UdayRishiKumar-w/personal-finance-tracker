@@ -1,7 +1,10 @@
 import { useSignUpMutation } from "@/api/authApi";
 import Loader from "@/components/common/Loader";
 import { setCredentials } from "@/store/authSlice";
-import { Box, Button, Link, TextField } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Link from "@mui/material/Link";
+import TextField from "@mui/material/TextField";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";

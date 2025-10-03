@@ -1,4 +1,7 @@
-import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
+import AppBar from "@mui/material/AppBar";
+import IconButton from "@mui/material/IconButton";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 
 export default function TopBar({ onLogout, text }: Readonly<{ onLogout: () => void; text: string }>) {
 	return (

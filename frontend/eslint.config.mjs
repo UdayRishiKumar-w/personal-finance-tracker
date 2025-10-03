@@ -103,6 +103,12 @@ export default defineConfig([
 			"no-console": "off",
 			"no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
 			...pluginQuery.configs["flat/recommended"][0].rules,
+			"no-restricted-imports": [
+				"error",
+				{
+					patterns: [{ regex: "^@mui/[^/]+$" }],
+				},
+			],
 		},
 		settings: {
 			react: {
