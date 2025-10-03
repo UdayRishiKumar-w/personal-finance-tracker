@@ -8,6 +8,7 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 // import eslintPluginTailwindcss from "eslint-plugin-tailwindcss";
+import pluginQuery from "@tanstack/eslint-plugin-query";
 import eslintPluginPlaywright from "eslint-plugin-playwright";
 import eslintPluginReactRedux from "eslint-plugin-react-redux";
 import testingLibrary from "eslint-plugin-testing-library";
@@ -73,6 +74,7 @@ export default defineConfig([
 			"react-hooks": eslintPluginReactHooks,
 			"jsx-a11y": eslintPluginJsxA11y,
 			prettier: eslintPluginPrettier,
+			"@tanstack/query": pluginQuery,
 		},
 		rules: {
 			...eslintPluginReactHooks.configs.recommended.rules,
@@ -100,6 +102,7 @@ export default defineConfig([
 			// "no-console": process.env.NODE_ENV === "production" ? "warn" : "off", // as using no console plugin
 			"no-console": "off",
 			"no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+			...pluginQuery.configs["flat/recommended"][0].rules,
 		},
 		settings: {
 			react: {

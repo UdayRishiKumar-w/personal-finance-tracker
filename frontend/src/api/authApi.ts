@@ -1,62 +1,57 @@
-import axios from "axios";
+import api, { throwError } from "@/api/api-config";
+import { useMutation } from "@tanstack/react-query";
 
-const api = axios.create({
-	baseURL: import.meta.env.VITE_API_BASE || "http://localhost:8080/api",
-	withCredentials: true,
-});
+interface LoginResponse {
+	user: User;
+	accessToken: string;
+}
 
-api.interceptors.request.use((config) => {
-	const token = sessionStorage.getItem("token");
-	if (token) {
-		config.headers["Authorization"] = `Bearer ${token}`;
-	}
-	return config;
-});
-
-export const login = async ({ email, password }: { email: string; password: string }) =>
+const loginUser = async ({ email, password }: { email: string; password: string }): Promise<LoginResponse> =>
 	api
 		.post("/auth/login", { email, password })
-		.then((res) => {
-			console.log(res);
-
+		.then(({ data }) => {
 			return {
-				user: res.data.user.email,
-				accessToken: res.data.accessToken,
+				user: data.user,
+				accessToken: data.accessToken,
 			};
 		})
-		.catch((err) => {
-			console.log(err);
-			if (err.response.data.message) {
-				throw new Error(err.response.data.message);
-			}
-		});
+		.catch(throwError);
 
-export const signup = async ({
-	email,
-	password,
-	firstName,
-	lastName,
-}: {
+interface SignupData {
 	email: string;
 	password: string;
 	firstName: string;
 	lastName: string;
-}) =>
+}
+
+interface User {
+	email: string;
+}
+
+interface SignupResponse {
+	user: User;
+	accessToken: string;
+}
+
+const signupUser = async (data: SignupData): Promise<SignupResponse> =>
 	api
-		.post("/auth/signup", { email, password, firstName, lastName })
-		.then((res) => {
-			console.log(res);
+		.post("/auth/signup", data)
+		.then(({ data }) => {
+			console.log(data);
 
 			return {
-				user: res.data.user.email,
-				accessToken: res.data.accessToken,
+				user: data.user.email,
+				accessToken: data.accessToken,
 			};
 		})
-		.catch((err) => {
-			console.log(err);
-			if (err.response.data.message) {
-				throw new Error(err.response.data.message);
-			}
-		});
+		.catch(throwError);
 
-export default api;
+export const useLoginMutation = () =>
+	useMutation({
+		mutationFn: loginUser,
+	});
+
+export const useSignUpMutation = () =>
+	useMutation({
+		mutationFn: signupUser,
+	});

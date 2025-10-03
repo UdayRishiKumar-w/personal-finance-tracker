@@ -20,6 +20,8 @@
 @layer base {
 	html {
 		@apply bg-[var(--bg-light)] text-[var(--text-light)];
+
+		color-scheme: light dark;
 	}
 
 	html.dark {

@@ -6,6 +6,7 @@ import { defineConfig } from "vite";
 import { imagetools } from "vite-imagetools"; // https://github.com/JonasKruckenberg/imagetools/blob/main/docs/_media/getting-started.md
 // import cdn from "vite-plugin-cdn-import";
 // import VitePluginChecker from "vite-plugin-checker";
+import { devtools } from "@tanstack/devtools-vite";
 import { ViteMinifyPlugin } from "vite-plugin-minify";
 import preload from "vite-plugin-preload";
 import { VitePWA } from "vite-plugin-pwa";
@@ -251,6 +252,7 @@ export default defineConfig(({ mode }) => {
 			// 		},
 			// 	],
 			// }), //Default: https://cdn.jsdelivr.net/npm/{name}@{version}/{path},
+			...(isDev ? [devtools()] : []),
 			// VitePluginChecker({
 			// 	typescript: true, // Enable TypeScript checking
 			// 	// eslint: {

@@ -1,29 +1,33 @@
-import { signup } from "@/api/authApi";
+import { useSignUpMutation } from "@/api/authApi";
 import Loader from "@/components/common/Loader";
 import { setCredentials } from "@/store/authSlice";
 import { Box, Button, Link, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 
 const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 export default function Signup() {
-	const dispatch = useDispatch();
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [err, setErr] = useState("");
-	const [loading, setLoading] = useState(false);
+	const dispatch = useDispatch();
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		inputRef.current?.focus();
+	}, []);
+
+	const { mutateAsync: signup, isPending } = useSignUpMutation();
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setErr("");
 
 		try {
-			setLoading(true);
-
 			if (!validateEmail(email)) return setErr("Invalid email format");
 			if (!firstName.trim()) return setErr("First name is required");
 			if (!lastName.trim()) return setErr("Last name is required");
@@ -38,15 +42,13 @@ export default function Signup() {
 			}
 		} catch (err) {
 			setErr((err as Error).message || "Signup failed");
-		} finally {
-			setLoading(false);
 		}
 	};
 
 	return (
 		<>
 			<div className="flex min-h-screen items-center justify-center">
-				<form onSubmit={handleSubmit} className="w-full max-w-md rounded p-8 shadow-2xl dark:shadow-white">
+				<form onSubmit={handleSubmit} className="w-full max-w-md rounded p-8 shadow-2xl dark:shadow-neutral-50">
 					<h2 className="mb-6 text-center text-2xl font-bold">Sign Up</h2>
 
 					{err && <div className="mb-4 text-red-600">{err}</div>}
@@ -58,6 +60,7 @@ export default function Signup() {
 							variant="outlined"
 							fullWidth
 							value={firstName}
+							inputRef={inputRef}
 							onChange={(e) => setFirstName(e.target.value)}
 						/>
 						<TextField
@@ -91,7 +94,14 @@ export default function Signup() {
 						/>
 					</Box>
 
-					<Button variant="contained" color="primary" fullWidth type="submit" className="mb-4">
+					<Button
+						variant="contained"
+						color="primary"
+						fullWidth
+						type="submit"
+						className="mb-4"
+						disabled={isPending}
+					>
 						Sign Up
 					</Button>
 
@@ -104,7 +114,7 @@ export default function Signup() {
 				</form>
 			</div>
 
-			{loading && <Loader text="Signing up..." />}
+			{isPending && <Loader text="Signing up..." />}
 		</>
 	);
 }

@@ -1,26 +1,31 @@
-import { login } from "@/api/authApi";
+import { useLoginMutation } from "@/api/authApi";
 import Loader from "@/components/common/Loader";
 import { setCredentials } from "@/store/authSlice";
 import { Box, Button, Link, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 
 const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 export default function Login() {
-	const dispatch = useDispatch();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [err, setErr] = useState("");
-	const [loading, setLoading] = useState(false);
+	const dispatch = useDispatch();
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		inputRef.current?.focus();
+	}, []);
+
+	const { mutateAsync: login, isPending } = useLoginMutation();
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setErr("");
 
 		try {
-			setLoading(true);
 			if (!validateEmail(email)) return setErr("Invalid email format");
 
 			const data = await login({ email, password });
@@ -32,15 +37,13 @@ export default function Login() {
 			}
 		} catch (err) {
 			setErr((err as Error).message || "Login failed");
-		} finally {
-			setLoading(false);
 		}
 	};
 
 	return (
 		<>
 			<div className="flex min-h-screen items-center justify-center">
-				<form onSubmit={handleSubmit} className="w-full max-w-md rounded p-8 shadow-2xl dark:shadow-white">
+				<form onSubmit={handleSubmit} className="w-full max-w-md rounded p-8 shadow-2xl dark:shadow-neutral-50">
 					<h2 className="mb-6 text-center text-2xl font-bold">Login</h2>
 
 					{err && <div className="mb-4 text-red-600">{err}</div>}
@@ -53,6 +56,7 @@ export default function Login() {
 							variant="outlined"
 							fullWidth
 							value={email}
+							inputRef={inputRef}
 							onChange={(e) => setEmail(e.target.value)}
 						/>
 
@@ -67,7 +71,14 @@ export default function Login() {
 						/>
 					</Box>
 
-					<Button variant="contained" color="primary" fullWidth type="submit" className="mb-4">
+					<Button
+						variant="contained"
+						color="primary"
+						fullWidth
+						type="submit"
+						className="mb-4"
+						disabled={isPending}
+					>
 						Login
 					</Button>
 
@@ -79,7 +90,7 @@ export default function Login() {
 					</div>
 				</form>
 			</div>
-			{loading && <Loader text="Logging in..." />}
+			{isPending && <Loader text="Logging in..." />}
 		</>
 	);
 }
