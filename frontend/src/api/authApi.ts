@@ -5,11 +5,14 @@ import { useMutation } from "@tanstack/react-query";
 const loginUser = async ({ email, password }: { email: string; password: string }): Promise<LoginResponse> =>
 	api
 		.post("/auth/login", { email, password })
-		.then(({ data }) => {
-			return {
-				user: data.user,
-				accessToken: data.accessToken,
-			};
+		.then(({ status, data }) => {
+			if (status === 200) {
+				return {
+					user: data.user,
+					accessToken: data.accessToken,
+				};
+			}
+			throw new Error();
 		})
 		.catch(throwError);
 
@@ -21,13 +24,16 @@ export const useLoginMutation = () =>
 const signupUser = async (data: SignupData): Promise<SignupResponse> =>
 	api
 		.post("/auth/signup", data)
-		.then(({ data }) => {
+		.then(({ status, data }) => {
 			console.log(data);
 
-			return {
-				user: data.user.email,
-				accessToken: data.accessToken,
-			};
+			if (status === 200) {
+				return {
+					user: data.user,
+					accessToken: data.accessToken,
+				};
+			}
+			throw new Error();
 		})
 		.catch(throwError);
 

@@ -23,6 +23,10 @@ export default class ErrorBoundary extends Component<Props, State> {
 		return { hasError: true, error };
 	}
 
+	resetError = () => {
+		this.setState({ hasError: false, error: undefined });
+	};
+
 	componentDidCatch(error: Error, info: ErrorInfo) {
 		console.error("React error boundary has caught an error:", error, info);
 	}
@@ -34,16 +38,22 @@ export default class ErrorBoundary extends Component<Props, State> {
 	render() {
 		if (this.state.hasError) {
 			return (
-				<Box className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
+				<Box className="flex min-h-screen flex-col items-center justify-center p-6 text-center duration-300 fade-in">
 					<Typography variant="h4" className="mb-4 font-bold">
-						Something went wrong!
+						Uh-oh, looks like we hit a snag. Try again or reload the app.
 					</Typography>
 					<Typography variant="body1" className="mb-4 text-gray-600">
 						{import.meta.env.DEV ? this.state.error?.message : "An unexpected error occurred."}
 					</Typography>
-					<Button variant="contained" color="primary" onClick={this.handleReload} className="!mt-4">
-						Reload App
-					</Button>
+
+					<Box className="flex gap-4">
+						<Button variant="outlined" color="primary" onClick={this.resetError} className="!mt-4">
+							<span className="material-icons mr-2">replay</span>Try Again
+						</Button>
+						<Button variant="contained" color="primary" onClick={this.handleReload} className="!mt-4">
+							<span className="material-icons mr-2">refresh</span>Reload App
+						</Button>
+					</Box>
 				</Box>
 			);
 		}

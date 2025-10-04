@@ -32,7 +32,15 @@ const muiCache = createCache({
 	insertionPoint: (insertionPoint as HTMLElement) ?? undefined,
 });
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			gcTime: 5 * 60 * 1000,
+			retry: 3,
+			retryDelay: 1000,
+		},
+	},
+});
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
@@ -57,6 +65,7 @@ createRoot(document.getElementById("root")!).render(
 											},
 										]}
 									/>
+									/* <ReactQueryDevtools initialIsOpen={false} /> */
 								)}
 							</QueryClientProvider>
 						</ThemeProvider>

@@ -1,6 +1,5 @@
 import Loader from "@/components/common/Loader";
 import PrivateRoute from "@/components/common/PrivateRoute";
-import NotFound from "@/pages/NotFound";
 import { setCredentials } from "@/store/authSlice";
 import type { RootState } from "@/store/store";
 import { lazy, Suspense, useEffect } from "react";
@@ -10,6 +9,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 const Dashboard = lazy(async () => import("@/pages/Dashboard"));
 const Login = lazy(async () => import("@/pages/Login"));
 const Signup = lazy(async () => import("@/pages/Signup"));
+const NotFound = lazy(async () => import("@/pages/NotFound"));
 
 export default function AppRouter() {
 	const token = useSelector((s: RootState) => s.auth.token);
