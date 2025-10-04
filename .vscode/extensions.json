@@ -1,0 +1,24 @@
+{
+	"recommendations": [
+		"esbenp.prettier-vscode",
+		"ahmadalli.vscode-nginx-conf",
+		"docker.docker",
+		"ms-playwright.playwright",
+		"vitest.explorer",
+		"eamodio.gitlens",
+		"Oracle.oracle-java",
+		"redhat.java",
+		"vmware.vscode-spring-boot",
+		"dsznajder.es7-react-js-snippets",
+		"dbaeumer.vscode-eslint",
+		"vscjava.vscode-java-pack",
+		"inferrinizzard.prettier-sql-vscode",
+		"sonarsource.sonarlint-vscode",
+		"vmware.vscode-boot-dev-pack",
+		"stylelint.vscode-stylelint",
+		"bradlc.vscode-tailwindcss",
+		"redhat.vscode-xml",
+		"redhat.vscode-yaml",
+		"xabikos.javascriptsnippets"
+	]
+}
