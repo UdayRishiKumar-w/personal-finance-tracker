@@ -1,10 +1,6 @@
 import api, { throwError } from "@/api/api-config";
+import type { LoginResponse, SignupData, SignupResponse } from "@/types/apiTypes";
 import { useMutation } from "@tanstack/react-query";
-
-interface LoginResponse {
-	user: User;
-	accessToken: string;
-}
 
 const loginUser = async ({ email, password }: { email: string; password: string }): Promise<LoginResponse> =>
 	api
@@ -17,21 +13,10 @@ const loginUser = async ({ email, password }: { email: string; password: string 
 		})
 		.catch(throwError);
 
-interface SignupData {
-	email: string;
-	password: string;
-	firstName: string;
-	lastName: string;
-}
-
-interface User {
-	email: string;
-}
-
-interface SignupResponse {
-	user: User;
-	accessToken: string;
-}
+export const useLoginMutation = () =>
+	useMutation({
+		mutationFn: loginUser,
+	});
 
 const signupUser = async (data: SignupData): Promise<SignupResponse> =>
 	api
@@ -45,11 +30,6 @@ const signupUser = async (data: SignupData): Promise<SignupResponse> =>
 			};
 		})
 		.catch(throwError);
-
-export const useLoginMutation = () =>
-	useMutation({
-		mutationFn: loginUser,
-	});
 
 export const useSignUpMutation = () =>
 	useMutation({
