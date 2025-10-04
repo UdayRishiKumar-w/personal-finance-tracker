@@ -26,10 +26,10 @@ export const ThemeProvider: FC<PropsWithChildren> = ({ children }) => {
 			setMode(localMode);
 			document.documentElement.classList.toggle("dark", localMode === "dark");
 		} else {
-			const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-			const preferMode = prefersDark ? "dark" : "light";
+			const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+			const preferMode = prefersDarkMode ? "dark" : "light";
 			setMode(preferMode);
-			document.documentElement.classList.toggle("dark", prefersDark);
+			document.documentElement.classList.toggle("dark", prefersDarkMode);
 			localStorage.setItem("theme", preferMode);
 		}
 	}, []);
@@ -56,6 +56,12 @@ export const ThemeProvider: FC<PropsWithChildren> = ({ children }) => {
 
 export const getMuiTheme = (mode: ThemeMode): Theme =>
 	createTheme({
+		// // https://mui.com/material-ui/customization/css-theme-variables/configuration/#toggling-dark-mode-manually
+		// // https://mui.com/material-ui/customization/palette/#color-schemes
+		// colorSchemes: { light: true, dark: true },
+		// cssVariables: {
+		// 	colorSchemeSelector: "class",
+		// },
 		palette: {
 			mode,
 			...(mode === "dark"
