@@ -1,35 +1,63 @@
 services:
     db:
         image: postgres:17-alpine
-        container_name: finance-db
+        container_name: pft-db
         restart: always
         environment:
-            POSTGRES_USER: finance_user
-            POSTGRES_PASSWORD: finance_pass
-            POSTGRES_DB: finance_db
+            POSTGRES_USER: pft_user
+            POSTGRES_PASSWORD: pft_pass
+            POSTGRES_DB: pft_db
         ports:
             - "5432:5432"
         volumes:
             - db_data:/var/lib/postgresql/data
         healthcheck:
-            test: ["CMD-SHELL", "pg_isready -U finance_user -d finance_db"]
+            test: ["CMD-SHELL", "pg_isready -U pft_user -d pft_db"]
             interval: 10s
             timeout: 5s
             retries: 5
             start_period: 30s
 
+    redis:
+        image: "redis:8.2.1-alpine"
+        container_name: pft-redis
+        restart: always
+        ports:
+            - "6379:6379"
+        environment:
+            REDIS_USER: redis_user
+            REDIS_PASSWORD: my_redis_password
+        volumes:
+            - redis_data:/data
+        healthcheck:
+            test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+            interval: 10s
+            timeout: 3s
+            retries: 3
+            start_period: 5s
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "10m"
+                max-file: "3" # Can be added to all services better for minimal docker container logs
+
     backend:
         build: ./backend
-        container_name: finance-backend
+        container_name: pft-backend
         restart: always
         environment:
-            SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/finance_db
-            SPRING_DATASOURCE_USERNAME: finance_user
-            SPRING_DATASOURCE_PASSWORD: finance_pass
+            SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/pft_db
+            SPRING_DATASOURCE_USERNAME: pft_user
+            SPRING_DATASOURCE_PASSWORD: pft_pass
             SPRING_JPA_HIBERNATE_DDL_AUTO: update
+            SPRING_REDIS_HOST: redis
+            SPRING_REDIS_USER: redis_user
+            SPRING_REDIS_PASSWORD: my_redis_password
             SPRING_PROFILES_ACTIVE: prod
         depends_on:
             db:
+                condition: service_healthy
+            redis:
                 condition: service_healthy
         ports:
             - "8080:8080"
@@ -48,7 +76,7 @@ services:
 
     frontend:
         build: ./frontend
-        container_name: finance-frontend
+        container_name: pft-frontend
         restart: always
         environment:
             VITE_API_BASE: http://localhost:8080/api
@@ -66,4 +94,5 @@ services:
 
 volumes:
     db_data:
+    redis_data:
     backend-logs:

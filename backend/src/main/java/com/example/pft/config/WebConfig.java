@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig {
 	@Value("${cors.allowed-origins}")
-	private String allowedOrigins;
+	protected String allowedOrigins;
 
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
@@ -19,7 +19,8 @@ public class WebConfig {
 				registry.addMapping("/**")
 						.allowedOrigins(allowedOrigins) // Frontend URL
 						.allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
-						.allowedHeaders("*");
+						.allowedHeaders("*")
+						.allowCredentials(true);
 			}
 		};
 	}

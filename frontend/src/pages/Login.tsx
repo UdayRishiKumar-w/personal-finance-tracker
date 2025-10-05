@@ -31,6 +31,8 @@ export default function Login() {
 		try {
 			if (!validateEmail(email)) return setErr("Invalid email format");
 
+			setEmail((prev) => prev.trim());
+
 			const data = await login({ email, password });
 			if (data) {
 				const id = Math.random().toString();

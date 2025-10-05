@@ -1,5 +1,8 @@
 import Constants from "@/Constants";
-import axios from "axios";
+import { navigateTo } from "@/context/NavigationContext";
+import type { CustomAxiosRequestConfig } from "@/types/apiTypes";
+import type { AxiosError, AxiosResponse } from "axios";
+import axios, { HttpStatusCode } from "axios";
 
 const api = axios.create({
 	baseURL: import.meta.env.VITE_API_BASE || "http://localhost:8080/api",
@@ -11,13 +14,64 @@ const api = axios.create({
 	withCredentials: true,
 });
 
-api.interceptors.request.use((config) => {
-	const token = sessionStorage.getItem("token");
-	if (token) {
-		config.headers["Authorization"] = `Bearer ${token}`;
-	}
-	return config;
-});
+// api.interceptors.request.use((config) => {
+// 	const token = sessionStorage.getItem("token");
+// 	if (token) {
+// 		config.headers["Authorization"] = `Bearer ${token}`;
+// 	}
+// 	return config;
+// });
+
+let isRefreshing = false;
+let failedQueue: Array<(tokenRefreshed: boolean) => void> = [];
+
+const processQueue = (success: boolean) => {
+	failedQueue.forEach((cb) => cb(success));
+	failedQueue = [];
+};
+
+api.interceptors.response.use(
+	(response: AxiosResponse) => response,
+	async (error: AxiosError) => {
+		const originalRequest = error.config as CustomAxiosRequestConfig;
+
+		if (originalRequest?.url?.includes("/auth/")) {
+			return Promise.reject(error);
+		}
+
+		if (error.response?.status === HttpStatusCode.Unauthorized && originalRequest && !originalRequest._retry) {
+			if (isRefreshing) {
+				// Wait until refresh completes
+				return new Promise((resolve, reject) => {
+					failedQueue.push((success) => {
+						if (success) {
+							resolve(api(originalRequest));
+						} else {
+							reject(error);
+						}
+					});
+				});
+			}
+
+			originalRequest._retry = true; // To avoid infinite retries
+			isRefreshing = true;
+
+			try {
+				await api.post("/auth/refresh");
+				processQueue(true);
+				return api(originalRequest);
+			} catch (refreshError) {
+				processQueue(false);
+				navigateTo("/login", { replace: true });
+				return Promise.reject(refreshError as Error);
+			} finally {
+				isRefreshing = false;
+			}
+		}
+
+		return Promise.reject(error);
+	},
+);
 
 export default api;
 
@@ -28,4 +82,9 @@ export const throwError = (err: Error) => {
 	} else {
 		throw new Error(Constants.errorMessage);
 	}
+};
+
+export const queryFn = async <T>(url: string): Promise<T> => {
+	const { data } = await api.get<T>(url);
+	return data;
 };

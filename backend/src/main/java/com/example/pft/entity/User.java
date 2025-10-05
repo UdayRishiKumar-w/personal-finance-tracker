@@ -1,51 +1,50 @@
 package com.example.pft.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
 @Entity
 @Table(name = "users")
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Email
+	@Column(unique = true, nullable = false)
 	private String email;
+
+	@Column(nullable = false)
+	private String firstName;
+
+	@Column(nullable = false)
+	private String lastName;
+
+	@Column(nullable = false)
 	private String password;
-	private String role = "USER";
 
-	// getters/setters
-	public Long getId() {
-		return id;
-	}
+	@Column(updatable = false, name = "created_at")
+	private Long createdAt;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+	@Column(name = "updated_at")
+	private Long updatedAt;
 
-	public String getEmail() {
-		return email;
-	}
+	@Enumerated(EnumType.STRING)
+	private Role role;
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
 }

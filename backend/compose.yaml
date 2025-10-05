@@ -1,15 +1,9 @@
 services:
-    postgres:
-        image: "postgres:17-alpine"
-        environment:
-            SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/finance_db
-            SPRING_DATASOURCE_USERNAME: finance_user
-            SPRING_DATASOURCE_PASSWORD: finance_pass
-            SPRING_JPA_HIBERNATE_DDL_AUTO: update
-            SPRING_PROFILES_ACTIVE: prod
-        ports:
-            - "5432"
     redis:
         image: "redis:8.2.1-alpine"
         ports:
             - "6379"
+        environment:
+            REDIS_USER: myuser
+            REDIS_PASSWORD: mypassword
+        restart: always

@@ -1,59 +1,145 @@
 package com.example.pft.controller;
 
+import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.pft.dto.LoginRequest;
+import com.example.pft.dto.LoginRequestDTO;
+import com.example.pft.dto.SignUpRequestDTO;
+import com.example.pft.entity.Role;
 import com.example.pft.entity.User;
 import com.example.pft.repository.UserRepository;
 import com.example.pft.security.JwtTokenProvider;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
 	private final UserRepository userRepository;
 	private final JwtTokenProvider tokenProvider;
-
-	public AuthController(UserRepository userRepository, JwtTokenProvider tokenProvider) {
-		this.userRepository = userRepository;
-		this.tokenProvider = tokenProvider;
-	}
+	private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(7);
+	// private final AuthService service;
 
 	@PostMapping("/signup")
-	public ResponseEntity<Map<String, Object>> signup(@RequestBody LoginRequest request) {
+	public ResponseEntity<Map<String, Object>> signup(@Valid @RequestBody final SignUpRequestDTO request,
+			final HttpServletResponse response) {
 		// Check if user already exists
-		Optional<User> userOpt = userRepository.findByEmail(request.email());
+		final Optional<User> userOpt = this.userRepository.findByEmail(request.email());
 		if (userOpt.isPresent()) {
 			return ResponseEntity.status(409).body(Map.of("message", "User already exists"));
 		}
-		// Create new user (NOTE: password should be hashed in production)
-		User newUser = new User();
+
+		final User newUser = new User();
 		newUser.setEmail(request.email());
-		newUser.setPassword(request.password());
-		userRepository.save(newUser);
-		String token = tokenProvider.generateToken(newUser.getEmail());
-		return ResponseEntity.ok(Map.of("accessToken", token, "user",
+		newUser.setFirstName(request.firstName());
+		newUser.setLastName(request.lastName());
+		newUser.setPassword(passwordEncoder.encode(request.password()));
+		newUser.setCreatedAt(Instant.now().toEpochMilli());
+		newUser.setRole(Role.ROLE_USER);
+		this.userRepository.save(newUser);
+
+		final String accessToken = this.tokenProvider.generateAccessToken(newUser.getEmail());
+		final String refreshToken = this.tokenProvider.generateRefreshToken(newUser.getEmail());
+
+		this.setAuthCookies(response, accessToken, refreshToken);
+		return ResponseEntity.ok(Map.of("accessToken", accessToken, "refreshToken", refreshToken, "user",
 				Map.of("id", newUser.getId(), "email", newUser.getEmail())));
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequest request) {
-		Optional<User> userOpt = userRepository.findByEmail(request.email());
+	public ResponseEntity<Map<String, Object>> login(@Valid @RequestBody final LoginRequestDTO request,
+			final HttpServletResponse response) {
+		final Optional<User> userOpt = this.userRepository.findByEmail(request.email());
+		log.info("user: {}", userOpt);
+		log.info(request.email());
+		log.info(request.password());
+		// log.info(userOpt.get().getPassword());
+
 		if (userOpt.isEmpty())
-			return ResponseEntity.status(401).body(Map.of("message", "Invalid credentials"));
-		User user = userOpt.get();
-		// NOTE: password is stored raw in this minimal scaffold. Replace with bcrypt in
-		// prod.
-		if (!user.getPassword().equals(request.password()))
-			return ResponseEntity.status(401).body(Map.of("message", "Invalid credentials"));
-		String token = tokenProvider.generateToken(user.getEmail());
-		return ResponseEntity.ok(Map.of("accessToken", token, "user",
+			return ResponseEntity.status(401).body(Map.of("message", "Invalid credentials1"));
+		final User user = userOpt.get();
+
+		log.info("user: {}", user);
+		log.info(request.password());
+		log.info(user.getPassword());
+		System.out.println(user);
+		System.out.println(request.password());
+		System.out.println(user.getPassword());
+		if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+			throw new RuntimeException("Invalid credentials");
+		}
+
+		final String accessToken = this.tokenProvider.generateAccessToken(user.getEmail());
+		final String refreshToken = this.tokenProvider.generateRefreshToken(user.getEmail());
+		this.setAuthCookies(response, accessToken, refreshToken);
+
+		return ResponseEntity.ok(Map.of("accessToken", accessToken, "refreshToken", refreshToken, "user",
 				Map.of("id", user.getId(), "email", user.getEmail())));
+	}
+
+	@PostMapping("/refresh")
+	public ResponseEntity<?> refresh(final HttpServletRequest request, final HttpServletResponse response) {
+		String refreshToken = null;
+		if (request.getCookies() != null) {
+			for (final Cookie cookie : request.getCookies()) {
+				if ("refreshToken".equals(cookie.getName())) {
+					refreshToken = cookie.getValue();
+				}
+			}
+		}
+
+		if (refreshToken == null || !this.tokenProvider.validateJwtToken(refreshToken)) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid refresh token"));
+		}
+
+		final String email = this.tokenProvider.getUsernameFromToken(refreshToken);
+
+		final String newAccessToken = this.tokenProvider.generateAccessToken(email);
+		final String newRefreshToken = this.tokenProvider.generateRefreshToken(email);
+
+		this.setAuthCookies(response, newAccessToken, newRefreshToken);
+
+		return ResponseEntity.ok(Map.of("message", "Token refreshed"));
+	}
+
+	private void setAuthCookies(final HttpServletResponse response, final String accessToken,
+			final String refreshToken) {
+		final ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
+				.httpOnly(true)
+				// .secure(true)
+				.path("/")
+				.maxAge(60 * 60) // 1 hour
+				.sameSite("Strict")
+				.build();
+
+		final ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
+				.httpOnly(true)
+				// .secure(true)
+				.path("/")
+				.maxAge(7 * 24 * 60 * 60) // 7 days
+				.sameSite("Strict")
+				.build();
+
+		response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+		response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 	}
 }

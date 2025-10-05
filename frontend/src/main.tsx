@@ -32,7 +32,7 @@ const muiCache = createCache({
 	insertionPoint: (insertionPoint as HTMLElement) ?? undefined,
 });
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
 			gcTime: 5 * 60 * 1000,

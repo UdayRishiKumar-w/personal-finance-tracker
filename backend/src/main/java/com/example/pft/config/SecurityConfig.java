@@ -1,39 +1,79 @@
 package com.example.pft.config;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.example.pft.security.JwtAuthenticationFilter;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
+@EnableMethodSecurity // enables @PreAuthorize, @RolesAllowed
+@RequiredArgsConstructor
 public class SecurityConfig {
+	@Value("${app.security.public-urls:''}")
+	private String publicURLs;
+
+	private final JwtAuthenticationFilter jwtFilter;
+	private final AuthenticationProvider authenticationProvider;
+
+	private final WebConfig webConfig;
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.csrf(csrf -> csrf.disable())
+	public CorsConfigurationSource corsConfigurationSource() {
+		final CorsConfiguration corsConfig = new CorsConfiguration();
+		corsConfig.setAllowedOrigins(List.of(this.webConfig.allowedOrigins)); // Read from the application properties
+		corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+		corsConfig.setAllowedHeaders(List.of("*"));
+		corsConfig.setAllowCredentials(true); // Allow credentials if required
 
+		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", corsConfig); // Register CORS for all endpoints
+		return source;
+	}
+
+	// https://stackoverflow.com/questions/77266685/spring-security-6-cors-is-deprecated-and-marked-for-removal
+	@Bean
+	protected SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
+		http
+				.csrf(CsrfConfigurer::disable)
+				.cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
+						.configurationSource(this.corsConfigurationSource()))
 				.authorizeHttpRequests(authorize -> authorize
-						.requestMatchers("/api/auth/**").permitAll() // allow auth endpoints
-						.anyRequest().permitAll() // allow all requests
-				)
-				.headers(headers -> headers.frameOptions(frame -> frame.disable()))
+						.requestMatchers(this.publicURLs.split(",")).permitAll()
+						.requestMatchers("/api/admin/**").hasRole("ADMIN")
+						.anyRequest().authenticated())
+				.headers(headers -> headers.frameOptions(FrameOptionsConfig::disable))
 				.sessionManagement(session -> session
 						.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // no session, stateless API
-				);
-
-		// Add your JWT filter here (before UsernamePasswordAuthenticationFilter), e.g.
-		// http.addFilterBefore(jwtAuthenticationFilter(),
-		// UsernamePasswordAuthenticationFilter.class);
+				)
+				.authenticationProvider(this.authenticationProvider)
+				.addFilterBefore(this.jwtFilter,
+						UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
 	}
 
 	// To expose AuthenticationManager for login handling
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+	protected AuthenticationManager authenticationManager(final AuthenticationConfiguration authConfig)
+			throws Exception {
 		return authConfig.getAuthenticationManager();
 	}
 }

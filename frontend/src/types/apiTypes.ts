@@ -1,3 +1,5 @@
+import type { AxiosRequestConfig } from "axios";
+
 export interface LoginResponse {
 	user: User;
 	accessToken: string;
@@ -17,4 +19,8 @@ export interface User {
 export interface SignupResponse {
 	user: User;
 	accessToken: string;
+}
+
+export interface CustomAxiosRequestConfig extends AxiosRequestConfig {
+	_retry?: boolean;
 }

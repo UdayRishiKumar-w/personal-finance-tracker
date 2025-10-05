@@ -1,4 +1,5 @@
 import api, { throwError } from "@/api/api-config";
+import { queryClient } from "@/main";
 import type { LoginResponse, SignupData, SignupResponse } from "@/types/apiTypes";
 import { useMutation } from "@tanstack/react-query";
 
@@ -19,6 +20,9 @@ const loginUser = async ({ email, password }: { email: string; password: string 
 export const useLoginMutation = () =>
 	useMutation({
 		mutationFn: loginUser,
+		onSuccess: () => {
+			queryClient.clear(); // Clear all cached queries
+		},
 	});
 
 const signupUser = async (data: SignupData): Promise<SignupResponse> =>
