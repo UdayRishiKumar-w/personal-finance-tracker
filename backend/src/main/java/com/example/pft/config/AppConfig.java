@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -38,7 +39,7 @@ public class AppConfig {
 						.password(u.getPassword())
 						.roles(u.getRole().name().replace("ROLE_", ""))
 						.build())
-				.orElseThrow(() -> new RuntimeException("User not found"));
+				.orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
 	}
 
 }

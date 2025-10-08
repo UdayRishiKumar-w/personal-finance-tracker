@@ -1,4 +1,4 @@
-package com.example.pft.entity;
+package com.example.pft.enums;
 
 public enum Role {
 	ROLE_USER,

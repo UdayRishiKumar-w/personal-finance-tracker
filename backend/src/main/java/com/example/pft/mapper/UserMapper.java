@@ -4,14 +4,12 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-import org.mapstruct.factory.Mappers;
 
 import com.example.pft.dto.UserDTO;
 import com.example.pft.entity.User;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
-	UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
 	UserDTO toDto(User user);
 

@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @EnableMethodSecurity // enables @PreAuthorize, @RolesAllowed
 @RequiredArgsConstructor
 public class SecurityConfig {
-	@Value("${app.security.public-urls:''}")
+	@Value("${app.security.public-urls:}")
 	private String publicURLs;
 
 	private final JwtAuthenticationFilter jwtFilter;
@@ -56,8 +56,11 @@ public class SecurityConfig {
 				.cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
 						.configurationSource(this.corsConfigurationSource()))
 				.authorizeHttpRequests(authorize -> authorize
-						.requestMatchers(this.publicURLs.split(",")).permitAll()
-						.requestMatchers("/api/admin/**").hasRole("ADMIN")
+						.requestMatchers(this.publicURLs.isEmpty()
+								? new String[0]
+								: this.publicURLs.split(","))
+						.permitAll()
+						.requestMatchers("/api/admin/**", "/api/users/admin").hasRole("ADMIN")
 						.anyRequest().authenticated())
 				.headers(headers -> headers.frameOptions(FrameOptionsConfig::disable))
 				.sessionManagement(session -> session

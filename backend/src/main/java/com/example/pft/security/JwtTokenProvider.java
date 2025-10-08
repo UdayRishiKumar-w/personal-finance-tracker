@@ -13,7 +13,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -41,10 +40,10 @@ public class JwtTokenProvider {
 	// Generate JWT token
 	public String generateToken(final String username, final long expirationMs) {
 		return Jwts.builder()
-				.setSubject(username)
-				.setIssuedAt(new Date())
-				.setExpiration(new Date(System.currentTimeMillis() + expirationMs))
-				.signWith(this.key, SignatureAlgorithm.HS256)
+				.subject(username)
+				.issuedAt(new Date())
+				.expiration(new Date(System.currentTimeMillis() + expirationMs))
+				.signWith(this.key)
 				.compact();
 	}
 
@@ -58,17 +57,17 @@ public class JwtTokenProvider {
 
 	// Get username from JWT token
 	public String getUsernameFromToken(final String token) {
-		return Jwts.parserBuilder()
-				.setSigningKey(this.key).build()
-				.parseClaimsJws(token)
-				.getBody()
+		return Jwts.parser()
+				.verifyWith(this.key).build()
+				.parseSignedClaims(token)
+				.getPayload()
 				.getSubject();
 	}
 
 	// Validate JWT token
 	public boolean validateJwtToken(final String token) {
 		try {
-			Jwts.parserBuilder().setSigningKey(this.key).build().parseClaimsJws(token);
+			Jwts.parser().verifyWith(this.key).build().parseSignedClaims(token);
 			return true;
 		} catch (final SecurityException e) {
 			log.info("Invalid JWT signature: {}", e.getMessage());
@@ -85,8 +84,10 @@ public class JwtTokenProvider {
 	}
 
 	public <T> T extractClaim(final String token, final Function<Claims, T> resolver) {
-		return resolver.apply(Jwts.parserBuilder().setSigningKey(this.key).build()
-				.parseClaimsJws(token).getBody());
+		return resolver.apply(Jwts.parser()
+				.verifyWith(this.key).build()
+				.parseSignedClaims(token)
+				.getPayload());
 	}
 
 	public boolean isTokenValid(final String token, final String username) {

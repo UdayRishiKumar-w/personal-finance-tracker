@@ -36,10 +36,18 @@ export default function Signup() {
 			if (!lastName.trim()) return setErr("Last name is required");
 			if (password.length < 10) return setErr("Password must be at least 10 characters");
 
-			setFirstName((prev) => prev.trim());
-			setLastName((prev) => prev.trim());
-			setEmail((prev) => prev.trim());
-			const data = await signup({ firstName, lastName, email, password });
+			const trimmedFirstName = firstName.trim();
+			const trimmedLastName = lastName.trim();
+			const trimmedEmail = email.trim();
+			setFirstName(trimmedFirstName);
+			setLastName(trimmedLastName);
+			setEmail(trimmedEmail);
+			const data = await signup({
+				firstName: trimmedFirstName,
+				lastName: trimmedLastName,
+				email: trimmedEmail,
+				password,
+			});
 			if (data) {
 				const id = Math.random().toString();
 				sessionStorage.setItem("token", JSON.stringify(data.accessToken));

@@ -5,10 +5,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.example.pft.config.RedisTestConfig;
+import com.example.pft.config.TestcontainersConfiguration;
 
 @SpringBootTest
-@Import(RedisTestConfig.class)
+@Import(TestcontainersConfiguration.class)
 @ActiveProfiles("test")
 class PersonalFinanceTrackerApplicationTests {
 

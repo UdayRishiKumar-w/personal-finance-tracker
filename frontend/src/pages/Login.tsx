@@ -29,11 +29,12 @@ export default function Login() {
 		setErr("");
 
 		try {
-			if (!validateEmail(email)) return setErr("Invalid email format");
+			const trimmedEmail = email.trim();
+			if (!validateEmail(trimmedEmail)) return setErr("Invalid email format");
 
-			setEmail((prev) => prev.trim());
+			setEmail(trimmedEmail);
 
-			const data = await login({ email, password });
+			const data = await login({ email: trimmedEmail, password });
 			if (data) {
 				const id = Math.random().toString();
 				sessionStorage.setItem("token", JSON.stringify(data.accessToken));

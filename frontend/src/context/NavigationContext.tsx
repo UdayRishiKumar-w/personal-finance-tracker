@@ -1,20 +1,23 @@
 import type { FC, PropsWithChildren } from "react";
-import { createContext, useEffect } from "react";
+import { createContext, useLayoutEffect } from "react";
 import type { NavigateFunction } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 let navigateRef: NavigateFunction | null = null;
 
-const NavigationContext = createContext<null>(null);
+const NavigationContext = createContext<NavigateFunction | null>(null);
 
 export const NavigationProvider: FC<PropsWithChildren> = ({ children }) => {
 	const navigate = useNavigate();
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		navigateRef = navigate;
+		return () => {
+			navigateRef = null;
+		};
 	}, [navigate]);
 
-	return <NavigationContext.Provider value={null}>{children}</NavigationContext.Provider>;
+	return <NavigationContext.Provider value={navigate}>{children}</NavigationContext.Provider>;
 };
 
 export function navigateTo(path: string, options?: { replace?: boolean }) {

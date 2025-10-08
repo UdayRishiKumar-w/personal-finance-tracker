@@ -1,14 +1,13 @@
 package com.example.pft.controller;
 
-import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,8 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.pft.dto.LoginRequestDTO;
 import com.example.pft.dto.SignUpRequestDTO;
-import com.example.pft.entity.Role;
 import com.example.pft.entity.User;
+import com.example.pft.enums.Role;
+import com.example.pft.exception.InvalidateException;
 import com.example.pft.repository.UserRepository;
 import com.example.pft.security.JwtTokenProvider;
 
@@ -36,8 +36,11 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthController {
 	private final UserRepository userRepository;
 	private final JwtTokenProvider tokenProvider;
-	private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(7);
+	private final PasswordEncoder passwordEncoder;
 	// private final AuthService service;
+
+	@Value("${app.cookie.secure:true}")
+	private boolean cookieSecure;
 
 	@PostMapping("/signup")
 	public ResponseEntity<Map<String, Object>> signup(@Valid @RequestBody final SignUpRequestDTO request,
@@ -52,8 +55,7 @@ public class AuthController {
 		newUser.setEmail(request.email());
 		newUser.setFirstName(request.firstName());
 		newUser.setLastName(request.lastName());
-		newUser.setPassword(passwordEncoder.encode(request.password()));
-		newUser.setCreatedAt(Instant.now().toEpochMilli());
+		newUser.setPassword(this.passwordEncoder.encode(request.password()));
 		newUser.setRole(Role.ROLE_USER);
 		this.userRepository.save(newUser);
 
@@ -69,23 +71,15 @@ public class AuthController {
 	public ResponseEntity<Map<String, Object>> login(@Valid @RequestBody final LoginRequestDTO request,
 			final HttpServletResponse response) {
 		final Optional<User> userOpt = this.userRepository.findByEmail(request.email());
-		log.info("user: {}", userOpt);
-		log.info(request.email());
-		log.info(request.password());
-		// log.info(userOpt.get().getPassword());
 
-		if (userOpt.isEmpty())
-			return ResponseEntity.status(401).body(Map.of("message", "Invalid credentials1"));
+		if (userOpt.isEmpty()) {
+			throw new InvalidateException("Invalid credentials");
+		}
+
 		final User user = userOpt.get();
 
-		log.info("user: {}", user);
-		log.info(request.password());
-		log.info(user.getPassword());
-		System.out.println(user);
-		System.out.println(request.password());
-		System.out.println(user.getPassword());
-		if (!passwordEncoder.matches(request.password(), user.getPassword())) {
-			throw new RuntimeException("Invalid credentials");
+		if (!this.passwordEncoder.matches(request.password(), user.getPassword())) {
+			throw new InvalidateException("Invalid credentials");
 		}
 
 		final String accessToken = this.tokenProvider.generateAccessToken(user.getEmail());
@@ -125,7 +119,7 @@ public class AuthController {
 			final String refreshToken) {
 		final ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
 				.httpOnly(true)
-				// .secure(true)
+				.secure(this.cookieSecure)
 				.path("/")
 				.maxAge(60 * 60) // 1 hour
 				.sameSite("Strict")
@@ -133,7 +127,7 @@ public class AuthController {
 
 		final ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
 				.httpOnly(true)
-				// .secure(true)
+				.secure(this.cookieSecure)
 				.path("/")
 				.maxAge(7 * 24 * 60 * 60) // 7 days
 				.sameSite("Strict")

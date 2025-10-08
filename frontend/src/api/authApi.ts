@@ -44,4 +44,7 @@ const signupUser = async (data: SignupData): Promise<SignupResponse> =>
 export const useSignUpMutation = () =>
 	useMutation({
 		mutationFn: signupUser,
+		onSuccess: () => {
+			queryClient.clear(); // Clear all cached queries
+		},
 	});

@@ -4,37 +4,36 @@ import java.io.IOException;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.pft.repository.UserRepository;
 
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.GenericFilter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends GenericFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-	private final transient JwtTokenProvider jwtTokenProvider;
-	private final transient UserRepository userRepository;
+	private final JwtTokenProvider jwtTokenProvider;
+	private final UserRepository userRepository;
 
 	@Override
-	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
-			throws IOException, ServletException {
-
-		final HttpServletRequest req = (HttpServletRequest) request;
+	protected void doFilterInternal(final HttpServletRequest request,
+			final HttpServletResponse response,
+			final FilterChain chain) throws IOException, ServletException {
 
 		String accessToken = null;
-		if (req.getCookies() != null) {
-			for (final Cookie cookie : req.getCookies()) {
+		if (request.getCookies() != null) {
+			for (final Cookie cookie : request.getCookies()) {
 				if ("accessToken".equals(cookie.getName())) {
 					accessToken = cookie.getValue();
 				}
@@ -57,7 +56,7 @@ public class JwtAuthenticationFilter extends GenericFilter {
 			final var user = this.userRepository.findByEmail(email).orElse(null);
 
 			if (user != null && this.jwtTokenProvider.isTokenValid(accessToken, user.getEmail())) {
-				final UserDetails userDetails = org.springframework.security.core.userdetails.User
+				final UserDetails userDetails = User
 						.withUsername(user.getEmail())
 						.password(user.getPassword())
 						.roles(user.getRole().name().replace("ROLE_", ""))
@@ -66,7 +65,7 @@ public class JwtAuthenticationFilter extends GenericFilter {
 				final UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,
 						null,
 						userDetails.getAuthorities());
-				auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
+				auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
 				SecurityContextHolder.getContext().setAuthentication(auth);
 			}

@@ -1,5 +1,9 @@
 package com.example.pft.entity;
 
+import java.time.Instant;
+
+import com.example.pft.enums.Role;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -7,17 +11,21 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
+@ToString(exclude = "password")
 @Entity
 @Table(name = "users")
 public class User {
@@ -46,5 +54,16 @@ public class User {
 
 	@Enumerated(EnumType.STRING)
 	private Role role;
+
+	@PrePersist
+	protected void onCreate() {
+		createdAt = Instant.now().toEpochMilli();
+		updatedAt = Instant.now().toEpochMilli();
+	}
+
+	@PreUpdate
+	protected void onUpdate() {
+		updatedAt = Instant.now().toEpochMilli();
+	}
 
 }

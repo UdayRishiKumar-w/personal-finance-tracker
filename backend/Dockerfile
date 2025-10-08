@@ -3,13 +3,26 @@ WORKDIR /app
 
 # Copy only pom.xml and download dependencies
 COPY pom.xml ./
-RUN mvn dependency:go-offline -B
+
+# The target is typically /root/.m2 for the root user in the container
+# The id is a unique identifier for this cache mount
+RUN --mount=type=cache,target=/root/.m2,id=maven-cache \
+	mvn dependency:go-offline -B
 
 # Copy the entire source code
 COPY src ./src
 
-# Build the JAR (skip tests to save time)
-RUN mvn clean package -DskipTests -B
+# Build the application, using the same cache mount
+RUN --mount=type=cache,target=/root/.m2,id=maven-cache \
+	mvn clean package -DskipTests -B
+
+# RUN mvn dependency:go-offline -B
+
+# # Copy the entire source code
+# COPY src ./src
+
+# # Build the JAR (skip tests to save time)
+# RUN mvn clean package -DskipTests -B
 
 # Stage 2: The final production image
 FROM eclipse-temurin:21-jre-alpine

@@ -10,7 +10,6 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -19,7 +18,7 @@ public class RedisConfig {
 
 	@Value("${spring.data.redis.host:localhost}")
 	private String redisHost;
-	@Value("${spring.redis.port:6379}")
+	@Value("${spring.data.redis.port:6379}")
 	private int redisPort;
 
 	@Bean
@@ -32,9 +31,9 @@ public class RedisConfig {
 		final RedisTemplate<String, Object> template = new RedisTemplate<>();
 		template.setConnectionFactory(connectionFactory);
 		template.setKeySerializer(new StringRedisSerializer());
-		template.setValueSerializer(new StringRedisSerializer());
-		template.setHashKeySerializer(new JdkSerializationRedisSerializer());
-		template.setHashValueSerializer(new JdkSerializationRedisSerializer());
+		template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+		template.setHashKeySerializer(new StringRedisSerializer());
+		template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
 		template.setEnableTransactionSupport(true);
 		template.afterPropertiesSet();
 		return template;
