@@ -4,6 +4,7 @@ import type { CustomAxiosRequestConfig } from "@/types/apiTypes";
 import type { AxiosError, AxiosResponse } from "axios";
 import axios, { HttpStatusCode } from "axios";
 
+// const baseURL = import.meta.env.PROD ? "/api" : import.meta.env.VITE_API_BASE || "http://localhost:8080/api"; //nginx as proxy use
 const api = axios.create({
 	baseURL: import.meta.env.VITE_API_BASE || "http://localhost:8080/api",
 	timeout: 30_000,

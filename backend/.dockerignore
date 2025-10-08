@@ -1,0 +1,35 @@
+# Ignore Maven/Gradle build output
+target/
+build/
+.mvn
+
+# Ignore IDE files
+*.iml
+.idea/
+*.classpath
+*.project
+*.settings/
+.vscode
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore logs
+*.log
+
+# Ignore environment files
+.env
+
+# Ignore test reports
+test-output/
+surefire-reports/
+jacoco.exec
+
+# Ignore Docker files themselves
+Dockerfile
+compose.yaml
+
+HELP.md
+
+src/test

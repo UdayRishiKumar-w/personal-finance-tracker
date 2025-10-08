@@ -4,7 +4,10 @@ FROM node:22.19.0-alpine AS build
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
-RUN npm ci
+
+# Install dependencies using npm ci with a cache mount for faster subsequent builds
+RUN --mount=type=cache,target=/root/.npm npm ci
+# RUN npm ci
 
 COPY . .
 RUN npm run build
