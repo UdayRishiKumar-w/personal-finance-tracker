@@ -1,5 +1,6 @@
 import Loader from "@/components/common/Loader";
 import PrivateRoute from "@/components/common/PrivateRoute";
+import { useAuth } from "@/context/AuthContext";
 import { NavigationProvider } from "@/context/NavigationContext";
 import { setCredentials } from "@/store/authSlice";
 import type { RootState } from "@/store/store";
@@ -15,6 +16,7 @@ const NotFound = lazy(async () => import("@/pages/NotFound"));
 export default function AppRouter() {
 	const token = useSelector((s: RootState) => s.auth.token);
 	const dispatch = useDispatch();
+	const { setIsAuthenticated } = useAuth();
 
 	useEffect(() => {
 		if (!token) {
@@ -22,6 +24,7 @@ export default function AppRouter() {
 			const user = sessionStorage.getItem("user");
 			if (sessionToken && user) {
 				dispatch(setCredentials({ token: sessionToken, user: JSON.parse(user) }));
+				setIsAuthenticated(true);
 			}
 		}
 	}, []);

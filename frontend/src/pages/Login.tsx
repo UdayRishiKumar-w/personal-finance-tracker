@@ -1,5 +1,6 @@
 import { useLoginMutation } from "@/api/authApi";
 import Loader from "@/components/common/Loader";
+import { useAuth } from "@/context/AuthContext";
 import { setCredentials } from "@/store/authSlice";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -18,6 +19,7 @@ export default function Login() {
 	const dispatch = useDispatch();
 	const inputRef = useRef<HTMLInputElement>(null);
 
+	const { setIsAuthenticated } = useAuth();
 	useEffect(() => {
 		inputRef.current?.focus();
 	}, []);
@@ -40,6 +42,7 @@ export default function Login() {
 				sessionStorage.setItem("token", JSON.stringify(data.accessToken));
 				sessionStorage.setItem("user", JSON.stringify({ id, email: data.user.email }));
 				dispatch(setCredentials({ token: data.accessToken, user: { id, email: data.user.email } }));
+				setIsAuthenticated(true);
 			}
 		} catch (err) {
 			setErr((err as Error).message || "Login failed");
@@ -48,7 +51,7 @@ export default function Login() {
 
 	return (
 		<>
-			<div className="flex min-h-screen items-center justify-center">
+			<div className="flex h-full items-center justify-center">
 				<form onSubmit={handleSubmit} className="w-full max-w-md rounded p-8 shadow-2xl dark:shadow-neutral-50">
 					<h2 className="mb-6 text-center text-2xl font-bold">Login</h2>
 

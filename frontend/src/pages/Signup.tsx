@@ -1,5 +1,6 @@
 import { useSignUpMutation } from "@/api/authApi";
 import Loader from "@/components/common/Loader";
+import { useAuth } from "@/context/AuthContext";
 import { setCredentials } from "@/store/authSlice";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -19,6 +20,8 @@ export default function Signup() {
 	const [err, setErr] = useState("");
 	const dispatch = useDispatch();
 	const inputRef = useRef<HTMLInputElement>(null);
+
+	const { setIsAuthenticated } = useAuth();
 
 	useEffect(() => {
 		inputRef.current?.focus();
@@ -53,6 +56,7 @@ export default function Signup() {
 				sessionStorage.setItem("token", JSON.stringify(data.accessToken));
 				sessionStorage.setItem("user", JSON.stringify({ id, email: data.user.email }));
 				dispatch(setCredentials({ token: data.accessToken, user: { id, email: data.user.email } }));
+				setIsAuthenticated(true);
 			}
 		} catch (err) {
 			setErr((err as Error).message || "Signup failed");

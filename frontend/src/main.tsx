@@ -2,7 +2,6 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 
-import { Menu } from "@/components/Menu";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
@@ -12,6 +11,8 @@ import { store } from "./store/store";
 import PWABadge from "@/PWABadge";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
+import Layout from "@/components/layouts/Layout";
+import { AuthProvider } from "@/context/AuthContext";
 import { reportWebVitals } from "@/reportWebVitals";
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
@@ -47,30 +48,33 @@ createRoot(document.getElementById("root")!).render(
 		<CacheProvider value={muiCache}>
 			<StyledEngineProvider enableCssLayer>
 				<GlobalStyles styles="@layer theme, base, mui, components, utilities;" />
-				<Provider store={store}>
-					<ErrorBoundary>
-						<ThemeProvider>
-							<QueryClientProvider client={queryClient}>
-								<BrowserRouter>
-									<Menu />
-									<AppRouter />
-									<PWABadge />
-								</BrowserRouter>
-								{import.meta.env.DEV && (
-									<TanStackDevtools
-										plugins={[
-											{
-												name: "TanStack Query",
-												render: <ReactQueryDevtoolsPanel />,
-											},
-										]}
-									/>
-									/* <ReactQueryDevtools initialIsOpen={false} /> */
-								)}
-							</QueryClientProvider>
-						</ThemeProvider>
-					</ErrorBoundary>
-				</Provider>
+				<ErrorBoundary>
+					<Provider store={store}>
+						<AuthProvider>
+							<ThemeProvider>
+								<QueryClientProvider client={queryClient}>
+									<BrowserRouter>
+										<Layout>
+											<AppRouter />
+										</Layout>
+										<PWABadge />
+									</BrowserRouter>
+									{import.meta.env.DEV && (
+										<TanStackDevtools
+											plugins={[
+												{
+													name: "TanStack Query",
+													render: <ReactQueryDevtoolsPanel />,
+												},
+											]}
+										/>
+										/* <ReactQueryDevtools initialIsOpen={false} /> */
+									)}
+								</QueryClientProvider>
+							</ThemeProvider>
+						</AuthProvider>
+					</Provider>
+				</ErrorBoundary>
 			</StyledEngineProvider>
 		</CacheProvider>
 	</StrictMode>,

@@ -58,10 +58,11 @@ export const getMuiTheme = (mode: ThemeMode): Theme =>
 	createTheme({
 		// // https://mui.com/material-ui/customization/css-theme-variables/configuration/#toggling-dark-mode-manually
 		// // https://mui.com/material-ui/customization/palette/#color-schemes
-		// colorSchemes: { light: true, dark: true },
-		// cssVariables: {
-		// 	colorSchemeSelector: "class",
-		// },
+		colorSchemes: { light: true, dark: true },
+		cssVariables: {
+			colorSchemeSelector: "html",
+			// disableCssColorScheme: true,
+		},
 		palette: {
 			mode,
 			...(mode === "dark"
