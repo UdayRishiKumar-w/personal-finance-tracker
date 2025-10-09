@@ -15,8 +15,8 @@ RUN npm run build
 # ---- Run stage ----
 FROM nginx:1.28.0-alpine
 
-# # Install Brotli module
-# RUN apk add --no-cache nginx-mod-http-brotli
+# # Install Brotli module and server header remover module
+# RUN apk add --no-cache nginx-mod-http-brotli nginx-mod-http-headers-more
 
 COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf

@@ -8,6 +8,7 @@
 	"files.associations": {
 		"*.css": "tailwindcss"
 	},
+	"files.eol": "\n",
 	"html.format.indentInnerHtml": true,
 	"[typescriptreact]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
