@@ -6,13 +6,14 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
-import React, { useEffect, useRef, useState } from "react";
+import type { FC, FormEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 
 const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-export default function Signup() {
+const Signup: FC = () => {
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [email, setEmail] = useState("");
@@ -29,7 +30,7 @@ export default function Signup() {
 
 	const { mutateAsync: signup, isPending } = useSignUpMutation();
 
-	const handleSubmit = async (e: React.FormEvent) => {
+	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
 		setErr("");
 
@@ -65,7 +66,7 @@ export default function Signup() {
 
 	return (
 		<>
-			<div className="flex min-h-screen items-center justify-center">
+			<div className="flex h-full items-center justify-center">
 				<form onSubmit={handleSubmit} className="w-full max-w-md rounded p-8 shadow-2xl dark:shadow-neutral-50">
 					<h2 className="mb-6 text-center text-2xl font-bold">Sign Up</h2>
 
@@ -135,4 +136,6 @@ export default function Signup() {
 			{isPending && <Loader text="Signing up..." />}
 		</>
 	);
-}
+};
+
+export default Signup;

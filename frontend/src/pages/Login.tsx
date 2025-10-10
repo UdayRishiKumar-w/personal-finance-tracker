@@ -6,18 +6,21 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
-import React, { useEffect, useRef, useState } from "react";
+import type { FC, FormEvent } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 
 const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-export default function Login() {
+const Login: FC = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [err, setErr] = useState("");
 	const dispatch = useDispatch();
 	const inputRef = useRef<HTMLInputElement>(null);
+	const { t } = useTranslation();
 
 	const { setIsAuthenticated } = useAuth();
 	useEffect(() => {
@@ -26,7 +29,7 @@ export default function Login() {
 
 	const { mutateAsync: login, isPending } = useLoginMutation();
 
-	const handleSubmit = async (e: React.FormEvent) => {
+	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
 		setErr("");
 
@@ -53,14 +56,14 @@ export default function Login() {
 		<>
 			<div className="flex h-full items-center justify-center">
 				<form onSubmit={handleSubmit} className="w-full max-w-md rounded p-8 shadow-2xl dark:shadow-neutral-50">
-					<h2 className="mb-6 text-center text-2xl font-bold">Login</h2>
+					<h2 className="mb-6 text-center text-2xl font-bold">{t("login")}</h2>
 
 					{err && <div className="mb-4 text-red-600">{err}</div>}
 
 					<Box className="mb-4 space-y-4">
 						<TextField
 							required
-							label="Email"
+							label={t("email")}
 							type="email"
 							variant="outlined"
 							fullWidth
@@ -71,7 +74,7 @@ export default function Login() {
 
 						<TextField
 							required
-							label="Password"
+							label={t("password")}
 							type="password"
 							variant="outlined"
 							fullWidth
@@ -88,7 +91,7 @@ export default function Login() {
 						className="mb-4"
 						disabled={isPending}
 					>
-						Login
+						{t("login")}
 					</Button>
 
 					<div className="text-center text-sm">
@@ -102,4 +105,6 @@ export default function Login() {
 			{isPending && <Loader text="Logging in..." />}
 		</>
 	);
-}
+};
+
+export default Login;

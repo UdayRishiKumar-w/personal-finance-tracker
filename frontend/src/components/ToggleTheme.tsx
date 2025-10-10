@@ -1,22 +1,15 @@
 import { useTheme } from "@/context/ThemeContext";
-import Switch from "@mui/material/Switch";
-import clsx from "clsx/lite";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import IconButton from "@mui/material/IconButton";
 import type { FC } from "react";
 
 const ToggleTheme: FC = () => {
 	const { mode, toggleTheme } = useTheme();
 	return (
-		<div
-			className={clsx(
-				"mt-2 flex flex-col items-end space-y-2 rounded-lg p-4 shadow-xl transition-opacity duration-300 dark:shadow-white",
-				mode === "dark" ? "bg-gray-800 text-white" : "bg-white text-black",
-			)}
-		>
-			<div className="flex items-center space-x-2">
-				<span className="text-sm font-medium">{mode === "dark" ? "Dark Mode" : "Light Mode"}</span>
-				<Switch checked={mode === "dark"} onChange={toggleTheme} color="default" />
-			</div>
-		</div>
+		<IconButton onClick={toggleTheme} color="inherit">
+			{mode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
+		</IconButton>
 	);
 };
 

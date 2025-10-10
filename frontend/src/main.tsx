@@ -18,9 +18,13 @@ import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import { StyledEngineProvider } from "@mui/material/styles";
+// eslint-disable-next-line no-restricted-imports
+import rtlPlugin from "@mui/stylis-plugin-rtl";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
+import { prefixer } from "stylis";
+import "./i18n.tsx";
 
 const scriptWithNonce = document.querySelector("script[nonce]");
 const nonce = (scriptWithNonce as HTMLScriptElement)?.nonce;
@@ -31,6 +35,7 @@ const muiCache = createCache({
 	key: "mui",
 	nonce,
 	insertionPoint: (insertionPoint as HTMLElement) ?? undefined,
+	stylisPlugins: [prefixer, rtlPlugin],
 });
 
 export const queryClient = new QueryClient({

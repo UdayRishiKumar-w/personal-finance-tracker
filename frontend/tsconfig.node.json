@@ -30,6 +30,7 @@
 		"eslint.config.mjs",
 		"postcss.config.js",
 		"playwright.config.ts",
-		"vite-env.d.ts"
+		"vite-env.d.ts",
+		"i18next.config.ts"
 	]
 }
