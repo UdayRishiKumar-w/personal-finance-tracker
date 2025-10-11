@@ -7,7 +7,7 @@ export const Menu: FC = () => {
 	const [menuOpen, setMenuOpen] = useState(false);
 
 	return (
-		<div className="fixed top-7.5 right-2 z-50 flex flex-col items-end space-y-2">
+		<div className="top-7.5 fixed right-2 z-50 flex flex-col items-end space-y-2">
 			<button
 				onClick={() => setMenuOpen(!menuOpen)}
 				className={clsx(

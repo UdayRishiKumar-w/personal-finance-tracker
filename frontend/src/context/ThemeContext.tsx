@@ -56,6 +56,7 @@ export const ThemeProvider: FC<PropsWithChildren> = ({ children }) => {
 	const muiTheme = useMemo(() => {
 		console.log("i18n.dir(): ", i18n.dir());
 		console.log("lang: ", i18n.language);
+		console.log("lang =- resolved: ", i18n.resolvedLanguage);
 		console.log("locale: ", localeMap[i18n.language]);
 		const theme = getMuiTheme(mode, i18n.dir(), localeMap[i18n.language] || enUS);
 		console.log("ThemeContext", theme);

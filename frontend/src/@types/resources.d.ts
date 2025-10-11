@@ -1,7 +1,10 @@
 interface Resources {
+	loader: {
+		loading: "Loading";
+	};
 	translation: {
 		appName: "Personal Finance Tracker";
-		email: "email";
+		email: "Email";
 		login: "Login";
 		password: "Password";
 	};

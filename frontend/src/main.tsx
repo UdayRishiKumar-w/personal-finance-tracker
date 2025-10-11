@@ -1,6 +1,6 @@
+import "@/styles/index.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./index.css";
 
 import { ThemeProvider } from "@/context/ThemeContext";
 import { Provider } from "react-redux";
@@ -11,9 +11,9 @@ import { store } from "./store/store";
 import PWABadge from "@/PWABadge";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
-import Layout from "@/components/layouts/Layout";
 import { AuthProvider } from "@/context/AuthContext";
-import { reportWebVitals } from "@/reportWebVitals";
+import Layout from "@/layouts/Layout";
+import { reportWebVitals } from "@/utils/reportWebVitals";
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
 import GlobalStyles from "@mui/material/GlobalStyles";

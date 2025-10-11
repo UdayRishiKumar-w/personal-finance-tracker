@@ -1,5 +1,5 @@
 import { languageOptions, type LanguageCode } from "@/Constants";
-import { getLangSupported } from "@/utils";
+import { getLangSupported } from "@/utils/utils";
 import LanguageIcon from "@mui/icons-material/Language";
 import InputAdornment from "@mui/material/InputAdornment";
 import MenuItem from "@mui/material/MenuItem";
@@ -43,7 +43,7 @@ const LanguageSelector: FC = () => {
 		document.documentElement.dir = i18n.dir(); //sets the body to ltr or rtl
 		document.documentElement.lang = i18n.language; //sets the lang attribute on html tag
 		document.title = t("appName");
-	}, [i18n, i18n.language]);
+	}, [i18n.language]);
 
 	return (
 		<Select

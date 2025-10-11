@@ -1,4 +1,4 @@
-import { getLangSupported } from "@/utils";
+import { getLangSupported } from "@/utils/utils";
 import i18next from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import Backend from "i18next-http-backend";
@@ -14,7 +14,7 @@ i18next
 			return getLangSupported(code);
 		}, // Language to fallback to if the selected is not configured
 		debug: import.meta.env.DEV, //To enable us see errors
-		// lng: "en", //Default language as english
+		// lng: "en", //Default language as english, disabled as using language detector
 		interpolation: {
 			escapeValue: false,
 		},

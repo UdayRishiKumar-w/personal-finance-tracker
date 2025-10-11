@@ -5,7 +5,7 @@ const NotFound = () => {
 	const navigate = useNavigate();
 
 	return (
-		<div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 text-center">
+		<div className="flex h-full flex-col items-center justify-center bg-gray-50 px-4 text-center">
 			<div className="mb-6 animate-bounce text-red-500">
 				<span className="material-icons !text-8xl">error_outline</span>
 			</div>
