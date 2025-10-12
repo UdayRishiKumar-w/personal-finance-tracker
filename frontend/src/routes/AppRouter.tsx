@@ -2,7 +2,7 @@ import Loader from "@/components/common/Loader";
 import PrivateRoute from "@/components/common/PrivateRoute";
 import { useAuth } from "@/context/AuthContext";
 import { NavigationProvider } from "@/context/NavigationContext";
-import { setCredentials } from "@/store/authSlice";
+import { setCredentials } from "@/store/auth/authSlice";
 import type { RootState } from "@/store/store";
 import { lazy, Suspense, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";

@@ -2,14 +2,14 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { clsx } from "clsx/lite";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
 
 function PWABadge() {
 	// check for updates every hour
 	const period = 60 * 60 * 1000;
 
-	let intervalTimer: NodeJS.Timeout | undefined;
+	const intervalTimerRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
 	const {
 		// offlineReady: [offlineReady, setOfflineReady],
@@ -19,12 +19,12 @@ function PWABadge() {
 		onRegisteredSW(swUrl, r) {
 			if (period <= 0) return;
 			if (r?.active?.state === "activated") {
-				intervalTimer = registerPeriodicSync(period, swUrl, r);
+				intervalTimerRef.current = registerPeriodicSync(period, swUrl, r);
 			} else if (r?.installing) {
 				r.installing.addEventListener("statechange", (e) => {
 					const sw = e.target as ServiceWorker;
 					if (sw.state === "activated") {
-						intervalTimer = registerPeriodicSync(period, swUrl, r);
+						intervalTimerRef.current = registerPeriodicSync(period, swUrl, r);
 					}
 				});
 			}
@@ -41,7 +41,7 @@ function PWABadge() {
 		window.addEventListener("offline", handleOffline);
 
 		return () => {
-			clearInterval(intervalTimer);
+			clearInterval(intervalTimerRef.current);
 			window.removeEventListener("online", handleOnline);
 			window.removeEventListener("offline", handleOffline);
 		};

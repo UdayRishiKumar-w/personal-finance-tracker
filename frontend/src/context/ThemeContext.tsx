@@ -1,10 +1,11 @@
 import type { ThemeMode } from "@/types/globalTypes";
+import { getInitialTheme } from "@/utils/commonUtils";
 import CssBaseline from "@mui/material/CssBaseline";
 import { arSA, deDE, enUS, jaJP, ruRU, type Localization } from "@mui/material/locale";
 import type { Theme } from "@mui/material/styles";
 import { createTheme, ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
 import type { FC, PropsWithChildren } from "react";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 interface ThemeContextPropsType {
 	mode: ThemeMode;
@@ -31,37 +32,22 @@ export const ThemeProvider: FC<PropsWithChildren> = ({ children }) => {
 
 	// On initial load, check for saved theme in localStorage or system preference
 	useEffect(() => {
-		const localMode = localStorage.getItem("theme") as ThemeMode | null;
-		if (localMode) {
-			setMode(localMode);
-			document.documentElement.classList.toggle("dark", localMode === "dark");
-		} else {
-			const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-			const preferMode = prefersDarkMode ? "dark" : "light";
-			setMode(preferMode);
-			document.documentElement.classList.toggle("dark", prefersDarkMode);
-			localStorage.setItem("theme", preferMode);
-		}
+		setMode(getInitialTheme());
 	}, []);
 
-	const toggleTheme = () => {
+	const toggleTheme = useCallback(() => {
 		const newMode: ThemeMode = mode === "light" ? "dark" : "light";
 		setMode(newMode);
 		document.documentElement.classList.toggle("dark", newMode === "dark");
 		localStorage.setItem("theme", newMode);
-	};
+	}, [mode]);
 
-	const value = useMemo(() => ({ mode, toggleTheme }), [mode]);
+	const value = useMemo(() => ({ mode, toggleTheme }), [mode, toggleTheme]);
 
-	const muiTheme = useMemo(() => {
-		console.log("i18n.dir(): ", i18n.dir());
-		console.log("lang: ", i18n.language);
-		console.log("lang =- resolved: ", i18n.resolvedLanguage);
-		console.log("locale: ", localeMap[i18n.language]);
-		const theme = getMuiTheme(mode, i18n.dir(), localeMap[i18n.language] || enUS);
-		console.log("ThemeContext", theme);
-		return theme;
-	}, [mode, i18n.dir(), i18n.language]);
+	const muiTheme = useMemo(
+		() => getMuiTheme(mode, i18n.dir(), localeMap[i18n.language] || enUS),
+		[mode, i18n, localeMap],
+	);
 
 	return (
 		<ThemeContext.Provider value={value}>

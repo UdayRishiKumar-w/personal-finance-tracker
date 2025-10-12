@@ -1,5 +1,5 @@
 import { languageOptions, type LanguageCode } from "@/Constants";
-import { getLangSupported } from "@/utils/utils";
+import { getLangSupported } from "@/utils/commonUtils";
 import LanguageIcon from "@mui/icons-material/Language";
 import InputAdornment from "@mui/material/InputAdornment";
 import MenuItem from "@mui/material/MenuItem";
@@ -10,13 +10,9 @@ import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 
 const LanguageSelector: FC = () => {
-	const [language, setLanguage] = useState(i18next.language);
+	const [language, setLanguage] = useState<LanguageCode>(getLangSupported(i18next.language));
 	const { i18n, t } = useTranslation();
 	const [searchParams, setSearchParams] = useSearchParams();
-
-	useEffect(() => {
-		setLanguage((prev) => getLangSupported(prev));
-	}, []);
 
 	useEffect(() => {
 		const lng = searchParams.get("lng");
@@ -43,11 +39,11 @@ const LanguageSelector: FC = () => {
 		document.documentElement.dir = i18n.dir(); //sets the body to ltr or rtl
 		document.documentElement.lang = i18n.language; //sets the lang attribute on html tag
 		document.title = t("appName");
-	}, [i18n.language]);
+	}, [i18n.language, t]);
 
 	return (
 		<Select
-			value={language as LanguageCode}
+			value={language}
 			onChange={handleLanguageChange}
 			variant="standard"
 			className="text-black dark:text-white [&>svg]:text-black dark:[&>svg]:text-white"

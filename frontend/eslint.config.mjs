@@ -83,6 +83,7 @@ export default defineConfig([
 
 			"react-hooks/rules-of-hooks": "error",
 			"react-hooks/exhaustive-deps": "off",
+			"react-hooks/set-state-in-effect": "off",
 			"prefer-arrow-callback": "error",
 			"no-else-return": ["error", { allowElseIf: false }],
 			"no-lonely-if": "error",

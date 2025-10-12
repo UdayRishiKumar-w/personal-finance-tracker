@@ -12,31 +12,15 @@ import PWABadge from "@/PWABadge";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { AuthProvider } from "@/context/AuthContext";
+import EmotionCacheProvider from "@/context/EmotionCacheProvider";
 import Layout from "@/layouts/Layout";
 import { reportWebVitals } from "@/utils/reportWebVitals";
-import createCache from "@emotion/cache";
-import { CacheProvider } from "@emotion/react";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import { StyledEngineProvider } from "@mui/material/styles";
-// eslint-disable-next-line no-restricted-imports
-import rtlPlugin from "@mui/stylis-plugin-rtl";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
-import { prefixer } from "stylis";
 import "./i18n.tsx";
-
-const scriptWithNonce = document.querySelector("script[nonce]");
-const nonce = (scriptWithNonce as HTMLScriptElement)?.nonce;
-
-const insertionPoint = document.querySelector('meta[name="emotion-insertion-point"]');
-// Create Emotion cache with nonce so MUI styles get CSP-compatible style tags
-const muiCache = createCache({
-	key: "mui",
-	nonce,
-	insertionPoint: (insertionPoint as HTMLElement) ?? undefined,
-	stylisPlugins: [prefixer, rtlPlugin],
-});
 
 export const queryClient = new QueryClient({
 	defaultOptions: {
@@ -50,14 +34,14 @@ export const queryClient = new QueryClient({
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
-		<CacheProvider value={muiCache}>
-			<StyledEngineProvider enableCssLayer>
-				<GlobalStyles styles="@layer theme, base, mui, components, utilities;" />
-				<ErrorBoundary>
-					<Provider store={store}>
-						<AuthProvider>
+		<Provider store={store}>
+			<AuthProvider>
+				<QueryClientProvider client={queryClient}>
+					<EmotionCacheProvider>
+						<StyledEngineProvider enableCssLayer>
+							<GlobalStyles styles="@layer theme, base, mui, components, utilities;" />
 							<ThemeProvider>
-								<QueryClientProvider client={queryClient}>
+								<ErrorBoundary>
 									<BrowserRouter>
 										<Layout>
 											<AppRouter />
@@ -75,13 +59,13 @@ createRoot(document.getElementById("root")!).render(
 										/>
 										/* <ReactQueryDevtools initialIsOpen={false} /> */
 									)}
-								</QueryClientProvider>
+								</ErrorBoundary>
 							</ThemeProvider>
-						</AuthProvider>
-					</Provider>
-				</ErrorBoundary>
-			</StyledEngineProvider>
-		</CacheProvider>
+						</StyledEngineProvider>
+					</EmotionCacheProvider>
+				</QueryClientProvider>
+			</AuthProvider>
+		</Provider>
 	</StrictMode>,
 );
 

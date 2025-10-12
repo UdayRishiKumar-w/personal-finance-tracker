@@ -1,5 +1,5 @@
 import { useAuth } from "@/context/AuthContext";
-import { clearCredentials } from "@/store/authSlice";
+import { clearCredentials } from "@/store/auth/authSlice";
 import LogoutIcon from "@mui/icons-material/Logout";
 import IconButton from "@mui/material/IconButton";
 import type { FC } from "react";

@@ -1,7 +1,7 @@
 import { useLoginMutation } from "@/api/authApi";
 import Loader from "@/components/common/Loader";
 import { useAuth } from "@/context/AuthContext";
-import { setCredentials } from "@/store/authSlice";
+import { setCredentials } from "@/store/auth/authSlice";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
