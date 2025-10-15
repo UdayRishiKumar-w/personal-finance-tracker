@@ -32,5 +32,5 @@
 		"forceConsistentCasingInFileNames": true,
 		"types": ["vite/client", "react", "react-dom", "vite-plugin-pwa/react", "vite-plugin-pwa/pwa-assets"]
 	},
-	"include": ["src", "vite-env.d.ts", ".env.d.ts", "pwa-assets.config.ts"]
+	"include": ["src", "vite-env.d.ts", ".env.d.ts"]
 }
