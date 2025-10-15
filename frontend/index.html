@@ -16,7 +16,17 @@
 		/>
 		<meta name="emotion-insertion-point" />
 		<title>Personal Finance Tracker</title>
-
+		<script>
+			(function () {
+				const theme = localStorage.getItem("theme");
+				if (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+					document.documentElement.classList.add("dark");
+				}
+				if (theme === "dark") {
+					document.documentElement.classList.add("dark");
+				}
+			})();
+		</script>
 		<style type="text/css">
 			.masked {
 				overflow: hidden;
@@ -126,17 +136,6 @@
 				color: #e5e5e5;
 			}
 		</style>
-		<script>
-			(function () {
-				const theme = localStorage.getItem("theme");
-				if (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-					document.documentElement.classList.add("dark");
-				}
-				if (theme === "dark") {
-					document.documentElement.classList.add("dark");
-				}
-			})();
-		</script>
 		<link rel="preconnect" crossorigin="anonymous" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" crossorigin="anonymous" href="https://fonts.gstatic.com" />
 		<link rel="preconnect" crossorigin="anonymous" href="https://cdn.jsdelivr.net" fetchpriority="high" />
