@@ -19,6 +19,7 @@
 		"bradlc.vscode-tailwindcss",
 		"redhat.vscode-xml",
 		"redhat.vscode-yaml",
-		"xabikos.javascriptsnippets"
+		"xabikos.javascriptsnippets",
+		"shakram02.bash-beautify"
 	]
 }

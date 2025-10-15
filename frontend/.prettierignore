@@ -13,3 +13,6 @@ test-results
 .gitignore
 package-lock.json
 *.log
+.husky
+.DS_Store
+Thumbs.db

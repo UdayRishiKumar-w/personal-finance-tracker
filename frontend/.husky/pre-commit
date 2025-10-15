@@ -1,0 +1,36 @@
+#!/bin/sh
+echo "Running pre-commit hook..."
+
+cd frontend || exit 1
+npx lint-staged || exit 1
+
+echo "Frontend linting and formatting completed."
+
+# # Go to backend
+# cd ../backend || exit 1
+
+# echo "Running Java formatter on staged files..."
+
+# # Get list of staged Java files (relative to backend/)
+# STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep '\.java$' | grep '^backend/' | sed 's|^backend/||')
+
+# if [ -z "$STAGED_FILES" ]; then
+#     echo "No staged Java files to format."
+
+# else
+#     echo "Formatting staged Java files:"
+#     # Build comma-separated list of files
+#     FILE_LIST=$(echo "$STAGED_FILES" | tr '\n' ',' | sed 's/,$//')
+#     echo "$STAGED_FILES" | tr ' ' '\n' | sed 's/^/ - /'
+
+#     # Run Spotify formatter once with all files
+#     if ! mvn fmt:format -Dfmt.includes="$FILE_LIST"; then
+#         echo "Error: Maven formatting failed"
+#         exit 1
+#     fi
+
+#     # Re-add all formatted files
+#     echo "$STAGED_FILES" | xargs -I {} git add "{}"
+# fi
+
+echo "Pre-commit hook completed successfully."
