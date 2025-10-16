@@ -72,3 +72,18 @@ createRoot(document.getElementById("root")!).render(
 if (import.meta.env.DEV) {
 	reportWebVitals();
 }
+
+if (import.meta.env.DEV) {
+	try {
+		const ReactModule = await import("react");
+		const React = ReactModule.default;
+
+		const ReactDOMModule = await import("react-dom");
+		const ReactDOM = ReactDOMModule.default;
+
+		const axe = await import("@axe-core/react");
+		axe.default(React, ReactDOM, 1000);
+	} catch (error) {
+		console.error("Error loading dependencies:", error);
+	}
+}

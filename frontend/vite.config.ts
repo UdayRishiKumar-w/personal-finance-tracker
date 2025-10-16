@@ -313,5 +313,8 @@ export default defineConfig(({ mode }) => {
 		css: {
 			devSourcemap: true,
 		},
+		define: {
+			"process.env.NODE_ENV": JSON.stringify(mode),
+		},
 	};
 });
