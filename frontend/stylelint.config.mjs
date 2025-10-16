@@ -3,7 +3,7 @@ export default {
 	extends: ["stylelint-config-standard", "stylelint-config-tailwindcss", "stylelint-prettier/recommended"],
 	overrides: [
 		{
-			files: ["**/*.{jsx,tsx}"],
+			files: ["**/*.{jsx,tsx,html}"],
 			customSyntax: "postcss-html", // enables JSX/TSX parsing
 		},
 	],

@@ -19,7 +19,7 @@
 		<script>
 			(function () {
 				const theme = localStorage.getItem("theme");
-				if (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+				if (!theme && globalThis.matchMedia("(prefers-color-scheme: dark)").matches) {
 					document.documentElement.classList.add("dark");
 				}
 				if (theme === "dark") {
@@ -35,12 +35,11 @@
 
 			.mask {
 				position: absolute;
-				top: 0;
-				left: 0;
+				inset: 0;
 				z-index: 100;
 				width: 100%;
 				height: 100%;
-				background: rgba(255, 255, 255, 0.8);
+				background: rgb(255 255 255 / 80%);
 			}
 
 			.mask-wrapper {
@@ -49,6 +48,12 @@
 				text-align: center;
 				display: grid;
 				place-items: center;
+			}
+
+			.spinner {
+				vertical-align: middle;
+				height: 25px;
+				padding: 5px;
 			}
 
 			.mask-content .spinner,
@@ -63,12 +68,6 @@
 				font-family: Arial, Helvetica, sans-serif;
 			}
 
-			.spinner {
-				vertical-align: middle;
-				height: 25px;
-				padding: 5px;
-			}
-
 			.spinner-bar {
 				background-color: #005686;
 				height: 100%;
@@ -79,22 +78,18 @@
 			}
 
 			.spinning .spinner-bar {
-				-webkit-animation: stretch-delay 1s infinite ease-in-out;
 				animation: stretch-delay 1s infinite ease-in-out;
 			}
 
 			.spinning .spinner-bar1 {
-				-webkit-animation-delay: -0.9s;
 				animation-delay: -0.9s;
 			}
 
 			.spinning .spinner-bar2 {
-				-webkit-animation-delay: -0.8s;
 				animation-delay: -0.8s;
 			}
 
 			.spinning .spinner-bar3 {
-				-webkit-animation-delay: -0.7s;
 				animation-delay: -0.7s;
 			}
 
@@ -102,15 +97,15 @@
 				transition-duration: 0.3s;
 			}
 
-			@-webkit-keyframes stretch-delay {
+			@keyframes stretch-delay {
 				0%,
 				100%,
 				40% {
-					-webkit-transform: scaleY(1);
+					transform: scaleY(1);
 				}
 
 				20% {
-					-webkit-transform: scaleY(1.7);
+					transform: scaleY(1.7);
 				}
 			}
 
@@ -118,18 +113,16 @@
 				0%,
 				100%,
 				40% {
-					-webkit-transform: scaleY(1);
 					transform: scaleY(1);
 				}
 
 				15% {
-					-webkit-transform: scaleY(1.7);
 					transform: scaleY(1.7);
 				}
 			}
 
 			html.dark .mask {
-				background-color: rgba(30, 30, 30, 0.8);
+				background-color: rgb(30 30 30 / 80%);
 			}
 
 			html.dark .mask-content .text {

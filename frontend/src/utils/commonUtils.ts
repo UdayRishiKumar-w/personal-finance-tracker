@@ -14,7 +14,7 @@ export const getInitialTheme = (): ThemeMode => {
 		return storedPreference;
 	}
 
-	const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+	const prefersDarkMode = globalThis.matchMedia("(prefers-color-scheme: dark)").matches;
 	const preferMode = prefersDarkMode ? "dark" : "light";
 	document.documentElement.classList.toggle("dark", prefersDarkMode);
 	localStorage.setItem("theme", preferMode);
