@@ -75,12 +75,8 @@ if (import.meta.env.DEV) {
 
 if (import.meta.env.DEV) {
 	try {
-		const ReactModule = await import("react");
-		const React = ReactModule.default;
-
-		const ReactDOMModule = await import("react-dom");
-		const ReactDOM = ReactDOMModule.default;
-
+		const React = await import("react");
+		const ReactDOM = await import("react-dom");
 		const axe = await import("@axe-core/react");
 		axe.default(React, ReactDOM, 1000);
 	} catch (error) {
