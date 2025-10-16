@@ -5,11 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,6 +23,7 @@ import com.example.pft.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
+@EnableWebSecurity
 @EnableMethodSecurity // enables @PreAuthorize, @RolesAllowed
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -38,10 +38,10 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		final CorsConfiguration corsConfig = new CorsConfiguration();
-		corsConfig.setAllowedOrigins(List.of(this.webConfig.allowedOrigins)); // Read from the application properties
+		corsConfig.setAllowedOrigins(List.of(this.webConfig.allowedOrigins));
 		corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 		corsConfig.setAllowedHeaders(List.of("*"));
-		corsConfig.setAllowCredentials(true); // Allow credentials if required
+		corsConfig.setAllowCredentials(true);
 
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", corsConfig); // Register CORS for all endpoints
@@ -51,7 +51,7 @@ public class SecurityConfig {
 	// https://stackoverflow.com/questions/77266685/spring-security-6-cors-is-deprecated-and-marked-for-removal
 	@Bean
 	protected SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
-		http
+		return http
 				.csrf(CsrfConfigurer::disable)
 				.cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
 						.configurationSource(this.corsConfigurationSource()))
@@ -67,16 +67,7 @@ public class SecurityConfig {
 						.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // no session, stateless API
 				)
 				.authenticationProvider(this.authenticationProvider)
-				.addFilterBefore(this.jwtFilter,
-						UsernamePasswordAuthenticationFilter.class);
-
-		return http.build();
-	}
-
-	// To expose AuthenticationManager for login handling
-	@Bean
-	protected AuthenticationManager authenticationManager(final AuthenticationConfiguration authConfig)
-			throws Exception {
-		return authConfig.getAuthenticationManager();
+				.addFilterBefore(this.jwtFilter, UsernamePasswordAuthenticationFilter.class)
+				.build();
 	}
 }

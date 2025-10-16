@@ -57,13 +57,14 @@ public class User {
 
 	@PrePersist
 	protected void onCreate() {
-		createdAt = Instant.now().toEpochMilli();
-		updatedAt = Instant.now().toEpochMilli();
+		final Long now = Instant.now().toEpochMilli();
+		this.createdAt = now;
+		this.updatedAt = now;
 	}
 
 	@PreUpdate
 	protected void onUpdate() {
-		updatedAt = Instant.now().toEpochMilli();
+		this.updatedAt = Instant.now().toEpochMilli();
 	}
 
 }

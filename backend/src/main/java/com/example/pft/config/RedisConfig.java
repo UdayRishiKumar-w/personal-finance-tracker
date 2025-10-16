@@ -3,15 +3,20 @@ package com.example.pft.config;
 import java.time.Duration;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import com.example.pft.util.Utils;
 
 @Configuration
 public class RedisConfig {
@@ -20,10 +25,19 @@ public class RedisConfig {
 	private String redisHost;
 	@Value("${spring.data.redis.port:6379}")
 	private int redisPort;
+	@Value("${spring.data.redis.password:}")
+	private String redisPassword;
+	@Value("${spring.data.redis.database:0}")
+	private int redisDatabase;
 
 	@Bean
 	public LettuceConnectionFactory redisConnectionFactory() {
-		return new LettuceConnectionFactory(this.redisHost, this.redisPort);
+		final RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(this.redisHost, this.redisPort);
+		if (Utils.isNotNullOrEmpty(this.redisPassword)) {
+			config.setPassword(this.redisPassword);
+		}
+		config.setDatabase(this.redisDatabase);
+		return new LettuceConnectionFactory(config);
 	}
 
 	@Bean
@@ -39,12 +53,24 @@ public class RedisConfig {
 		return template;
 	}
 
+	// https://docs.spring.io/spring-data/redis/reference/redis/redis-cache.html
+	// https://www.baeldung.com/spring-boot-redis-cache
 	@Bean
 	public RedisCacheConfiguration cacheConfiguration() {
-
 		return RedisCacheConfiguration.defaultCacheConfig()
 				.entryTtl(Duration.ofMinutes(10)) // Set TTL to 10 minutes
+				.enableTimeToIdle()
 				.disableCachingNullValues()
+				.serializeKeysWith(SerializationPair.fromSerializer(new StringRedisSerializer()))
 				.serializeValuesWith(SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
 	}
+
+	@Bean
+	public CacheManager cacheManager(final RedisConnectionFactory redisConnectionFactory) {
+		final RedisCacheConfiguration config = this.cacheConfiguration();
+		return RedisCacheManager.builder(redisConnectionFactory)
+				.cacheDefaults(config)
+				.build();
+	}
+
 }

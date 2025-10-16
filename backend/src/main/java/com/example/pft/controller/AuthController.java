@@ -19,6 +19,7 @@ import com.example.pft.dto.SignUpRequestDTO;
 import com.example.pft.entity.User;
 import com.example.pft.enums.Role;
 import com.example.pft.exception.InvalidateException;
+import com.example.pft.mapper.UserMapper;
 import com.example.pft.repository.UserRepository;
 import com.example.pft.security.JwtTokenProvider;
 
@@ -37,6 +38,7 @@ public class AuthController {
 	private final UserRepository userRepository;
 	private final JwtTokenProvider tokenProvider;
 	private final PasswordEncoder passwordEncoder;
+	private final UserMapper userMapper;
 	// private final AuthService service;
 
 	@Value("${app.cookie.secure:true}")
@@ -51,10 +53,7 @@ public class AuthController {
 			return ResponseEntity.status(409).body(Map.of("message", "User already exists"));
 		}
 
-		final User newUser = new User();
-		newUser.setEmail(request.email());
-		newUser.setFirstName(request.firstName());
-		newUser.setLastName(request.lastName());
+		final User newUser = this.userMapper.toEntity(request);
 		newUser.setPassword(this.passwordEncoder.encode(request.password()));
 		newUser.setRole(Role.ROLE_USER);
 		this.userRepository.save(newUser);
