@@ -131,7 +131,7 @@
 		"url": "https://github.com/UdayRishiKumar-w"
 	},
 	"lint-staged": {
-		"*.{js,jsx,ts,tsx}": [
+		"*.{js,mjs,jsx,ts,tsx}": [
 			"eslint --fix",
 			"stylelint --fix",
 			"prettier --write"

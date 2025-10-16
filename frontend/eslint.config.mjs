@@ -15,6 +15,7 @@ import testingLibrary from "eslint-plugin-testing-library";
 import eslintPluginVitest from "eslint-plugin-vitest";
 import { defineConfig, globalIgnores } from "eslint/config";
 
+/** @type {import('eslint').Linter.Config} */
 export default defineConfig([
 	globalIgnores(["dist", "dev-dist", "coverage", "playwright-report", "test-results"]),
 	// Base JS rules
