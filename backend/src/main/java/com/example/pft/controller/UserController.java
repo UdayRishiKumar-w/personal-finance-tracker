@@ -11,17 +11,15 @@ import com.example.pft.dto.UserDTO;
 import com.example.pft.mapper.UserMapper;
 import com.example.pft.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
 	private final UserRepository userRepository;
 	private final UserMapper mapper;
-
-	public UserController(UserRepository userRepository, UserMapper mapper) {
-		this.userRepository = userRepository;
-		this.mapper = mapper;
-	}
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping
