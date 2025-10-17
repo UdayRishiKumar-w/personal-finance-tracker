@@ -7,7 +7,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import com.example.pft.config.TestcontainersConfiguration;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import(TestcontainersConfiguration.class)
 @ActiveProfiles("test")
 class PersonalFinanceTrackerApplicationTests {

@@ -48,7 +48,7 @@ public class AppConfig {
 						.password(u.getPassword())
 						.roles(u.getRole().name().replace("ROLE_", ""))
 						.build())
-				.orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
+				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
 	}
 
 }

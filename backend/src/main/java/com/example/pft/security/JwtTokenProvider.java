@@ -57,11 +57,7 @@ public class JwtTokenProvider {
 
 	// Get username from JWT token
 	public String getUsernameFromToken(final String token) {
-		return Jwts.parser()
-				.verifyWith(this.key).build()
-				.parseSignedClaims(token)
-				.getPayload()
-				.getSubject();
+		return this.extractClaim(token, Claims::getSubject);
 	}
 
 	// Validate JWT token
@@ -84,10 +80,7 @@ public class JwtTokenProvider {
 	}
 
 	public <T> T extractClaim(final String token, final Function<Claims, T> resolver) {
-		return resolver.apply(Jwts.parser()
-				.verifyWith(this.key).build()
-				.parseSignedClaims(token)
-				.getPayload());
+		return resolver.apply(this.extractAllClaims(token));
 	}
 
 	public boolean isTokenValid(final String token, final String username) {
@@ -100,5 +93,12 @@ public class JwtTokenProvider {
 
 	private boolean isTokenExpired(final String token) {
 		return this.extractClaim(token, Claims::getExpiration).before(new Date());
+	}
+
+	private Claims extractAllClaims(String token) {
+		return Jwts.parser()
+				.verifyWith(this.key).build()
+				.parseSignedClaims(token)
+				.getPayload();
 	}
 }

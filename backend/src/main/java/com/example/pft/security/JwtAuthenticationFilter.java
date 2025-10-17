@@ -2,6 +2,7 @@ package com.example.pft.security;
 
 import java.io.IOException;
 
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -27,9 +28,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private final UserRepository userRepository;
 
 	@Override
-	protected void doFilterInternal(final HttpServletRequest request,
-			final HttpServletResponse response,
-			final FilterChain chain) throws IOException, ServletException {
+	protected void doFilterInternal(@NonNull final HttpServletRequest request,
+			@NonNull final HttpServletResponse response,
+			@NonNull final FilterChain chain) throws IOException, ServletException {
+
+		if (request.getRequestURI().startsWith("/auth/")) {
+			// Skip JWT filter for /auth/** paths
+			chain.doFilter(request, response);
+			return;
+		}
 
 		String accessToken = null;
 		if (request.getCookies() != null) {
@@ -39,12 +46,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				}
 			}
 		}
-
-		// if (request.getRequestId().startsWith("/auth/")) {
-		// // Skip JWT filter for /auth/** paths
-		// chain.doFilter(request, response);
-		// return;
-		// }
 
 		if (accessToken == null) {
 			chain.doFilter(request, response);
