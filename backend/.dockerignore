@@ -2,6 +2,7 @@
 target/
 build/
 .mvn
+data/
 
 # Ignore IDE files
 *.iml

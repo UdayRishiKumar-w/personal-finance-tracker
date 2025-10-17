@@ -9,6 +9,8 @@
 		"*.css": "tailwindcss"
 	},
 	"files.eol": "\n",
+	"files.insertFinalNewline": true,
+	"files.trimTrailingWhitespace": true,
 	"html.format.indentInnerHtml": true,
 	"[typescriptreact]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
