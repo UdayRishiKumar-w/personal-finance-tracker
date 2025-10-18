@@ -1,9 +1,31 @@
 services:
     redis:
         image: "redis:8.2.1-alpine"
-        ports:
-            - "6379"
-        environment:
-            REDIS_USER: myuser
-            REDIS_PASSWORD: mypassword
+        container_name: pft-redis
         restart: always
+        ports:
+            - "6379:6379"
+        command: redis-server --requirepass mypassword
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "redis-cli --no-auth-warning -a mypassword ping | grep PONG",
+                ]
+            interval: 10s
+            timeout: 3s
+            retries: 3
+            start_period: 5s
+
+    redisinsight:
+        image: redis/redisinsight:2.70.1
+        container_name: pft-redisinsight
+        environment:
+            RI_REDIS_HOST: redis
+            RI_REDIS_PORT: 6379
+            RI_REDIS_PASSWORD: mypassword
+        restart: always
+        ports:
+            - "5540:5540"
+        depends_on:
+            - redis
