@@ -1,7 +1,5 @@
 package com.example.pft.config;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +12,7 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.example.pft.security.JwtAuthenticationFilter;
 
@@ -32,29 +28,14 @@ public class SecurityConfig {
 
 	private final JwtAuthenticationFilter jwtFilter;
 	private final AuthenticationProvider authenticationProvider;
-
-	private final WebConfig webConfig;
-
-	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
-		final CorsConfiguration corsConfig = new CorsConfiguration();
-		corsConfig.setAllowedOrigins(List.of(this.webConfig.allowedOrigins));
-		corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-		corsConfig.setAllowedHeaders(List.of("*"));
-		corsConfig.setAllowCredentials(true);
-
-		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", corsConfig); // Register CORS for all endpoints
-		return source;
-	}
+	private final CorsConfigurationSource corsConfigurationSource;
 
 	// https://stackoverflow.com/questions/77266685/spring-security-6-cors-is-deprecated-and-marked-for-removal
 	@Bean
 	protected SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
 		return http
 				.csrf(CsrfConfigurer::disable)
-				.cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
-						.configurationSource(this.corsConfigurationSource()))
+				.cors(cors -> cors.configurationSource(corsConfigurationSource))
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers(this.publicURLs.isEmpty()
 								? new String[0]
