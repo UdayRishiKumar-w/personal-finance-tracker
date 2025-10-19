@@ -37,7 +37,9 @@ services:
         image: "redis:8.2.1-alpine"
         container_name: pft-redis
         restart: always
-        command: redis-server --appendonly yes --requirepass my_redis_password
+        environment:
+            REDIS_PASSWORD: ${REDIS_PASSWORD:-my_redis_password}
+        command: redis-server --appendonly yes --requirepass $${REDIS_PASSWORD:-my_redis_password}
         ports:
             - "6379:6379"
         volumes:
@@ -46,7 +48,7 @@ services:
             test:
                 [
                     "CMD-SHELL",
-                    "redis-cli --no-auth-warning -a my_redis_password ping | grep PONG",
+                    "redis-cli --no-auth-warning -a $${REDIS_PASSWORD:-my_redis_password} ping | grep PONG",
                 ]
             interval: 10s
             timeout: 3s
@@ -65,7 +67,7 @@ services:
         environment:
             RI_REDIS_HOST: redis
             RI_REDIS_PORT: 6379
-            RI_REDIS_PASSWORD: my_redis_password
+            RI_REDIS_PASSWORD: ${REDIS_PASSWORD:-my_redis_password}
         ports:
             - "5540:5540"
         depends_on:
@@ -84,7 +86,7 @@ services:
             SPRING_DATASOURCE_PASSWORD: pft_pass
             SPRING_JPA_HIBERNATE_DDL_AUTO: update
             SPRING_REDIS_HOST: redis
-            SPRING_REDIS_PASSWORD: my_redis_password
+            SPRING_REDIS_PASSWORD: ${REDIS_PASSWORD:-my_redis_password}
             SPRING_PROFILES_ACTIVE: prod
         depends_on:
             db:

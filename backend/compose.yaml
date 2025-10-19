@@ -2,10 +2,14 @@ services:
     redis:
         image: "redis:8.2.1-alpine"
         container_name: pft-redis
-        restart: always
+        restart: unless-stopped
         ports:
             - "6379:6379"
-        command: redis-server --requirepass mypassword
+        networks:
+            - redis-network
+        volumes:
+            - redis-dev-data:/data
+        command: redis-server --appendonly yes --requirepass mypassword
         healthcheck:
             test:
                 [
@@ -24,8 +28,20 @@ services:
             RI_REDIS_HOST: redis
             RI_REDIS_PORT: 6379
             RI_REDIS_PASSWORD: mypassword
-        restart: always
+        restart: unless-stopped
         ports:
             - "5540:5540"
+        volumes:
+            - redis-insight-dev-data:/data
+        networks:
+            - redis-network
         depends_on:
             - redis
+
+volumes:
+    redis-dev-data:
+    redis-insight-dev-data:
+
+networks:
+    redis-network:
+        driver: bridge
