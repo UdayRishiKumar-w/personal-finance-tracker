@@ -3,12 +3,13 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
 import { ThemeProvider } from "@/context/ThemeContext";
+import PWABadge from "@/PWABadge";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import AppRouter from "./routes/AppRouter";
 import { store } from "./store/store";
-
-import PWABadge from "@/PWABadge";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { AuthProvider } from "@/context/AuthContext";
@@ -48,6 +49,8 @@ createRoot(document.getElementById("root")!).render(
 										</Layout>
 										<PWABadge />
 									</BrowserRouter>
+									<Analytics />
+									<SpeedInsights />
 									{import.meta.env.DEV && (
 										<TanStackDevtools
 											plugins={[

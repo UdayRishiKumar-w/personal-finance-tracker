@@ -39,21 +39,25 @@ const manifest: Partial<ManifestOptions> = {
 			src: "android-64x64.png", // replace pwa- with android-
 			sizes: "64x64",
 			type: "image/png",
+			purpose: "any",
 		},
 		{
 			src: "android-192x192.png",
 			sizes: "192x192",
 			type: "image/png",
+			purpose: "any",
 		},
 		{
 			src: "android-256x256.png",
 			sizes: "256x256",
 			type: "image/png",
+			purpose: "any",
 		},
 		{
 			src: "android-512x512.png",
 			sizes: "512x512",
 			type: "image/png",
+			purpose: "any",
 		},
 		{
 			src: "icons/manifest-icon-192.maskable.png",
