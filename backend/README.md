@@ -16,7 +16,6 @@ The Personal Finance Tracker (PFT) is a application designed to help users manag
 - **Lombok**: For reducing boilerplate code, Lombok is used to generate getters, setters, and other boilerplate code automatically.
 - **JJWT**: For JSON Web Tokens, JJWT is used to handle authentication and authorization tokens.
 - **Testcontainers**: For integration testing, Testcontainers is used to run tests in isolated environments.
-- **Asciidoctor**: For generating documentation, Asciidoctor is used to convert AsciiDoc files to HTML.
 
 ## Getting Started
 
@@ -55,14 +54,6 @@ To run the tests, use the following command:
 
 ```sh
 mvn test
-```
-
-### Generating Documentation
-
-To generate documentation using Asciidoctor, use the following command:
-
-```sh
-mvn asciidoctor:process-asciidoc
 ```
 
 ### Additional Commands

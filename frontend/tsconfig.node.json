@@ -24,14 +24,5 @@
 		"noUncheckedSideEffectImports": true,
 		"types": ["node"]
 	},
-	"include": [
-		"vite.config.ts",
-		"vitest.config.ts",
-		"eslint.config.mjs",
-		"postcss.config.js",
-		"playwright.config.ts",
-		"vite-env.d.ts",
-		"i18next.config.ts",
-		"pwa-assets.config.ts"
-	]
+	"include": ["*.config.*", "vite-env.d.ts", "vite-build-config.ts"]
 }

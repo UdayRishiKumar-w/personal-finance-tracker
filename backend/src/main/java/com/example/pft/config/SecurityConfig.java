@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 @EnableMethodSecurity // enables @PreAuthorize, @RolesAllowed
 @RequiredArgsConstructor
 public class SecurityConfig {
+
 	@Value("${app.security.public-urls:}")
 	private String publicURLs;
 
@@ -44,9 +45,8 @@ public class SecurityConfig {
 						.requestMatchers("/api/admin/**", "/api/users/admin").hasRole("ADMIN")
 						.anyRequest().authenticated())
 				.headers(headers -> headers.frameOptions(FrameOptionsConfig::disable))
-				.sessionManagement(session -> session
-						.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // no session, stateless API
-				)
+				// no session, stateless API
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(this.authenticationProvider)
 				.addFilterBefore(this.jwtFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();

@@ -1,12 +1,12 @@
 services:
-    redis:
+    redis-dev:
         image: "redis:8.2.1-alpine"
-        container_name: pft-redis
+        container_name: pft-dev-redis
         restart: unless-stopped
         ports:
             - "6379:6379"
         networks:
-            - redis-network
+            - redis-dev-network
         volumes:
             - redis-dev-data:/data
         command: redis-server --appendonly yes --requirepass mypassword
@@ -21,11 +21,11 @@ services:
             retries: 3
             start_period: 5s
 
-    redisinsight:
+    redisinsight-dev:
         image: redis/redisinsight:2.70.1
-        container_name: pft-redisinsight
+        container_name: pft-dev-redisinsight
         environment:
-            RI_REDIS_HOST: redis
+            RI_REDIS_HOST: redis-dev
             RI_REDIS_PORT: 6379
             RI_REDIS_PASSWORD: mypassword
         restart: unless-stopped
@@ -34,14 +34,15 @@ services:
         volumes:
             - redis-insight-dev-data:/data
         networks:
-            - redis-network
+            - redis-dev-network
         depends_on:
-            - redis
+            redis-dev:
+                condition: service_healthy
 
 volumes:
     redis-dev-data:
     redis-insight-dev-data:
 
 networks:
-    redis-network:
+    redis-dev-network:
         driver: bridge
