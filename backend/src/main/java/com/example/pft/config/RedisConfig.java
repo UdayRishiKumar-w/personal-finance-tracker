@@ -2,8 +2,10 @@ package com.example.pft.config;
 
 import java.time.Duration;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -18,9 +20,11 @@ import org.springframework.data.redis.serializer.RedisSerializationContext.Seria
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import com.example.pft.util.Utils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 @EnableRedisRepositories
+@EnableCaching
 public class RedisConfig {
 
 	@Value("${spring.data.redis.host:localhost}")
@@ -31,6 +35,12 @@ public class RedisConfig {
 	private String redisPassword;
 	@Value("${spring.data.redis.database:0}")
 	private int redisDatabase;
+
+	private final ObjectMapper redisObjectMapper;
+
+	public RedisConfig(@Qualifier("redisObjectMapper") final ObjectMapper redisObjectMapper) {
+		this.redisObjectMapper = redisObjectMapper;
+	}
 
 	@Bean
 	public LettuceConnectionFactory redisConnectionFactory() {
@@ -47,9 +57,9 @@ public class RedisConfig {
 		final RedisTemplate<String, Object> template = new RedisTemplate<>();
 		template.setConnectionFactory(connectionFactory);
 		template.setKeySerializer(new StringRedisSerializer());
-		template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+		template.setValueSerializer(new GenericJackson2JsonRedisSerializer(this.redisObjectMapper));
 		template.setHashKeySerializer(new StringRedisSerializer());
-		template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
+		template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer(this.redisObjectMapper));
 		template.setEnableTransactionSupport(true);
 		template.afterPropertiesSet();
 		return template;
@@ -64,7 +74,8 @@ public class RedisConfig {
 				.enableTimeToIdle()
 				.disableCachingNullValues()
 				.serializeKeysWith(SerializationPair.fromSerializer(new StringRedisSerializer()))
-				.serializeValuesWith(SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
+				.serializeValuesWith(SerializationPair
+						.fromSerializer(new GenericJackson2JsonRedisSerializer(this.redisObjectMapper)));
 	}
 
 	@Bean
@@ -72,6 +83,7 @@ public class RedisConfig {
 		final RedisCacheConfiguration config = this.cacheConfiguration();
 		return RedisCacheManager.builder(redisConnectionFactory)
 				.cacheDefaults(config)
+				.transactionAware()
 				.build();
 	}
 

@@ -1,5 +1,7 @@
 package com.example.pft.service;
 
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -15,20 +17,33 @@ public class RedisService {
 
 	private final RedisTemplate<String, Object> redisTemplate;
 
-	public void saveData(String key, Object value) {
+	public void save(final String key, final Object value, final long ttlMinutes) {
+		if (ttlMinutes <= 0) {
+			throw new IllegalArgumentException("TTL must be positive, got: " + ttlMinutes);
+		}
 		try {
-			this.redisTemplate.opsForValue().set(key, value);
-		} catch (DataAccessException e) {
-			log.warn("redis - exception, {}", e);
-			throw new RuntimeException("Failed to save data to Redis for key: " + key, e);
+			this.redisTemplate.opsForValue().set(key, value, ttlMinutes, TimeUnit.MINUTES);
+		} catch (final DataAccessException e) {
+			log.error("Failed to save data to Redis for key {}: {}", key, e.getMessage());
+			throw new RuntimeException("Redis save failed", e);
 		}
 	}
 
-	public Object getData(String key) {
-		return this.redisTemplate.opsForValue().get(key);
+	public Object get(final String key) {
+		try {
+			return this.redisTemplate.opsForValue().get(key);
+		} catch (final DataAccessException e) {
+			log.error("Failed to get data from Redis for key {}: {}", key, e.getMessage());
+			throw new RuntimeException("Redis get failed", e);
+		}
 	}
 
-	public void deleteData(String key) {
-		this.redisTemplate.delete(key);
+	public void delete(final String key) {
+		try {
+			this.redisTemplate.delete(key);
+		} catch (final DataAccessException e) {
+			log.error("Failed to delete data from Redis for key {}: {}", key, e.getMessage());
+			throw new RuntimeException("Redis delete failed", e);
+		}
 	}
 }

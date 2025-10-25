@@ -43,6 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			for (final Cookie cookie : request.getCookies()) {
 				if ("accessToken".equals(cookie.getName())) {
 					accessToken = cookie.getValue();
+					break;
 				}
 			}
 		}
@@ -54,13 +55,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		final String email = this.jwtTokenProvider.getUsernameFromToken(accessToken);
 		if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-			final var user = this.userRepository.findByEmail(email).orElse(null);
+			final com.example.pft.entity.User user = this.userRepository.findByEmail(email).orElse(null);
 
 			if (user != null && this.jwtTokenProvider.isTokenValid(accessToken, user.getEmail())) {
 				final UserDetails userDetails = User
 						.withUsername(user.getEmail())
 						.password(user.getPassword())
-						.roles(user.getRole().name().replace("ROLE_", ""))
+						.roles(user.getRole().name())
 						.build();
 
 				final UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,

@@ -13,6 +13,7 @@ import com.example.pft.entity.User;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
 
+	@Mapping(source = "role", target = "role")
 	UserDTO toDto(User user);
 
 	List<UserDTO> toDtoList(List<User> users);

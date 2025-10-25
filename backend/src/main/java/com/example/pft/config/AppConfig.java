@@ -5,21 +5,21 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.example.pft.repository.UserRepository;
+import com.example.pft.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
 public class AppConfig {
-	private final UserRepository userRepository;
+	private final UserService userService;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -28,27 +28,28 @@ public class AppConfig {
 
 	// To expose AuthenticationManager for login handling
 	@Bean
-	protected AuthenticationManager authenticationManager(final AuthenticationConfiguration authConfig)
-			throws Exception {
-		return authConfig.getAuthenticationManager();
+	public AuthenticationManager authManager(final HttpSecurity http) throws Exception {
+		return http.getSharedObject(AuthenticationManagerBuilder.class)
+				.authenticationProvider(this.authenticationProvider())
+				.build();
 	}
 
 	@Bean
-	public AuthenticationProvider authenticationProvider(final UserDetailsService userDetailsService) {
-		final DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+	public AuthenticationProvider authenticationProvider() {
+		final DaoAuthenticationProvider provider = new DaoAuthenticationProvider(this.userDetailsService());
 		provider.setPasswordEncoder(this.passwordEncoder());
 		return provider;
 	}
 
 	@Bean
 	public UserDetailsService userDetailsService() {
-		return email -> this.userRepository.findByEmail(email)
-				.map(u -> User
-						.withUsername(u.getEmail())
-						.password(u.getPassword())
-						.roles(u.getRole().name().replace("ROLE_", ""))
-						.build())
-				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		return email -> {
+			final com.example.pft.entity.User u = this.userService.loadUserByEmail(email);
+			return User.withUsername(u.getEmail())
+					.password(u.getPassword())
+					.roles(u.getRole().name())
+					.build();
+		};
 	}
 
 }

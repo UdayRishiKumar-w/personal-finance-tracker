@@ -95,7 +95,7 @@ public class JwtTokenProvider {
 		return this.extractClaim(token, Claims::getExpiration).before(new Date());
 	}
 
-	private Claims extractAllClaims(String token) {
+	private Claims extractAllClaims(final String token) {
 		return Jwts.parser()
 				.verifyWith(this.key).build()
 				.parseSignedClaims(token)

@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthService {
 
 	private final UserRepository userRepository;
+	private final UserService userService;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtTokenProvider jwtTokenProvider;
 
@@ -36,10 +37,10 @@ public class AuthService {
 				.lastName(request.lastName())
 				.email(request.email())
 				.password(this.passwordEncoder.encode(request.password()))
-				.role(Role.ROLE_USER)
+				.role(Role.USER)
 				.createdAt(Instant.now().toEpochMilli())
 				.build();
-		final User savedUser = this.userRepository.save(user);
+		final User savedUser = this.userService.saveUser(user);
 
 		final String token = this.jwtTokenProvider.generateAccessToken(savedUser.getEmail());
 		final String refresh = this.jwtTokenProvider.generateRefreshToken(savedUser.getEmail());

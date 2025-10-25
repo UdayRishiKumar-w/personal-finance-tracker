@@ -21,11 +21,11 @@ public class UserController {
 	private final UserRepository userRepository;
 	private final UserMapper mapper;
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping
 	public List<UserDTO> getAllUsers() {
-		return userRepository.findAll().stream()
-				.map(mapper::toDto).toList();
+		return this.userRepository.findAll().stream()
+				.map(this.mapper::toDto).toList();
 	}
 
 	@GetMapping("/admin")
