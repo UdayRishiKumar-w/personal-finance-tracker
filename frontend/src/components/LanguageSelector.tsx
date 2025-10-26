@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 
 const LanguageSelector: FC = () => {
-	const [language, setLanguage] = useState<LanguageCode>(getLangSupported(i18next.language));
+	const [language, setLanguage] = useState<LanguageCode>(() => getLangSupported(i18next.language));
 	const { i18n, t } = useTranslation();
 	const [searchParams, setSearchParams] = useSearchParams();
 

@@ -5,7 +5,7 @@ import { arSA, deDE, enUS, jaJP, ruRU, type Localization } from "@mui/material/l
 import type { Theme } from "@mui/material/styles";
 import { createTheme, ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
 import type { FC, PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 interface ThemeContextPropsType {
 	mode: ThemeMode;
@@ -20,7 +20,8 @@ export const ThemeContext = createContext<ThemeContextPropsType>({
 export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider: FC<PropsWithChildren> = ({ children }) => {
-	const [mode, setMode] = useState<ThemeMode>("light");
+	// On initial load, check for saved theme in localStorage or system preference
+	const [mode, setMode] = useState<ThemeMode>(getInitialTheme);
 	const { i18n } = useTranslation();
 	const localeMap: Record<string, Localization> = {
 		en: enUS,
@@ -29,11 +30,6 @@ export const ThemeProvider: FC<PropsWithChildren> = ({ children }) => {
 		ru: ruRU,
 		ja: jaJP,
 	};
-
-	// On initial load, check for saved theme in localStorage or system preference
-	useEffect(() => {
-		setMode(getInitialTheme());
-	}, []);
 
 	const toggleTheme = useCallback(() => {
 		const newMode: ThemeMode = mode === "light" ? "dark" : "light";

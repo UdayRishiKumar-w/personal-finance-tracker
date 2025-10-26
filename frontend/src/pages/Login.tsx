@@ -48,7 +48,7 @@ const Login: FC = () => {
 
 					{err && <div className="mb-4 text-red-600">{err}</div>}
 
-					<Box className="mb-4 space-y-4">
+					<Box className="mb-4 flex flex-col gap-4">
 						<TextField
 							required
 							label={t("email")}
@@ -76,7 +76,9 @@ const Login: FC = () => {
 						color="primary"
 						fullWidth
 						type="submit"
-						className="mb-4"
+						sx={{
+							mb: 0.5,
+						}}
 						disabled={isPending}
 					>
 						{t("login")}

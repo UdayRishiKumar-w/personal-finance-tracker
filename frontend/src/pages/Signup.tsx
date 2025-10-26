@@ -89,7 +89,7 @@ const Signup: FC = () => {
 						/>
 					</Box>
 
-					<Box className="mb-4 space-y-4">
+					<Box className="mb-4 flex flex-col gap-4">
 						<TextField
 							required
 							label="Email"
@@ -115,7 +115,9 @@ const Signup: FC = () => {
 						color="primary"
 						fullWidth
 						type="submit"
-						className="mb-4"
+						sx={{
+							mb: 0.5,
+						}}
 						disabled={isPending}
 					>
 						Sign Up

@@ -37,9 +37,9 @@ createRoot(document.getElementById("root")!).render(
 	<StrictMode>
 		<Provider store={store}>
 			<QueryClientProvider client={queryClient}>
-				<EmotionCacheProvider>
-					<StyledEngineProvider enableCssLayer>
-						<GlobalStyles styles="@layer theme, base, mui, components, utilities;" />
+				<StyledEngineProvider enableCssLayer>
+					<GlobalStyles styles="@layer theme, base, mui, components, utilities;" />
+					<EmotionCacheProvider>
 						<ThemeProvider>
 							<ErrorBoundary>
 								<BrowserRouter>
@@ -64,8 +64,8 @@ createRoot(document.getElementById("root")!).render(
 								)}
 							</ErrorBoundary>
 						</ThemeProvider>
-					</StyledEngineProvider>
-				</EmotionCacheProvider>
+					</EmotionCacheProvider>
+				</StyledEngineProvider>
 			</QueryClientProvider>
 		</Provider>
 	</StrictMode>,
