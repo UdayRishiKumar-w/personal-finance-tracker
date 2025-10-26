@@ -1,7 +1,5 @@
 import { useLoginMutation } from "@/api/authApi";
 import Loader from "@/components/common/Loader";
-import { useAuth } from "@/context/AuthContext";
-import { setCredentials } from "@/store/auth/authSlice";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
@@ -9,7 +7,6 @@ import TextField from "@mui/material/TextField";
 import type { FC, FormEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 
 const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -18,11 +15,9 @@ const Login: FC = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [err, setErr] = useState("");
-	const dispatch = useDispatch();
 	const inputRef = useRef<HTMLInputElement>(null);
 	const { t } = useTranslation();
 
-	const { setIsAuthenticated } = useAuth();
 	useEffect(() => {
 		inputRef.current?.focus();
 	}, []);
@@ -39,14 +34,7 @@ const Login: FC = () => {
 
 			setEmail(trimmedEmail);
 
-			const data = await login({ email: trimmedEmail, password });
-			if (data) {
-				const id = Math.random().toString();
-				sessionStorage.setItem("token", JSON.stringify(data.accessToken));
-				sessionStorage.setItem("user", JSON.stringify({ id, email: data.user.email }));
-				dispatch(setCredentials({ token: data.accessToken, user: { id, email: data.user.email } }));
-				setIsAuthenticated(true);
-			}
+			await login({ email: trimmedEmail, password });
 		} catch (err) {
 			setErr((err as Error).message || "Login failed");
 		}

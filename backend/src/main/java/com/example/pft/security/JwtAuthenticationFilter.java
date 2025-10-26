@@ -32,12 +32,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			@NonNull final HttpServletResponse response,
 			@NonNull final FilterChain chain) throws IOException, ServletException {
 
-		if (request.getRequestURI().startsWith("/auth/")) {
-			// Skip JWT filter for /auth/** paths
-			chain.doFilter(request, response);
-			return;
-		}
-
 		String accessToken = null;
 		if (request.getCookies() != null) {
 			for (final Cookie cookie : request.getCookies()) {

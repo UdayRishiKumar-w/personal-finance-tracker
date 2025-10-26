@@ -1,5 +1,6 @@
 package com.example.pft.controller;
 
+import java.security.Principal;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -77,8 +79,8 @@ public class AuthController {
 		final String refreshToken = this.refreshTokenService.createOrUpdateRefreshToken(newUser.getEmail()).getToken();
 
 		this.setAuthCookies(response, accessToken, refreshToken);
-		return ResponseEntity.ok(Map.of("accessToken", accessToken, "refreshToken", refreshToken, "user",
-				Map.of("id", newUser.getId(), "email", newUser.getEmail())));
+		final UserDTO res = this.userMapper.toDto(newUser);
+		return ResponseEntity.ok(Map.of("user", res));
 	}
 
 	@PostMapping("/login")
@@ -87,14 +89,13 @@ public class AuthController {
 		final Authentication authentication = this.authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(request.email(), request.password()));
 		final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		final UserDTO user = this.userService.getUser(userDetails.getUsername());
+		final UserDTO user = this.userMapper.toDto(this.userService.loadUserByEmail(userDetails.getUsername()));
 
 		final String accessToken = this.tokenProvider.generateAccessToken(user.getEmail());
 		final String refreshToken = this.refreshTokenService.createOrUpdateRefreshToken(user.getEmail()).getToken();
 		this.setAuthCookies(response, accessToken, refreshToken);
 
-		return ResponseEntity.ok(Map.of("accessToken", accessToken, "refreshToken", refreshToken, "user",
-				Map.of("email", user.getEmail())));
+		return ResponseEntity.ok(Map.of("user", user));
 	}
 
 	@PostMapping("/refresh")
@@ -118,9 +119,7 @@ public class AuthController {
 		this.refreshTokenService.updateRefreshToken(refreshToken, newRefreshToken);
 		this.setAuthCookies(response, newAccessToken, newRefreshToken);
 
-		return ResponseEntity.ok(Map.of("message", "Token refreshed", "accessToken", newAccessToken,
-				"refreshToken", newRefreshToken));
-
+		return ResponseEntity.ok(Map.of("message", "Token refreshed"));
 	}
 
 	@PostMapping("/logout")
@@ -154,6 +153,22 @@ public class AuthController {
 
 		response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
 		response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+	}
+
+	@GetMapping("/me")
+	public ResponseEntity<Map<String, Object>> getCurrentUser(final Principal principal) {
+		if (principal == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+
+		try {
+			final User user = this.userService.loadUserByEmail(principal.getName());
+			return ResponseEntity.ok(Map.of("user", this.userMapper.toDto(user)));
+		} catch (final Exception e) {
+			log.error("Failed to load user for principal: {}", principal.getName(), e);
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+					.body(Map.of("error", "User not found"));
+		}
 	}
 
 	private String getRefreshTokenFromCookie(final HttpServletRequest request) {

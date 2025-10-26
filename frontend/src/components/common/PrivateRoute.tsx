@@ -4,9 +4,9 @@ import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 
 const PrivateRoute: FC<PropsWithChildren> = ({ children }) => {
-	const token = useSelector((state: RootState) => state.auth.token);
+	const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
-	if (!token) {
+	if (!isAuthenticated) {
 		return <Navigate to="/login" replace />;
 	}
 	return children ?? <Outlet />;

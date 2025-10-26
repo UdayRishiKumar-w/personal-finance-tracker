@@ -63,14 +63,21 @@ public class RefreshTokenService {
 
 		refreshToken.setToken(newToken);
 		refreshToken.setExpiryDate(Instant.now().plusMillis(this.refreshExpirationMs));
-		this.refreshTokenRepository.save(refreshToken);
+		final User user = refreshToken.getUser();
+		user.setRefreshToken(refreshToken);
+		this.userService.saveUser(user);
 	}
 
+	@Transactional
 	public ResponseEntity<?> clearRefreshToken(final HttpServletResponse response, final String refreshToken) {
 		return this.refreshTokenRepository.findByToken(refreshToken)
 				.map(token -> {
-					this.refreshTokenRepository.delete(token);
+					final User user = token.getUser();
+					user.setRefreshToken(null);
+
+					this.userService.saveUser(user);
 					this.clearAuthCookies(response);
+					response.addHeader("Clear-Site-Data", "\"cookies\", \"storage\"");
 					return ResponseEntity.ok("Logged out successfully.");
 				})
 				.orElse(ResponseEntity.badRequest().body("Invalid refresh token."));
@@ -82,7 +89,10 @@ public class RefreshTokenService {
 				.orElseThrow(() -> new RuntimeException("Invalid refresh token."));
 
 		if (token.isExpired()) {
-			this.refreshTokenRepository.delete(token);
+			final User user = token.getUser();
+			user.setRefreshToken(null);
+
+			this.userService.saveUser(user);
 			throw new RuntimeException("Refresh token expired. Please login again.");
 		} // UnauthorizedException
 

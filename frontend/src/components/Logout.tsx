@@ -1,27 +1,32 @@
-import { useAuth } from "@/context/AuthContext";
-import { clearCredentials } from "@/store/auth/authSlice";
+import { useLogout } from "@/api/authApi";
+import Loader from "@/components/common/Loader";
+import { showSnackbar } from "@/store/snack-bar/snackbarSlice";
 import LogoutIcon from "@mui/icons-material/Logout";
 import IconButton from "@mui/material/IconButton";
 import type { FC } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 const Logout: FC = () => {
-	const { setIsAuthenticated } = useAuth();
-	const navigate = useNavigate();
+	const { mutateAsync: logout, isPending } = useLogout();
 	const dispatch = useDispatch();
 
-	const handleLogout = () => {
-		sessionStorage.removeItem("token");
-		sessionStorage.removeItem("user");
-		dispatch(clearCredentials());
-		setIsAuthenticated(false);
-		navigate("/login", { replace: true });
+	const handleLogout = async () => {
+		try {
+			await logout();
+		} catch {
+			dispatch(showSnackbar({ message: "Logout failed", severity: "error" }));
+		}
 	};
 
 	return (
-		<IconButton color="inherit" onClick={handleLogout} title="Logout">
+		<IconButton
+			color="inherit"
+			disabled={isPending}
+			onClick={handleLogout}
+			title={isPending ? "Logging out" : "Logout"}
+		>
 			<LogoutIcon className="text-red-600" />
+			{isPending && <Loader />}
 		</IconButton>
 	);
 };

@@ -1,14 +1,15 @@
 import LanguageSelector from "@/components/LanguageSelector";
 import Logout from "@/components/Logout";
 import ToggleTheme from "@/components/ToggleTheme";
-import { useAuth } from "@/context/AuthContext";
+import type { RootState } from "@/store/store";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 const TopBar = () => {
-	const { isAuthenticated } = useAuth();
+	const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 	const { t } = useTranslation();
 
 	return (

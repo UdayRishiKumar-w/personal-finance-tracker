@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.pft.dto.UserDTO;
 import com.example.pft.entity.User;
-import com.example.pft.exception.InvalidateException;
 import com.example.pft.mapper.UserMapper;
 import com.example.pft.repository.UserRepository;
 
@@ -21,12 +20,6 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 	private final UserRepository userRepository;
 	private final UserMapper userMapper;
-
-	public UserDTO getUser(final String email) {
-		return this.userRepository.findByEmail(email)
-				.map(this.userMapper::toDto)
-				.orElseThrow(() -> new InvalidateException("User not found"));
-	}
 
 	@Transactional(readOnly = true)
 	@Cacheable(value = "users", key = "#email", unless = "#result == null")

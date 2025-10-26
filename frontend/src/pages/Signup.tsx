@@ -1,17 +1,18 @@
 import { useSignUpMutation } from "@/api/authApi";
 import Loader from "@/components/common/Loader";
-import { useAuth } from "@/context/AuthContext";
-import { setCredentials } from "@/store/auth/authSlice";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import type { FC, FormEvent } from "react";
 import { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 
-const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const validateEmail = (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const validatePassword = (password: string): boolean => {
+	const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).+$/;
+	return pattern.test(password);
+};
 
 const Signup: FC = () => {
 	const [firstName, setFirstName] = useState("");
@@ -19,10 +20,7 @@ const Signup: FC = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [err, setErr] = useState("");
-	const dispatch = useDispatch();
 	const inputRef = useRef<HTMLInputElement>(null);
-
-	const { setIsAuthenticated } = useAuth();
 
 	useEffect(() => {
 		inputRef.current?.focus();
@@ -35,30 +33,29 @@ const Signup: FC = () => {
 		setErr("");
 
 		try {
-			if (!validateEmail(email)) return setErr("Invalid email format");
-			if (!firstName.trim()) return setErr("First name is required");
-			if (!lastName.trim()) return setErr("Last name is required");
-			if (password.length < 10) return setErr("Password must be at least 10 characters");
-
 			const trimmedFirstName = firstName.trim();
 			const trimmedLastName = lastName.trim();
 			const trimmedEmail = email.trim();
+			const trimmedPassword = password.trim();
 			setFirstName(trimmedFirstName);
 			setLastName(trimmedLastName);
 			setEmail(trimmedEmail);
-			const data = await signup({
+			setPassword(trimmedPassword);
+			if (!trimmedFirstName) return setErr("First name is required");
+			if (!trimmedLastName) return setErr("Last name is required");
+			if (!validateEmail(trimmedEmail)) return setErr("Invalid email format");
+			if (trimmedPassword.length < 10) return setErr("Password must be at least 10 characters");
+			if (!validatePassword(trimmedPassword))
+				return setErr(
+					"Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character",
+				);
+
+			await signup({
 				firstName: trimmedFirstName,
 				lastName: trimmedLastName,
 				email: trimmedEmail,
-				password,
+				password: trimmedPassword,
 			});
-			if (data) {
-				const id = Math.random().toString();
-				sessionStorage.setItem("token", JSON.stringify(data.accessToken));
-				sessionStorage.setItem("user", JSON.stringify({ id, email: data.user.email }));
-				dispatch(setCredentials({ token: data.accessToken, user: { id, email: data.user.email } }));
-				setIsAuthenticated(true);
-			}
 		} catch (err) {
 			setErr((err as Error).message || "Signup failed");
 		}

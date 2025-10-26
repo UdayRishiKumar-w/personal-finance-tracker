@@ -12,7 +12,7 @@ import AppRouter from "./routes/AppRouter";
 import { store } from "./store/store";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { AuthProvider } from "@/context/AuthContext";
+import { SnackbarProvider } from "@/components/SnackbarProvider.tsx";
 import EmotionCacheProvider from "@/context/EmotionCacheProvider";
 import Layout from "@/layouts/Layout";
 import { reportWebVitals } from "@/utils/reportWebVitals";
@@ -36,38 +36,37 @@ export const queryClient = new QueryClient({
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
 		<Provider store={store}>
-			<AuthProvider>
-				<QueryClientProvider client={queryClient}>
-					<EmotionCacheProvider>
-						<StyledEngineProvider enableCssLayer>
-							<GlobalStyles styles="@layer theme, base, mui, components, utilities;" />
-							<ThemeProvider>
-								<ErrorBoundary>
-									<BrowserRouter>
-										<Layout>
-											<AppRouter />
-										</Layout>
-										<PWABadge />
-									</BrowserRouter>
-									<Analytics />
-									<SpeedInsights />
-									{import.meta.env.DEV && (
-										<TanStackDevtools
-											plugins={[
-												{
-													name: "TanStack Query",
-													render: <ReactQueryDevtoolsPanel />,
-												},
-											]}
-										/>
-										/* <ReactQueryDevtools initialIsOpen={false} /> */
-									)}
-								</ErrorBoundary>
-							</ThemeProvider>
-						</StyledEngineProvider>
-					</EmotionCacheProvider>
-				</QueryClientProvider>
-			</AuthProvider>
+			<QueryClientProvider client={queryClient}>
+				<EmotionCacheProvider>
+					<StyledEngineProvider enableCssLayer>
+						<GlobalStyles styles="@layer theme, base, mui, components, utilities;" />
+						<ThemeProvider>
+							<ErrorBoundary>
+								<BrowserRouter>
+									<Layout>
+										<AppRouter />
+									</Layout>
+									<SnackbarProvider />
+									<PWABadge />
+								</BrowserRouter>
+								<Analytics />
+								<SpeedInsights />
+								{import.meta.env.DEV && (
+									<TanStackDevtools
+										plugins={[
+											{
+												name: "TanStack Query",
+												render: <ReactQueryDevtoolsPanel />,
+											},
+										]}
+									/>
+									/* <ReactQueryDevtools initialIsOpen={false} /> */
+								)}
+							</ErrorBoundary>
+						</ThemeProvider>
+					</StyledEngineProvider>
+				</EmotionCacheProvider>
+			</QueryClientProvider>
 		</Provider>
 	</StrictMode>,
 );

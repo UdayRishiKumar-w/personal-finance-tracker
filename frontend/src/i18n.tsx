@@ -4,7 +4,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import Backend from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
 
-i18next
+export default i18next
 	.use(LanguageDetector)
 	.use(Backend) // https://www.i18next.com/how-to/caching#browser-caching-with-local-storage - add
 	.use(initReactI18next)
@@ -26,7 +26,6 @@ i18next
 		},
 		load: "languageOnly",
 	});
-export default i18next;
 
 //  https://github.com/i18next/i18next-cli for translation files extraction
 // npx i18next-cli extract

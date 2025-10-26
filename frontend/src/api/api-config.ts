@@ -1,5 +1,6 @@
 import Constants from "@/Constants";
-import { navigateTo } from "@/context/NavigationContext";
+import { setLoggedOut } from "@/store/auth/authSlice";
+import { store } from "@/store/store";
 import type { CustomAxiosRequestConfig } from "@/types/apiTypes";
 import type { AxiosError, AxiosResponse } from "axios";
 import axios, { HttpStatusCode } from "axios";
@@ -36,7 +37,7 @@ api.interceptors.response.use(
 	async (error: AxiosError) => {
 		const originalRequest = error.config as CustomAxiosRequestConfig;
 
-		if (originalRequest?.url?.includes("/auth/")) {
+		if (originalRequest?.url?.includes("/auth/") && !originalRequest.url.includes("/auth/me")) {
 			return Promise.reject(error);
 		}
 
@@ -63,7 +64,7 @@ api.interceptors.response.use(
 				return api(originalRequest);
 			} catch (refreshError) {
 				processQueue(false);
-				navigateTo("/login", { replace: true });
+				store.dispatch(setLoggedOut());
 				return Promise.reject(refreshError as Error);
 			} finally {
 				isRefreshing = false;
