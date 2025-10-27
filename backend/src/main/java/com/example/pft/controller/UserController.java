@@ -24,8 +24,7 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping
 	public List<UserDTO> getAllUsers() {
-		return this.userRepository.findAll().stream()
-				.map(this.mapper::toDto).toList();
+		return this.userRepository.findAll().stream().map(this.mapper::toDto).toList();
 	}
 
 	@GetMapping("/admin")

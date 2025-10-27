@@ -69,22 +69,21 @@ public class RedisConfig {
 	// https://www.baeldung.com/spring-boot-redis-cache
 	@Bean
 	public RedisCacheConfiguration cacheConfiguration() {
-		return RedisCacheConfiguration.defaultCacheConfig()
-				.entryTtl(Duration.ofMinutes(10)) // Set TTL to 10 minutes
-				.enableTimeToIdle()
-				.disableCachingNullValues()
-				.serializeKeysWith(SerializationPair.fromSerializer(new StringRedisSerializer()))
-				.serializeValuesWith(SerializationPair
-						.fromSerializer(new GenericJackson2JsonRedisSerializer(this.redisObjectMapper)));
+		return RedisCacheConfiguration
+			.defaultCacheConfig()
+			.entryTtl(Duration.ofMinutes(10)) // Set TTL to 10 minutes
+			.enableTimeToIdle()
+			.disableCachingNullValues()
+			.serializeKeysWith(SerializationPair.fromSerializer(new StringRedisSerializer()))
+			.serializeValuesWith(
+				SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(this.redisObjectMapper))
+			);
 	}
 
 	@Bean
 	public CacheManager cacheManager(final RedisConnectionFactory redisConnectionFactory) {
 		final RedisCacheConfiguration config = this.cacheConfiguration();
-		return RedisCacheManager.builder(redisConnectionFactory)
-				.cacheDefaults(config)
-				.transactionAware()
-				.build();
+		return RedisCacheManager.builder(redisConnectionFactory).cacheDefaults(config).transactionAware().build();
 	}
 
 }

@@ -34,7 +34,7 @@
 		"editor.defaultFormatter": "redhat.java"
 	},
 	"[xml]": {
-		"editor.defaultFormatter": "redhat.vscode-xml"
+		"editor.defaultFormatter": "DotJoshJohnson.xml"
 	},
 	"[nginx]": {
 		"editor.defaultFormatter": "teclado.vscode-nginx-format"
@@ -48,5 +48,9 @@
 	},
 	"typescript.preferences.importModuleSpecifier": "non-relative",
 	"javascript.preferences.importModuleSpecifier": "non-relative",
-	"typescript.preferences.autoImportSpecifierExcludeRegexes": ["^@mui/[^/]+$"]
+	"typescript.preferences.autoImportSpecifierExcludeRegexes": [
+		"^@mui/[^/]+$"
+	],
+	"java.format.settings.url": ".vscode/eclipse-java-google-style.xml",
+	"java.format.settings.profile": "GoogleStyle"
 }

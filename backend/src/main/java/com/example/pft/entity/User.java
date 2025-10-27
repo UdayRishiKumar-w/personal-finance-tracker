@@ -1,5 +1,6 @@
 package com.example.pft.entity;
 
+import java.io.Serial;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.HashSet;
@@ -19,7 +20,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -43,6 +43,9 @@ import lombok.ToString;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
+	@Serial
+	private static final long serialVersionUID = 1964792468320948930L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -70,13 +73,14 @@ public class User implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	@JsonIgnore
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
 	private RefreshToken refreshToken;
 
 	@PrePersist
 	protected void onCreate() {
-		final Long now = Instant.now().toEpochMilli();
+		final long now = Instant.now().toEpochMilli();
 		this.createdAt = now;
 		this.updatedAt = now;
 	}
@@ -94,9 +98,11 @@ public class User implements UserDetails {
 			return authorities;
 		}
 		authorities.add(new SimpleGrantedAuthority("ROLE_" + this.role.name()));
-		final Set<SimpleGrantedAuthority> permissionAuthorities = this.role.getPermissions().stream()
-				.map(permissions -> new SimpleGrantedAuthority(permissions.name()))
-				.collect(Collectors.toSet());
+		final Set<SimpleGrantedAuthority> permissionAuthorities = this.role
+			.getPermissions()
+			.stream()
+			.map(permissions -> new SimpleGrantedAuthority(permissions.name()))
+			.collect(Collectors.toSet());
 		authorities.addAll(permissionAuthorities);
 		return authorities;
 	}

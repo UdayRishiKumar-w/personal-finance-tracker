@@ -30,21 +30,13 @@ public class Utils {
 	}
 
 	public static boolean isNullOrEmpty(final Object obj) {
-		if (obj == null)
-			return true;
-
-		if (obj instanceof final String str)
-			return !isNotNullOrEmpty(str);
-
-		if (obj instanceof final Collection<?> collection)
-			return !isNotNullOrEmpty(collection);
-
-		if (obj instanceof final Map<?, ?> map)
-			return !isNotNullOrEmpty(map);
-
-		if (obj instanceof final Object[] array)
-			return !isNotNullOrEmpty(array);
-
-		return false;
+		return switch (obj) {
+			case null -> true;
+			case final String str -> !isNotNullOrEmpty(str);
+			case final Collection<?> collection -> !isNotNullOrEmpty(collection);
+			case final Map<?, ?> map -> !isNotNullOrEmpty(map);
+			case final Object[] array -> !isNotNullOrEmpty(array);
+			default -> false;
+		};
 	}
 }

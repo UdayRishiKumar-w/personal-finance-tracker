@@ -32,14 +32,15 @@ public class AuthService {
 			throw new InvalidateException("Email already registered");
 		}
 
-		final User user = User.builder()
-				.firstName(request.firstName())
-				.lastName(request.lastName())
-				.email(request.email())
-				.password(this.passwordEncoder.encode(request.password()))
-				.role(Role.USER)
-				.createdAt(Instant.now().toEpochMilli())
-				.build();
+		final User user = User
+			.builder()
+			.firstName(request.firstName())
+			.lastName(request.lastName())
+			.email(request.email())
+			.password(this.passwordEncoder.encode(request.password()))
+			.role(Role.USER)
+			.createdAt(Instant.now().toEpochMilli())
+			.build();
 		final User savedUser = this.userService.saveUser(user);
 
 		final String token = this.jwtTokenProvider.generateAccessToken(savedUser.getEmail());
@@ -49,8 +50,9 @@ public class AuthService {
 
 	@Transactional(readOnly = true)
 	public AuthResponseDTO login(final LoginRequestDTO request) {
-		final User user = this.userRepository.findByEmail(request.email())
-				.orElseThrow(() -> new InvalidateException("Invalid email or password"));
+		final User user = this.userRepository
+			.findByEmail(request.email())
+			.orElseThrow(() -> new InvalidateException("Invalid email or password"));
 
 		if (!this.passwordEncoder.matches(request.password(), user.getPassword())) {
 			throw new InvalidateException("Invalid email or password");

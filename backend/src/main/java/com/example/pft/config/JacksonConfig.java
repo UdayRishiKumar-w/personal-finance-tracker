@@ -28,10 +28,12 @@ public class JacksonConfig {
 		mapper.registerModule(new JavaTimeModule());
 		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		mapper.activateDefaultTyping(
+		mapper
+			.activateDefaultTyping(
 				mapper.getPolymorphicTypeValidator(),
 				ObjectMapper.DefaultTyping.NON_FINAL,
-				JsonTypeInfo.As.PROPERTY);
+				JsonTypeInfo.As.PROPERTY
+			);
 		return mapper;
 	}
 }

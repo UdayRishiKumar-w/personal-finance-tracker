@@ -1,4 +1,3 @@
-
 package com.example.pft.service;
 
 import java.time.Duration;
@@ -35,8 +34,9 @@ public class RefreshTokenService {
 
 	@Transactional
 	public RefreshToken createOrUpdateRefreshToken(final String email) {
-		final User user = this.userRepository.findByEmail(email)
-				.orElseThrow(() -> new IllegalArgumentException("User not found with email: " + email));
+		final User user = this.userRepository
+			.findByEmail(email)
+			.orElseThrow(() -> new IllegalArgumentException("User not found with email: " + email));
 
 		final String refreshJWTToken = this.tokenProvider.generateRefreshToken(email);
 		RefreshToken refreshToken = user.getRefreshToken();
@@ -58,8 +58,9 @@ public class RefreshTokenService {
 
 	@Transactional
 	public void updateRefreshToken(final String oldToken, final String newToken) {
-		final RefreshToken refreshToken = this.refreshTokenRepository.findByToken(oldToken)
-				.orElseThrow(() -> new IllegalArgumentException("Refresh token not found."));
+		final RefreshToken refreshToken = this.refreshTokenRepository
+			.findByToken(oldToken)
+			.orElseThrow(() -> new IllegalArgumentException("Refresh token not found."));
 
 		refreshToken.setToken(newToken);
 		refreshToken.setExpiryDate(Instant.now().plusMillis(this.refreshExpirationMs));
@@ -70,23 +71,22 @@ public class RefreshTokenService {
 
 	@Transactional
 	public ResponseEntity<?> clearRefreshToken(final HttpServletResponse response, final String refreshToken) {
-		return this.refreshTokenRepository.findByToken(refreshToken)
-				.map(token -> {
-					final User user = token.getUser();
-					user.setRefreshToken(null);
+		return this.refreshTokenRepository.findByToken(refreshToken).map(token -> {
+			final User user = token.getUser();
+			user.setRefreshToken(null);
 
-					this.userService.saveUser(user);
-					this.clearAuthCookies(response);
-					response.addHeader("Clear-Site-Data", "\"cookies\", \"storage\"");
-					return ResponseEntity.ok("Logged out successfully.");
-				})
-				.orElse(ResponseEntity.badRequest().body("Invalid refresh token."));
+			this.userService.saveUser(user);
+			this.clearAuthCookies(response);
+			response.addHeader("Clear-Site-Data", "\"cookies\", \"storage\"");
+			return ResponseEntity.ok("Logged out successfully.");
+		}).orElse(ResponseEntity.badRequest().body("Invalid refresh token."));
 	}
 
 	@Transactional
 	public boolean isValidRefreshToken(final String refreshToken) {
-		final RefreshToken token = this.refreshTokenRepository.findByToken(refreshToken)
-				.orElseThrow(() -> new RuntimeException("Invalid refresh token."));
+		final RefreshToken token = this.refreshTokenRepository
+			.findByToken(refreshToken)
+			.orElseThrow(() -> new RuntimeException("Invalid refresh token."));
 
 		if (token.isExpired()) {
 			final User user = token.getUser();
@@ -100,21 +100,23 @@ public class RefreshTokenService {
 	}
 
 	private void clearAuthCookies(final HttpServletResponse response) {
-		final ResponseCookie accessCookie = ResponseCookie.from("accessToken", "")
-				.httpOnly(true)
-				.secure(this.cookieSecure)
-				.path("/")
-				.maxAge(Duration.ZERO)
-				.sameSite("Strict")
-				.build();
+		final ResponseCookie accessCookie = ResponseCookie
+			.from("accessToken", "")
+			.httpOnly(true)
+			.secure(this.cookieSecure)
+			.path("/")
+			.maxAge(Duration.ZERO)
+			.sameSite("Strict")
+			.build();
 
-		final ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", "")
-				.httpOnly(true)
-				.secure(this.cookieSecure)
-				.path("/")
-				.maxAge(Duration.ZERO)
-				.sameSite("Strict")
-				.build();
+		final ResponseCookie refreshCookie = ResponseCookie
+			.from("refreshToken", "")
+			.httpOnly(true)
+			.secure(this.cookieSecure)
+			.path("/")
+			.maxAge(Duration.ZERO)
+			.sameSite("Strict")
+			.build();
 
 		response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
 		response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());

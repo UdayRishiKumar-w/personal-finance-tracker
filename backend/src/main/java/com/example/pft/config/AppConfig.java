@@ -29,9 +29,10 @@ public class AppConfig {
 	// To expose AuthenticationManager for login handling
 	@Bean
 	public AuthenticationManager authManager(final HttpSecurity http) throws Exception {
-		return http.getSharedObject(AuthenticationManagerBuilder.class)
-				.authenticationProvider(this.authenticationProvider())
-				.build();
+		return http
+			.getSharedObject(AuthenticationManagerBuilder.class)
+			.authenticationProvider(this.authenticationProvider())
+			.build();
 	}
 
 	@Bean
@@ -45,10 +46,7 @@ public class AppConfig {
 	public UserDetailsService userDetailsService() {
 		return email -> {
 			final com.example.pft.entity.User u = this.userService.loadUserByEmail(email);
-			return User.withUsername(u.getEmail())
-					.password(u.getPassword())
-					.roles(u.getRole().name())
-					.build();
+			return User.withUsername(u.getEmail()).password(u.getPassword()).roles(u.getRole().name()).build();
 		};
 	}
 

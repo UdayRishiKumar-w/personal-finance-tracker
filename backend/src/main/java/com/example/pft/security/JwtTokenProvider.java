@@ -39,12 +39,13 @@ public class JwtTokenProvider {
 
 	// Generate JWT token
 	public String generateToken(final String username, final long expirationMs) {
-		return Jwts.builder()
-				.subject(username)
-				.issuedAt(new Date())
-				.expiration(new Date(System.currentTimeMillis() + expirationMs))
-				.signWith(this.key)
-				.compact();
+		return Jwts
+			.builder()
+			.subject(username)
+			.issuedAt(new Date())
+			.expiration(new Date(System.currentTimeMillis() + expirationMs))
+			.signWith(this.key)
+			.compact();
 	}
 
 	public String generateAccessToken(final String username) {
@@ -96,9 +97,6 @@ public class JwtTokenProvider {
 	}
 
 	private Claims extractAllClaims(final String token) {
-		return Jwts.parser()
-				.verifyWith(this.key).build()
-				.parseSignedClaims(token)
-				.getPayload();
+		return Jwts.parser().verifyWith(this.key).build().parseSignedClaims(token).getPayload();
 	}
 }

@@ -63,8 +63,9 @@ public class AuthController {
 
 	@Transactional
 	@PostMapping("/signup")
-	public ResponseEntity<Map<String, Object>> signup(@Valid @RequestBody final SignUpRequestDTO request,
-			final HttpServletResponse response) {
+	public ResponseEntity<Map<String, Object>> signup(
+		@Valid @RequestBody final SignUpRequestDTO request, final HttpServletResponse response
+	) {
 		// Check if user already exists
 		if (this.userRepository.existsByEmail(request.email())) {
 			return ResponseEntity.status(409).body(Map.of("message", "User already exists"));
@@ -84,10 +85,11 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<Map<String, Object>> login(@Valid @RequestBody final LoginRequestDTO request,
-			final HttpServletResponse response) {
-		final Authentication authentication = this.authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+	public ResponseEntity<Map<String, Object>> login(
+		@Valid @RequestBody final LoginRequestDTO request, final HttpServletResponse response
+	) {
+		final Authentication authentication = this.authenticationManager
+			.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
 		final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 		final UserDTO user = this.userMapper.toDto(this.userService.loadUserByEmail(userDetails.getUsername()));
 
@@ -99,8 +101,9 @@ public class AuthController {
 	}
 
 	@PostMapping("/refresh")
-	public ResponseEntity<Map<String, Object>> refresh(final HttpServletRequest request,
-			final HttpServletResponse response) {
+	public ResponseEntity<Map<String, Object>> refresh(
+		final HttpServletRequest request, final HttpServletResponse response
+	) {
 		final String refreshToken = this.getRefreshTokenFromCookie(request);
 
 		if (!Utils.isNotNullOrBlank(refreshToken)) {
@@ -108,8 +111,7 @@ public class AuthController {
 		}
 
 		if (!this.refreshTokenService.isValidRefreshToken(refreshToken)) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-					.body(Map.of("error", "Invalid refresh token."));
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid refresh token."));
 		}
 
 		final String email = this.tokenProvider.getUsernameFromToken(refreshToken);
@@ -133,23 +135,26 @@ public class AuthController {
 		return this.refreshTokenService.clearRefreshToken(response, refreshToken);
 	}
 
-	private void setAuthCookies(final HttpServletResponse response, final String accessToken,
-			final String refreshToken) {
-		final ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
-				.httpOnly(true)
-				.secure(this.cookieSecure)
-				.path("/")
-				.maxAge((int) this.jwtExpirationMs / 1000)
-				.sameSite("Strict")
-				.build();
+	private void setAuthCookies(
+		final HttpServletResponse response, final String accessToken, final String refreshToken
+	) {
+		final ResponseCookie accessCookie = ResponseCookie
+			.from("accessToken", accessToken)
+			.httpOnly(true)
+			.secure(this.cookieSecure)
+			.path("/")
+			.maxAge((int) this.jwtExpirationMs / 1000)
+			.sameSite("Strict")
+			.build();
 
-		final ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
-				.httpOnly(true)
-				.secure(this.cookieSecure)
-				.path("/")
-				.maxAge((int) this.refreshExpirationMs / 1000)
-				.sameSite("Strict")
-				.build();
+		final ResponseCookie refreshCookie = ResponseCookie
+			.from("refreshToken", refreshToken)
+			.httpOnly(true)
+			.secure(this.cookieSecure)
+			.path("/")
+			.maxAge((int) this.refreshExpirationMs / 1000)
+			.sameSite("Strict")
+			.build();
 
 		response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
 		response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
@@ -166,8 +171,7 @@ public class AuthController {
 			return ResponseEntity.ok(Map.of("user", this.userMapper.toDto(user)));
 		} catch (final Exception e) {
 			log.error("Failed to load user for principal: {}", principal.getName(), e);
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-					.body(Map.of("error", "User not found"));
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "User not found"));
 		}
 	}
 

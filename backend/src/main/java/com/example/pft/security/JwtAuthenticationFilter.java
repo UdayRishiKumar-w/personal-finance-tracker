@@ -28,9 +28,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private final UserRepository userRepository;
 
 	@Override
-	protected void doFilterInternal(@NonNull final HttpServletRequest request,
-			@NonNull final HttpServletResponse response,
-			@NonNull final FilterChain chain) throws IOException, ServletException {
+	protected void doFilterInternal(
+		@NonNull final HttpServletRequest request, @NonNull final HttpServletResponse response,
+		@NonNull final FilterChain chain
+	) throws IOException, ServletException {
 
 		String accessToken = null;
 		if (request.getCookies() != null) {
@@ -53,14 +54,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 			if (user != null && this.jwtTokenProvider.isTokenValid(accessToken, user.getEmail())) {
 				final UserDetails userDetails = User
-						.withUsername(user.getEmail())
-						.password(user.getPassword())
-						.roles(user.getRole().name())
-						.build();
+					.withUsername(user.getEmail())
+					.password(user.getPassword())
+					.roles(user.getRole().name())
+					.build();
 
-				final UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,
-						null,
-						userDetails.getAuthorities());
+				final UsernamePasswordAuthenticationToken auth =
+					new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 				auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
 				SecurityContextHolder.getContext().setAuthentication(auth);

@@ -35,20 +35,22 @@ public class SecurityConfig {
 	@Bean
 	protected SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
 		return http
-				.csrf(CsrfConfigurer::disable)
-				.cors(cors -> cors.configurationSource(corsConfigurationSource))
-				.authorizeHttpRequests(authorize -> authorize
-						.requestMatchers(this.publicURLs.isEmpty()
-								? new String[0]
-								: this.publicURLs.split(","))
-						.permitAll()
-						.requestMatchers("/api/admin/**", "/api/users/admin").hasRole("ADMIN")
-						.anyRequest().authenticated())
-				.headers(headers -> headers.frameOptions(FrameOptionsConfig::disable))
-				// no session, stateless API
-				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authenticationProvider(this.authenticationProvider)
-				.addFilterBefore(this.jwtFilter, UsernamePasswordAuthenticationFilter.class)
-				.build();
+			.csrf(CsrfConfigurer::disable)
+			.cors(cors -> cors.configurationSource(this.corsConfigurationSource))
+			.authorizeHttpRequests(
+				authorize -> authorize
+					.requestMatchers(this.publicURLs.isEmpty() ? new String[0] : this.publicURLs.split(","))
+					.permitAll()
+					.requestMatchers("/api/admin/**", "/api/users/admin")
+					.hasRole("ADMIN")
+					.anyRequest()
+					.authenticated()
+			)
+			.headers(headers -> headers.frameOptions(FrameOptionsConfig::disable))
+			// no session, stateless API
+			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+			.authenticationProvider(this.authenticationProvider)
+			.addFilterBefore(this.jwtFilter, UsernamePasswordAuthenticationFilter.class)
+			.build();
 	}
 }

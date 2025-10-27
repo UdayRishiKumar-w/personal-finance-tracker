@@ -24,8 +24,9 @@ public class UserService {
 	@Transactional(readOnly = true)
 	@Cacheable(value = "users", key = "#email", unless = "#result == null")
 	public User loadUserByEmail(final String email) {
-		return this.userRepository.findByEmail(email)
-				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		return this.userRepository
+			.findByEmail(email)
+			.orElseThrow(() -> new UsernameNotFoundException("User not found"));
 	}
 
 	@Transactional
