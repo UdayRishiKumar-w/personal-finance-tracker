@@ -30,9 +30,8 @@ const Login: FC = () => {
 
 		try {
 			const trimmedEmail = email.trim();
-			if (!validateEmail(trimmedEmail)) return setErr("Invalid email format");
-
 			setEmail(trimmedEmail);
+			if (!validateEmail(trimmedEmail)) return setErr("Invalid email format");
 
 			await login({ email: trimmedEmail, password });
 		} catch (err) {
@@ -43,7 +42,10 @@ const Login: FC = () => {
 	return (
 		<>
 			<div className="flex h-full items-center justify-center">
-				<form onSubmit={handleSubmit} className="w-full max-w-md rounded p-8 shadow-2xl dark:shadow-neutral-50">
+				<form
+					onSubmit={handleSubmit}
+					className="w-full max-w-xs rounded p-8 shadow-2xl sm:max-w-md dark:shadow-neutral-50"
+				>
 					<h2 className="mb-6 text-center text-2xl font-bold">{t("login")}</h2>
 
 					{err && <div className="mb-4 text-red-600">{err}</div>}

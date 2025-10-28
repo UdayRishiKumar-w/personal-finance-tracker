@@ -117,11 +117,15 @@ services:
             start_period: 30s
 
     frontend:
-        build: ./frontend
+        build:
+            context: ./frontend
+            args:
+                - VITE_API_BASE=${VITE_API_BASE:-http://localhost:8080/api}
+                - VITE_NONCE_ENABLED=${VITE_NONCE_ENABLED:-true}
         container_name: pft-frontend
         restart: always
         environment:
-            VITE_API_BASE: http://localhost:8080/api
+            NODE_ENV: production
         ports:
             - "3000:80"
         depends_on:

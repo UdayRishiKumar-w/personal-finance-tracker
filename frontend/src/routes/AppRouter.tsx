@@ -17,15 +17,27 @@ export default function AppRouter() {
 	const [isLoading, setIsLoading] = useState(true);
 	const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
+	const checkAuth = () => {
+		try {
+			return JSON.parse(localStorage.getItem("isLoggedIn") || "false");
+		} catch {
+			return false;
+		}
+	};
+
 	useEffect(() => {
-		api.get("/auth/me")
-			.then(({ data }) => {
-				dispatch(setAuthenticated(data.user));
-			})
-			.catch(() => {
-				dispatch(setLoggedOut());
-			})
-			.finally(() => setIsLoading(false));
+		if (checkAuth()) {
+			api.get("/auth/me")
+				.then(({ data }) => {
+					dispatch(setAuthenticated(data.user));
+				})
+				.catch(() => {
+					dispatch(setLoggedOut());
+				})
+				.finally(() => setIsLoading(false));
+		} else {
+			setIsLoading(false);
+		}
 	}, [dispatch]);
 
 	if (isLoading) return <Loader />;

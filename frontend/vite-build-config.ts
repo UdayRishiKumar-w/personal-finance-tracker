@@ -7,7 +7,7 @@ const manifest: Partial<ManifestOptions> = {
 	theme_color: "#1e40af",
 	background_color: "#ffffff",
 	display: "standalone",
-	orientation: "landscape-primary",
+	orientation: "any",
 	scope: "/",
 	start_url: "/",
 	icons: [

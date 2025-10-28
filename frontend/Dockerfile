@@ -3,6 +3,12 @@ FROM node:22.19.0-alpine AS build
 
 WORKDIR /app
 
+ARG VITE_API_BASE=http://localhost:8080/api
+ARG VITE_NONCE_ENABLED=true
+
+ENV VITE_API_BASE=${VITE_API_BASE}
+ENV VITE_NONCE_ENABLED=${VITE_NONCE_ENABLED}
+
 COPY package.json package-lock.json* ./
 
 # Install dependencies using npm ci with a cache mount for faster subsequent builds
