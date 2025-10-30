@@ -1,4 +1,4 @@
-@layer theme, base, mui, components, utilities;
+@layer theme, base, mui, emotion, components, utilities;
 
 @import "tailwindcss";
 @import "tw-animate-css";

@@ -7,6 +7,7 @@ import { createTheme, ThemeProvider as MuiThemeProvider } from "@mui/material/st
 import type { FC, PropsWithChildren } from "react";
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+
 interface ThemeContextPropsType {
 	mode: ThemeMode;
 	toggleTheme: () => void;
@@ -33,9 +34,9 @@ export const ThemeProvider: FC<PropsWithChildren> = ({ children }) => {
 
 	const toggleTheme = useCallback(() => {
 		const newMode: ThemeMode = mode === "light" ? "dark" : "light";
-		setMode(newMode);
 		document.documentElement.classList.toggle("dark", newMode === "dark");
 		localStorage.setItem("theme", newMode);
+		setMode(newMode);
 	}, [mode]);
 
 	const value = useMemo(() => ({ mode, toggleTheme }), [mode, toggleTheme]);

@@ -4,16 +4,17 @@ import { createRoot } from "react-dom/client";
 
 import { ThemeProvider } from "@/context/ThemeContext";
 import PWABadge from "@/PWABadge";
+import AppRouter from "@/routes/AppRouter";
+import { store } from "@/store/store.ts";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import AppRouter from "./routes/AppRouter";
-import { store } from "./store/store";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { SnackbarProvider } from "@/components/SnackbarProvider.tsx";
+import { SnackbarProvider } from "@/components/SnackbarProvider";
 import EmotionCacheProvider from "@/context/EmotionCacheProvider";
+import "@/i18n";
 import Layout from "@/layouts/Layout";
 import { reportWebVitals } from "@/utils/reportWebVitals";
 import GlobalStyles from "@mui/material/GlobalStyles";
@@ -21,7 +22,6 @@ import { StyledEngineProvider } from "@mui/material/styles";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
-import "./i18n.tsx";
 
 export const queryClient = new QueryClient({
 	defaultOptions: {
@@ -38,7 +38,7 @@ createRoot(document.getElementById("root")!).render(
 		<Provider store={store}>
 			<QueryClientProvider client={queryClient}>
 				<StyledEngineProvider enableCssLayer>
-					<GlobalStyles styles="@layer theme, base, mui, components, utilities;" />
+					<GlobalStyles styles="@layer theme, base, mui, emotion, components, utilities, properties;" />
 					<EmotionCacheProvider>
 						<ThemeProvider>
 							<ErrorBoundary>

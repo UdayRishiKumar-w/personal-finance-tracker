@@ -20,3 +20,9 @@
 ::after {
 	box-sizing: border-box;
 } */
+
+@layer utilities {
+	.text-responsive {
+		@apply text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl;
+	}
+}
