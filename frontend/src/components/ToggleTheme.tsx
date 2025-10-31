@@ -7,8 +7,8 @@ import type { FC } from "react";
 const ToggleTheme: FC = () => {
 	const { mode, toggleTheme } = useTheme();
 	return (
-		<IconButton onClick={toggleTheme} color="inherit">
-			{mode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
+		<IconButton onClick={toggleTheme} color="inherit" aria-label="button to toggle theme between dark and light">
+			{mode === "dark" ? <LightModeIcon aria-label="light" /> : <DarkModeIcon aria-label="dark" />}
 		</IconButton>
 	);
 };

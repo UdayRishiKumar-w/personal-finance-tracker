@@ -60,6 +60,7 @@ const Login: FC = () => {
 							value={email}
 							inputRef={inputRef}
 							onChange={(e) => setEmail(e.target.value)}
+							autoComplete="username"
 						/>
 
 						<TextField
@@ -70,6 +71,7 @@ const Login: FC = () => {
 							fullWidth
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
+							autoComplete="current-password"
 						/>
 					</Box>
 

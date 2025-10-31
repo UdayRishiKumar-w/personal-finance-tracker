@@ -81,6 +81,7 @@ const Signup: FC = () => {
 							value={firstName}
 							inputRef={inputRef}
 							onChange={(e) => setFirstName(e.target.value)}
+							autoComplete="given-name"
 						/>
 						<TextField
 							required
@@ -89,6 +90,7 @@ const Signup: FC = () => {
 							fullWidth
 							value={lastName}
 							onChange={(e) => setLastName(e.target.value)}
+							autoComplete="family-name"
 						/>
 					</Box>
 
@@ -101,6 +103,7 @@ const Signup: FC = () => {
 							fullWidth
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
+							autoComplete="username"
 						/>
 						<TextField
 							required
@@ -110,6 +113,7 @@ const Signup: FC = () => {
 							fullWidth
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
+							autoComplete="new-password"
 						/>
 					</Box>
 

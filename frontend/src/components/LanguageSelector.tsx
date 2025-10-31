@@ -53,9 +53,10 @@ const LanguageSelector: FC = () => {
 					<LanguageIcon className="mr-2" />
 				</InputAdornment>
 			}
+			inputProps={{ "aria-label": "Select the localization language needed" }}
 		>
 			{languageOptions.map(({ language, code }) => (
-				<MenuItem value={code} key={code}>
+				<MenuItem value={code} key={code} aria-label={language + " language"}>
 					{language}
 				</MenuItem>
 			))}

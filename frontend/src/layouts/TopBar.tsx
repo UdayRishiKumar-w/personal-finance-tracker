@@ -20,8 +20,8 @@ const TopBar = () => {
 		>
 			<Toolbar className="flex justify-between p-2">
 				<Typography
-					variant="h6"
-					className="text-sm text-black sm:text-base md:text-lg lg:text-xl dark:text-white"
+					variant="h1"
+					className="text-sm font-medium text-black sm:text-base md:text-lg lg:text-xl dark:text-white"
 				>
 					{t("appName")}
 				</Typography>
