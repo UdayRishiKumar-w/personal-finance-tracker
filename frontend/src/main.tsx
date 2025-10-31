@@ -49,8 +49,12 @@ createRoot(document.getElementById("root")!).render(
 									<SnackbarProvider />
 									<PWABadge />
 								</BrowserRouter>
-								<Analytics />
-								<SpeedInsights />
+								{import.meta.env.VITE_IS_HOSTED_ON_VERCEL === "true" && (
+									<>
+										<Analytics />
+										<SpeedInsights />
+									</>
+								)}
 								{import.meta.env.DEV && (
 									<TanStackDevtools
 										plugins={[
