@@ -11,6 +11,7 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
+import { queryClient } from "@/api/queryClient";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { SnackbarProvider } from "@/components/SnackbarProvider";
 import EmotionCacheProvider from "@/context/EmotionCacheProvider";
@@ -20,18 +21,8 @@ import { reportWebVitals } from "@/utils/reportWebVitals";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import { StyledEngineProvider } from "@mui/material/styles";
 import { TanStackDevtools } from "@tanstack/react-devtools";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
-
-export const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			gcTime: 5 * 60 * 1000,
-			retry: 3,
-			retryDelay: 1000,
-		},
-	},
-});
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>

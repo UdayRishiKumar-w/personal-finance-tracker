@@ -9,4 +9,10 @@ export default defineConfig({
 		removeUnusedKeys: false,
 		generateBasePluralForms: true,
 	},
+	types: {
+		input: ["public/locales/en/*.json"],
+		output: "src/@types/i18next.d.ts",
+		resourcesFile: "src/@types/resources.d.ts",
+		enableSelector: true, // Enable type-safe key selection
+	},
 });

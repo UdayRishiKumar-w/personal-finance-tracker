@@ -1,6 +1,24 @@
 {
+	"alreadyHaveAccount": "Du hast bereits ein Konto?",
 	"appName": "Persönlicher Finanz Tracker",
+	"dontHaveAccount": "Du hast noch kein Konto?",
 	"email": "E-Mail",
+	"enterEmail": "Gib deine E-Mail-Adresse ein",
+	"enterFirstName": "Gib deinen Vornamen ein",
+	"enterLastName": "Gib deinen Nachnamen ein",
+	"enterPassword": "Gib dein Passwort ein",
+	"firstName": "Vorname",
+	"firstNameRequired": "Vorname ist erforderlich",
+	"invalidEmail": "Ungültige E-Mail-Adresse",
+	"lastName": "Nachname",
+	"lastNameRequired": "Nachname ist erforderlich",
+	"loggingIn": "Anmeldung läuft...",
 	"login": "Anmelden",
-	"password": "Passwort"
+	"password": "Passwort",
+	"passwordComplexity": "Das Passwort muss Buchstaben, Zahlen und Sonderzeichen enthalten",
+	"passwordMinRequired": "Das Passwort muss mindestens 10 Zeichen lang sein",
+	"passwordRequired": "Passwort ist erforderlich",
+	"signingUp": "Registrierung läuft...",
+	"signup": "Registrieren",
+	"signUp": "Registrieren"
 }

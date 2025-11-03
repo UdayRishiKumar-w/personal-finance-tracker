@@ -38,7 +38,7 @@ export default class ErrorBoundary extends Component<Props, State> {
 	render() {
 		if (this.state.hasError) {
 			return (
-				<Box className="fade-in flex min-h-screen flex-col items-center justify-center p-6 text-center duration-300">
+				<Box className="flex min-h-screen flex-col items-center justify-center p-6 text-center duration-300 fade-in">
 					<Typography variant="h4" className="mb-4 font-bold">
 						Uh-oh, looks like we hit a snag. Try again or reload the app.
 					</Typography>

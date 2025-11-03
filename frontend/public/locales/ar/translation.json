@@ -1,6 +1,24 @@
 {
+	"alreadyHaveAccount": "هل لديك حساب بالفعل؟",
 	"appName": "متعقب الشؤون المالية الشخصية",
+	"dontHaveAccount": "ليس لديك حساب؟",
 	"email": "البريد الإلكتروني",
+	"enterEmail": "أدخل بريدك الإلكتروني",
+	"enterFirstName": "أدخل اسمك الأول",
+	"enterLastName": "أدخل اسم العائلة",
+	"enterPassword": "أدخل كلمة المرور",
+	"firstName": "الاسم الأول",
+	"firstNameRequired": "الاسم الأول مطلوب",
+	"invalidEmail": "عنوان البريد الإلكتروني غير صالح",
+	"lastName": "اسم العائلة",
+	"lastNameRequired": "اسم العائلة مطلوب",
+	"loggingIn": "جارٍ تسجيل الدخول...",
 	"login": "تسجيل الدخول",
-	"password": "كلمة المرور"
+	"password": "كلمة المرور",
+	"passwordComplexity": "يجب أن تحتوي كلمة المرور على أحرف وأرقام ورموز خاصة",
+	"passwordMinRequired": "يجب أن تكون كلمة المرور مكونة من 10 أحرف على الأقل",
+	"passwordRequired": "كلمة المرور مطلوبة",
+	"signingUp": "جارٍ إنشاء الحساب...",
+	"signup": "إنشاء حساب",
+	"signUp": "إنشاء حساب"
 }

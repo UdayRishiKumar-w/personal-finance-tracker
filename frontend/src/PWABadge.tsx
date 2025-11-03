@@ -62,7 +62,7 @@ function PWABadge() {
 			role="alert"
 			aria-labelledby="toast-message"
 			className={clsx(
-				"fixed bottom-4 right-4 z-50 flex flex-col items-center rounded border border-gray-300 p-4 shadow-lg transition-transform duration-500 dark:shadow-white",
+				"fixed right-4 bottom-4 z-50 flex flex-col items-center rounded border border-gray-300 p-4 shadow-lg transition-transform duration-500 dark:shadow-white",
 				{
 					"translate-y-0 opacity-100": isOffline || needRefresh,
 					"translate-y-20 opacity-0": !(isOffline || needRefresh),

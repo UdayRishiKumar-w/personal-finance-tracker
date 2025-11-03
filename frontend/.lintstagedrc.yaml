@@ -1,7 +1,9 @@
 "*.{js,mjs,jsx,ts,tsx}":
     - eslint --fix
-    - stylelint --fix
     - prettier --write
+
+"*.{jsx,tsx}":
+    - stylelint --fix
 
 "*.{css,scss,html}":
     - stylelint --fix

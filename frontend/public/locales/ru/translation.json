@@ -1,6 +1,24 @@
 {
+	"alreadyHaveAccount": "Уже есть аккаунт?",
 	"appName": "Личный Финансовый Трекер",
+	"dontHaveAccount": "Нет аккаунта?",
 	"email": "Электронная почта",
+	"enterEmail": "Введите вашу электронную почту",
+	"enterFirstName": "Введите ваше имя",
+	"enterLastName": "Введите вашу фамилию",
+	"enterPassword": "Введите ваш пароль",
+	"firstName": "Имя",
+	"firstNameRequired": "Имя обязательно",
+	"invalidEmail": "Недействительный адрес электронной почты",
+	"lastName": "Фамилия",
+	"lastNameRequired": "Фамилия обязательна",
+	"loggingIn": "Вход в систему...",
 	"login": "Войти",
-	"password": "Пароль"
+	"password": "Пароль",
+	"passwordComplexity": "Пароль должен содержать буквы, цифры и специальные символы",
+	"passwordMinRequired": "Пароль должен содержать не менее 10 символов",
+	"passwordRequired": "Пароль обязателен",
+	"signingUp": "Регистрация...",
+	"signup": "Зарегистрироваться",
+	"signUp": "Создать аккаунт"
 }

@@ -1,41 +1,82 @@
 import { useLoginMutation } from "@/api/authApi";
 import Loader from "@/components/common/Loader";
+import { showSnackbar } from "@/store/snack-bar/snackbarSlice";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
 import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import type { FC, FormEvent } from "react";
-import { useEffect, useRef, useState } from "react";
+import Typography from "@mui/material/Typography";
+import type { TFunction } from "i18next";
+import type { FC } from "react";
+import { useEffect, useState } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
+import * as z from "zod";
 
-const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const createLoginSchema = (t: TFunction<"translation", undefined>) =>
+	z.object({
+		email: z.email({ error: t("invalidEmail") }).transform((val) => val.trim()),
+		password: z.string().min(1, t("passwordRequired")),
+	});
+
+type LoginFormData = z.infer<ReturnType<typeof createLoginSchema>>;
 
 const Login: FC = () => {
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [err, setErr] = useState("");
-	const inputRef = useRef<HTMLInputElement>(null);
-	const { t } = useTranslation();
-
-	useEffect(() => {
-		inputRef.current?.focus();
-	}, []);
-
+	const { t, i18n } = useTranslation();
+	const dispatch = useDispatch();
 	const { mutateAsync: login, isPending } = useLoginMutation();
 
-	const handleSubmit = async (e: FormEvent) => {
-		e.preventDefault();
-		setErr("");
+	const [showPassword, setShowPassword] = useState(false);
+	const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
+	const {
+		register,
+		handleSubmit,
+		setFocus,
+		reset,
+		formState: { errors },
+		trigger,
+	} = useForm<LoginFormData>({
+		resolver: zodResolver(createLoginSchema(t)),
+		mode: "onBlur",
+		shouldFocusError: true,
+	});
+
+	useEffect(() => {
+		const erroredFields = Object.keys(errors) as (keyof LoginFormData)[];
+
+		reset(
+			{},
+			{
+				keepValues: true,
+				keepErrors: true,
+			},
+		);
+		trigger(erroredFields);
+	}, [i18n.language, reset, trigger, errors]);
+
+	useEffect(() => {
+		setFocus("email");
+	}, [setFocus]);
+
+	const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
 		try {
-			const trimmedEmail = email.trim();
-			setEmail(trimmedEmail);
-			if (!validateEmail(trimmedEmail)) return setErr("Invalid email format");
-
-			await login({ email: trimmedEmail, password });
+			await login({
+				email: data.email.trim(),
+				password: data.password,
+			});
+			reset();
 		} catch (err) {
-			setErr((err as Error).message || "Login failed");
+			dispatch(showSnackbar({ message: (err as Error).message || "Login failed", severity: "error" }));
+			console.error(err);
 		}
 	};
 
@@ -43,12 +84,11 @@ const Login: FC = () => {
 		<>
 			<div className="flex h-full items-center justify-center">
 				<form
-					onSubmit={handleSubmit}
-					className="w-full max-w-xs rounded p-8 shadow-2xl sm:max-w-md dark:shadow-neutral-50"
+					onSubmit={handleSubmit(onSubmit)}
+					className="w-full max-w-xs rounded-lg p-8 shadow-2xl sm:max-w-md dark:shadow-neutral-50"
+					noValidate
 				>
 					<h2 className="mb-6 text-center text-2xl font-bold">{t("login")}</h2>
-
-					{err && <div className="mb-4 text-red-600">{err}</div>}
 
 					<Box className="mb-4 flex flex-col gap-4">
 						<TextField
@@ -57,46 +97,67 @@ const Login: FC = () => {
 							type="email"
 							variant="outlined"
 							fullWidth
-							value={email}
-							inputRef={inputRef}
-							onChange={(e) => setEmail(e.target.value)}
 							autoComplete="username"
+							error={!!errors.email}
+							helperText={errors.email?.message}
+							{...register("email")}
+							slotProps={{
+								htmlInput: {
+									title: t("enterEmail"),
+								},
+							}}
 						/>
 
 						<TextField
 							required
 							label={t("password")}
-							type="password"
+							type={showPassword ? "text" : "password"}
 							variant="outlined"
 							fullWidth
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
 							autoComplete="current-password"
+							error={!!errors.password}
+							helperText={errors.password?.message}
+							{...register("password")}
+							slotProps={{
+								htmlInput: {
+									title: t("enterPassword"),
+								},
+								input: {
+									endAdornment: (
+										<InputAdornment position="end">
+											<IconButton
+												onClick={togglePasswordVisibility}
+												onMouseDown={(e) => e.preventDefault()}
+												edge="end"
+												aria-label={showPassword ? "Hide password" : "Show password"}
+											>
+												{showPassword ? <VisibilityOff /> : <Visibility />}
+											</IconButton>
+										</InputAdornment>
+									),
+								},
+							}}
 						/>
 					</Box>
 
-					<Button
-						variant="contained"
-						color="primary"
-						fullWidth
-						type="submit"
-						sx={{
-							mb: 0.5,
-						}}
-						disabled={isPending}
-					>
+					<Button type="submit" variant="contained" color="primary" fullWidth disabled={isPending}>
 						{t("login")}
 					</Button>
+					<Stack
+						direction="row"
+						justifyContent="center"
+						alignItems="center"
+						className="mt-2 text-center text-sm"
+					>
+						<Typography variant="body2">{t("dontHaveAccount")}</Typography>
 
-					<div className="text-center text-sm">
-						Don't have an account?{" "}
-						<Link component={RouterLink} to="/signup">
-							Sign Up
+						<Link component={RouterLink} to="/signup" className="ml-1.5 rtl:mr-1.5 rtl:ml-0">
+							{t("signUp")}
 						</Link>
-					</div>
+					</Stack>
 				</form>
 			</div>
-			{isPending && <Loader text="Logging in..." />}
+			{isPending && <Loader text={t("loggingIn")} />}
 		</>
 	);
 };

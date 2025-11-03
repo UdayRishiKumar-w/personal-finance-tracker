@@ -1,5 +1,5 @@
 import api from "@/api/api-config";
-import { queryClient } from "@/main";
+import { queryClient } from "@/api/queryClient";
 import { setAuthenticated, setLoggedOut } from "@/store/auth/authSlice";
 import type { SignupReqData } from "@/types/apiTypes";
 import { useMutation } from "@tanstack/react-query";

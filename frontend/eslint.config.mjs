@@ -13,6 +13,7 @@ import eslintPluginPlaywright from "eslint-plugin-playwright";
 import eslintPluginReactRedux from "eslint-plugin-react-redux";
 import testingLibrary from "eslint-plugin-testing-library";
 import eslintPluginVitest from "eslint-plugin-vitest";
+import eslintPluginZodX from "eslint-plugin-zod-x";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 /** @type {import('eslint').Linter.Config} */
@@ -20,6 +21,9 @@ export default defineConfig([
 	globalIgnores(["dist", "dev-dist", "coverage", "playwright-report", "test-results"]),
 	// Base JS rules
 	eslintPluginJs.configs.recommended,
+
+	// Zod rules
+	eslintPluginZodX.configs.recommended,
 
 	// TypeScript rules
 	tseslint.configs.recommendedTypeChecked,

@@ -1,63 +1,92 @@
 import { useSignUpMutation } from "@/api/authApi";
 import Loader from "@/components/common/Loader";
+import { showSnackbar } from "@/store/snack-bar/snackbarSlice";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
 import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import type { FC, FormEvent } from "react";
-import { useEffect, useRef, useState } from "react";
+import Typography from "@mui/material/Typography";
+import type { TFunction } from "i18next";
+import type { FC } from "react";
+import { useEffect, useState } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
+import * as z from "zod";
 
-const validateEmail = (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-const validatePassword = (password: string): boolean => {
-	const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).+$/;
-	return pattern.test(password);
-};
+const createSignupSchema = (t: TFunction<"translation", undefined>) =>
+	z.object({
+		firstName: z
+			.string()
+			.trim()
+			.min(1, { message: t("firstNameRequired") }),
+		lastName: z
+			.string()
+			.trim()
+			.min(1, { message: t("lastNameRequired") }),
+		email: z.email({ error: t("invalidEmail") }).transform((val) => val.trim()),
+		password: z
+			.string()
+			.trim()
+			.min(10, { message: t("passwordMinRequired") })
+			.regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).+$/, {
+				message: t("passwordComplexity"),
+			}),
+	});
+
+type SignupFormData = z.infer<ReturnType<typeof createSignupSchema>>;
 
 const Signup: FC = () => {
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [err, setErr] = useState("");
-	const inputRef = useRef<HTMLInputElement>(null);
+	const { mutateAsync: signup, isPending } = useSignUpMutation();
+	const dispatch = useDispatch();
+	const { t, i18n } = useTranslation();
+	const [showPassword, setShowPassword] = useState(false);
+	const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+
+	const {
+		register,
+		handleSubmit,
+		setFocus,
+		reset,
+		trigger,
+		formState: { errors },
+	} = useForm<SignupFormData>({
+		resolver: zodResolver(createSignupSchema(t)),
+		mode: "onBlur",
+		shouldFocusError: true,
+	});
 
 	useEffect(() => {
-		inputRef.current?.focus();
-	}, []);
+		const erroredFields = Object.keys(errors) as (keyof SignupFormData)[];
 
-	const { mutateAsync: signup, isPending } = useSignUpMutation();
+		reset(
+			{},
+			{
+				keepValues: true,
+				keepErrors: true,
+			},
+		);
+		trigger(erroredFields);
+	}, [i18n.language, reset, trigger, errors]);
 
-	const handleSubmit = async (e: FormEvent) => {
-		e.preventDefault();
-		setErr("");
+	useEffect(() => {
+		setFocus("firstName");
+	}, [setFocus]);
 
+	const onSubmit: SubmitHandler<SignupFormData> = async (data) => {
 		try {
-			const trimmedFirstName = firstName.trim();
-			const trimmedLastName = lastName.trim();
-			const trimmedEmail = email.trim();
-			const trimmedPassword = password.trim();
-			setFirstName(trimmedFirstName);
-			setLastName(trimmedLastName);
-			setEmail(trimmedEmail);
-			setPassword(trimmedPassword);
-			if (!trimmedFirstName) return setErr("First name is required");
-			if (!trimmedLastName) return setErr("Last name is required");
-			if (!validateEmail(trimmedEmail)) return setErr("Invalid email format");
-			if (trimmedPassword.length < 10) return setErr("Password must be at least 10 characters");
-			if (!validatePassword(trimmedPassword))
-				return setErr(
-					"Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character",
-				);
-
-			await signup({
-				firstName: trimmedFirstName,
-				lastName: trimmedLastName,
-				email: trimmedEmail,
-				password: trimmedPassword,
-			});
+			await signup(data);
+			reset();
 		} catch (err) {
-			setErr((err as Error).message || "Signup failed");
+			dispatch(showSnackbar({ message: "Sign up failed", severity: "error" }));
+			console.error(err);
 		}
 	};
 
@@ -65,81 +94,116 @@ const Signup: FC = () => {
 		<>
 			<div className="flex h-full items-center justify-center">
 				<form
-					onSubmit={handleSubmit}
-					className="w-full max-w-xs rounded p-8 shadow-2xl sm:max-w-md dark:shadow-neutral-50"
+					onSubmit={handleSubmit(onSubmit)}
+					className="w-full max-w-xs rounded-lg p-8 shadow-2xl sm:max-w-md dark:shadow-neutral-50"
+					noValidate
 				>
-					<h2 className="mb-6 text-center text-2xl font-bold">Sign Up</h2>
-
-					{err && <div className="mb-4 text-red-600">{err}</div>}
+					<h2 className="mb-6 text-center text-2xl font-bold">{t("signup")}</h2>
 
 					<Box className="mb-4 flex flex-col gap-4 sm:flex-row">
 						<TextField
 							required
-							label="First Name"
+							label={t("firstName")}
 							variant="outlined"
 							fullWidth
-							value={firstName}
-							inputRef={inputRef}
-							onChange={(e) => setFirstName(e.target.value)}
 							autoComplete="given-name"
+							{...register("firstName")}
+							error={!!errors.firstName}
+							helperText={errors.firstName?.message}
+							slotProps={{
+								htmlInput: {
+									title: t("enterFirstName"),
+								},
+							}}
 						/>
 						<TextField
 							required
-							label="Last Name"
+							label={t("lastName")}
 							variant="outlined"
 							fullWidth
-							value={lastName}
-							onChange={(e) => setLastName(e.target.value)}
 							autoComplete="family-name"
+							{...register("lastName")}
+							error={!!errors.lastName}
+							helperText={errors.lastName?.message}
+							slotProps={{
+								htmlInput: {
+									title: t("enterLastName"),
+								},
+							}}
 						/>
 					</Box>
 
 					<Box className="mb-4 flex flex-col gap-4">
 						<TextField
 							required
-							label="Email"
+							label={t("email")}
 							type="email"
 							variant="outlined"
 							fullWidth
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
 							autoComplete="username"
+							{...register("email")}
+							error={!!errors.email}
+							helperText={errors.email?.message}
+							slotProps={{
+								htmlInput: {
+									title: t("enterEmail"),
+								},
+							}}
 						/>
+
 						<TextField
 							required
-							label="Password"
-							type="password"
+							label={t("password")}
+							type={showPassword ? "text" : "password"}
 							variant="outlined"
 							fullWidth
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
 							autoComplete="new-password"
+							{...register("password")}
+							error={!!errors.password}
+							helperText={errors.password?.message}
+							slotProps={{
+								htmlInput: {
+									minLength: 10,
+									title: t("passwordComplexity"),
+								},
+								input: {
+									endAdornment: (
+										<InputAdornment position="end">
+											<IconButton
+												onClick={togglePasswordVisibility}
+												onMouseDown={(e) => e.preventDefault()}
+												edge="end"
+												aria-label={showPassword ? "Hide password" : "Show password"}
+											>
+												{showPassword ? <VisibilityOff /> : <Visibility />}
+											</IconButton>
+										</InputAdornment>
+									),
+								},
+							}}
 						/>
 					</Box>
 
-					<Button
-						variant="contained"
-						color="primary"
-						fullWidth
-						type="submit"
-						sx={{
-							mb: 0.5,
-						}}
-						disabled={isPending}
-					>
-						Sign Up
+					<Button variant="contained" color="primary" fullWidth type="submit" disabled={isPending}>
+						{t("signup")}
 					</Button>
 
-					<div className="text-center text-sm">
-						Already have an account?{" "}
-						<Link component={RouterLink} to="/login">
-							Login
+					<Stack
+						direction="row"
+						justifyContent="center"
+						alignItems="center"
+						className="mt-2 text-center text-sm"
+					>
+						<Typography variant="body2">{t("alreadyHaveAccount")}</Typography>
+
+						<Link component={RouterLink} to="/login" className="ml-1.5 rtl:mr-1.5 rtl:ml-0">
+							{t("login")}
 						</Link>
-					</div>
+					</Stack>
 				</form>
 			</div>
 
-			{isPending && <Loader text="Signing up..." />}
+			{isPending && <Loader text={t("signingUp")} />}
 		</>
 	);
 };

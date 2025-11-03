@@ -1,5 +1,5 @@
+import Logout from "@/components/auth/Logout";
 import LanguageSelector from "@/components/LanguageSelector";
-import Logout from "@/components/Logout";
 import ToggleTheme from "@/components/ToggleTheme";
 import type { RootState } from "@/store/store";
 import AppBar from "@mui/material/AppBar";
