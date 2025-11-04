@@ -1,5 +1,4 @@
 import type { ThemeMode } from "@/types/globalTypes";
-import { getInitialTheme } from "@/utils/commonUtils";
 import CssBaseline from "@mui/material/CssBaseline";
 import { arSA, deDE, enUS, jaJP, ruRU, type Localization } from "@mui/material/locale";
 import type { Theme } from "@mui/material/styles";
@@ -7,6 +6,20 @@ import { createTheme, ThemeProvider as MuiThemeProvider } from "@mui/material/st
 import type { FC, PropsWithChildren } from "react";
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+const getInitialTheme = (): ThemeMode => {
+	const storedPreference = localStorage.getItem("theme");
+	if (storedPreference && (storedPreference === "light" || storedPreference === "dark")) {
+		document.documentElement.classList.toggle("dark", storedPreference === "dark");
+		return storedPreference;
+	}
+
+	const prefersDarkMode = globalThis.matchMedia("(prefers-color-scheme: dark)").matches;
+	const preferMode = prefersDarkMode ? "dark" : "light";
+	document.documentElement.classList.toggle("dark", prefersDarkMode);
+	localStorage.setItem("theme", preferMode);
+	return preferMode;
+};
 
 interface ThemeContextPropsType {
 	mode: ThemeMode;
