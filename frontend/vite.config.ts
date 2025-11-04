@@ -6,7 +6,7 @@ import { defineConfig, loadEnv } from "vite";
 import { imagetools } from "vite-imagetools"; // https://github.com/JonasKruckenberg/imagetools/blob/main/docs/_media/getting-started.md
 // import VitePluginChecker from "vite-plugin-checker";
 import { devtools } from "@tanstack/devtools-vite";
-import { ViteMinifyPlugin } from "vite-plugin-minify";
+import htmlMinifier from "vite-plugin-html-minifier";
 import preload from "vite-plugin-preload";
 import { VitePWA } from "vite-plugin-pwa";
 import removeConsole from "vite-plugin-remove-console";
@@ -45,7 +45,7 @@ export default defineConfig(({ mode }) => {
 			// 	},
 			// }),
 			// analyzer(),
-			ViteMinifyPlugin(),
+			htmlMinifier(),
 		],
 		resolve: {
 			alias: {
@@ -70,6 +70,16 @@ export default defineConfig(({ mode }) => {
 							}
 							if (id.includes("@reduxjs/toolkit") || id.includes("react-redux")) {
 								return "redux";
+							}
+							if (
+								id.includes("@hookform/resolvers") ||
+								id.includes("react-hook-form") ||
+								id.includes("zod")
+							) {
+								return "hookform";
+							}
+							if (id.includes("i18next")) {
+								return "i18next";
 							}
 							return "vendor";
 						}

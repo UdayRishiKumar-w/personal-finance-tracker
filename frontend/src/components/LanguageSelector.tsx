@@ -27,10 +27,13 @@ const LanguageSelector: FC = () => {
 		const selectedLanguage = e.target.value;
 		setLanguage(selectedLanguage);
 
-		setSearchParams((searchParams) => {
-			searchParams.set("lng", selectedLanguage);
-			return searchParams;
-		});
+		setSearchParams(
+			(searchParams) => {
+				searchParams.set("lng", selectedLanguage);
+				return searchParams;
+			},
+			{ replace: true },
+		);
 
 		i18next.changeLanguage(selectedLanguage);
 	};

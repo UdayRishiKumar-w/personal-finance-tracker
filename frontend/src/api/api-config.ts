@@ -16,6 +16,15 @@ const api = axios.create({
 	withCredentials: true,
 });
 
+export const healthApi = axios.create({
+	baseURL: (import.meta.env.VITE_API_BASE || "http://localhost:8080/api").replace("/api", "/actuator/health"),
+	timeout: 60_000,
+	headers: {
+		"Content-Type": "application/json",
+		Accept: "application/json",
+	},
+});
+
 // api.interceptors.request.use((config) => {
 // 	const token = sessionStorage.getItem("token");
 // 	if (token) {

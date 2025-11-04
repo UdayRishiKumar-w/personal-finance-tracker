@@ -1,10 +1,27 @@
-import api from "@/api/api-config";
+import api, { healthApi } from "@/api/api-config";
 import { queryClient } from "@/api/queryClient";
 import { setAuthenticated, setLoggedOut } from "@/store/auth/authSlice";
 import type { SignupReqData } from "@/types/apiTypes";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+/**
+ * Health check query to start the cold startup of the backend server.
+ * Retries until a successful response is received.
+ */
+export const useHealthCheckQuery = () => {
+	return useQuery({
+		queryKey: ["health"],
+		queryFn: async () => {
+			const { data } = await healthApi.get("");
+			return data;
+		},
+		retry: true, // keep retrying until success
+		retryDelay: 10000, // 10 seconds between retry attempts
+		enabled: import.meta.env.VITE_IS_HOSTED_ON_VERCEL === "true",
+	});
+};
 
 export const useLoginMutation = () => {
 	const dispatch = useDispatch();

@@ -1,9 +1,11 @@
-"*.{js,mjs,jsx,ts,tsx}":
+"*.{js,mjs,ts,.cjs}":
     - eslint --fix
     - prettier --write
 
 "*.{jsx,tsx}":
+    - eslint --fix
     - stylelint --fix
+    - prettier --write
 
 "*.{css,scss,html}":
     - stylelint --fix
