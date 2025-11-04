@@ -57,32 +57,26 @@ export default defineConfig(({ mode }) => {
 			minify: "terser",
 			rollupOptions: {
 				output: {
-					manualChunks(id) {
-						if (id.includes("node_modules")) {
-							if (id.includes("i18n")) return "i18n";
-							if (id.includes("axios")) return "axios";
-							if (id.includes("@mui") || id.includes("@emotion")) {
-								return "mui-emotion";
-							}
-							if (id.includes("react") || id.includes("use-sync-external-store")) return "react";
-							if (id.includes("chart.js") || id.includes("chartjs") || id.includes("hammerjs")) {
-								return "chartjs";
-							}
-							if (id.includes("@reduxjs/toolkit") || id.includes("react-redux")) {
-								return "redux";
-							}
-							if (
-								id.includes("@hookform/resolvers") ||
-								id.includes("react-hook-form") ||
-								id.includes("zod")
-							) {
-								return "hookform";
-							}
-							if (id.includes("i18next")) {
-								return "i18next";
-							}
-							return "vendor";
-						}
+					manualChunks: {
+						react: ["react", "react-dom", "react-router-dom"],
+						mui: ["@mui/material", "@emotion/react", "@emotion/styled"],
+						"mui-icons": ["@mui/icons-material"],
+						stylis: ["stylis", "@mui/stylis-plugin-rtl"],
+						"mui-grid": ["@mui/x-data-grid"],
+						redux: ["@reduxjs/toolkit", "react-redux"],
+						hookform: ["react-hook-form", "@hookform/resolvers", "zod"],
+						i18n: [
+							"i18next",
+							"react-i18next",
+							"i18next-browser-languagedetector",
+							"i18next-http-backend",
+							"i18next-localstorage-backend",
+						],
+						chart: ["chart.js", "chartjs-plugin-zoom", "react-chartjs-2"],
+						query: ["@tanstack/react-query"],
+						vercel: ["@vercel/analytics/react", "@vercel/speed-insights/react"],
+						axios: ["axios"],
+						utils: ["clsx", "clsx/lite", "date-fns"],
 					},
 				},
 			},
