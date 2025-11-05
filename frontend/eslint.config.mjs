@@ -39,6 +39,7 @@ export default defineConfig([
 			"@typescript-eslint/no-misused-promises": "off",
 			"@typescript-eslint/no-floating-promises": "off",
 			"@typescript-eslint/promise-function-async": "off",
+			"@typescript-eslint/no-redundant-type-constituents": "off",
 		},
 	},
 	{

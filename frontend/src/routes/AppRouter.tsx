@@ -11,6 +11,7 @@ const Dashboard = lazy(async () => import("@/pages/Dashboard"));
 const Login = lazy(async () => import("@/pages/Login"));
 const Signup = lazy(async () => import("@/pages/Signup"));
 const NotFound = lazy(async () => import("@/pages/NotFound"));
+const Transactions = lazy(async () => import("@/pages/Transactions"));
 
 export default function AppRouter() {
 	const dispatch = useDispatch();
@@ -49,6 +50,9 @@ export default function AppRouter() {
 				<Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />} />
 				<Route element={<PrivateRoute />}>
 					<Route path="/dashboard" element={<Dashboard />}></Route>
+				</Route>
+				<Route element={<PrivateRoute />}>
+					<Route path="/transactions" element={<Transactions />}></Route>
 				</Route>
 				<Route path="/" element={<Navigate to="/dashboard" replace />} />
 				<Route path="*" element={<NotFound />} />
