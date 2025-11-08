@@ -14,8 +14,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import com.example.pft.component.JwtAuthEntryPoint;
 import com.example.pft.security.JwtAuthenticationFilter;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -30,6 +32,7 @@ public class SecurityConfig {
 	private final JwtAuthenticationFilter jwtFilter;
 	private final AuthenticationProvider authenticationProvider;
 	private final CorsConfigurationSource corsConfigurationSource;
+	private final JwtAuthEntryPoint jwtAuthEntryPoint;
 
 	// https://stackoverflow.com/questions/77266685/spring-security-6-cors-is-deprecated-and-marked-for-removal
 	@Bean
@@ -50,6 +53,14 @@ public class SecurityConfig {
 			// no session, stateless API
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authenticationProvider(this.authenticationProvider)
+			.exceptionHandling(
+				ex -> ex
+					.authenticationEntryPoint(jwtAuthEntryPoint)
+					.accessDeniedHandler(
+						(request, response, accessDeniedException) -> response
+							.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden")
+					)
+			)
 			.addFilterBefore(this.jwtFilter, UsernamePasswordAuthenticationFilter.class)
 			.build();
 	}
