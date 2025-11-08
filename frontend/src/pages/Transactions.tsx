@@ -1,6 +1,7 @@
 import { useTransactions } from "@/api/transactionsApi";
 import TransactionForm from "@/components/forms/TransactionForm";
 import ConfirmDeleteDialog from "@/components/transaction/ConfirmDeleteDialog";
+import useGetDateFnsLocale from "@/hooks/useGetDateFnsLocale";
 import type { TransactionData } from "@/types/globalTypes";
 import AddIcon from "@mui/icons-material/Add";
 import Box from "@mui/material/Box";
@@ -18,6 +19,7 @@ import type { FC } from "react";
 import { useState } from "react";
 
 const Transactions: FC = () => {
+	const dateFnsLocale = useGetDateFnsLocale();
 	const [paginationModel, setPaginationModel] = useState({
 		page: 0,
 		pageSize: 10,
@@ -53,11 +55,25 @@ const Transactions: FC = () => {
 		},
 		{ field: "category", headerName: "Category", width: 150 },
 		{
+			field: "description",
+			headerName: "Description",
+			flex: 1,
+			minWidth: 200,
+		},
+		{
+			field: "recurring",
+			headerName: "Recurring",
+			width: 130,
+			renderCell: (params) => (
+				<Typography className="flex h-full items-center">{params.value ? "Yes" : "No"}</Typography>
+			),
+		},
+		{
 			field: "date",
 			headerName: "Date",
 			width: 160,
 			valueFormatter: (value: string) => {
-				return value ? format(parseISO(value), "dd MMM yyyy") : "";
+				return value ? format(parseISO(value), "dd MMM yyyy", { locale: dateFnsLocale }) : "";
 			},
 		},
 		{ field: "amount", headerName: "Amount", width: 120 },

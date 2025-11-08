@@ -1,4 +1,5 @@
 import { useCreateTransaction, useUpdateTransaction } from "@/api/transactionsApi";
+import useGetDateFnsLocale from "@/hooks/useGetDateFnsLocale";
 import { showSnackbar } from "@/store/snack-bar/snackbarSlice";
 import type { TransactionData } from "@/types/globalTypes";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -7,8 +8,13 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import MenuItem from "@mui/material/MenuItem";
+import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useEffect, type FC } from "react";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -20,6 +26,8 @@ const transactionSchema = z.object({
 	category: z.string().min(1, "Category is required"),
 	amount: z.preprocess(Number, z.number().positive("Amount must be positive")),
 	date: z.string().min(1, "Date is required"),
+	description: z.string(),
+	recurring: z.boolean().default(false).nonoptional(),
 });
 
 type TransactionFormValues = z.infer<typeof transactionSchema>;
@@ -33,6 +41,7 @@ interface TransactionFormProps {
 const TransactionForm: FC<TransactionFormProps> = ({ open, onClose, editTransaction }) => {
 	const { mutateAsync: createTx } = useCreateTransaction();
 	const { mutateAsync: updateTx } = useUpdateTransaction();
+	const dateFnsLocale = useGetDateFnsLocale();
 
 	const transactionFormDefaultValues: TransactionFormValues = {
 		title: "",
@@ -40,6 +49,8 @@ const TransactionForm: FC<TransactionFormProps> = ({ open, onClose, editTransact
 		category: "",
 		amount: 0,
 		date: new Date().toISOString().split("T")[0],
+		description: "",
+		recurring: false,
 	};
 
 	const {
@@ -62,6 +73,8 @@ const TransactionForm: FC<TransactionFormProps> = ({ open, onClose, editTransact
 				category: editTransaction.category,
 				amount: editTransaction.amount,
 				date: editTransaction.date.split("T")[0],
+				description: editTransaction.description,
+				recurring: editTransaction.recurring,
 			});
 		} else if (!open) {
 			reset({ ...transactionFormDefaultValues });
@@ -135,17 +148,42 @@ const TransactionForm: FC<TransactionFormProps> = ({ open, onClose, editTransact
 						helperText={errors.amount?.message}
 					/>
 
-					<TextField
-						required
-						fullWidth
-						label="Date"
-						type="date"
-						{...register("date")}
-						slotProps={{
-							inputLabel: { shrink: true },
-						}}
-						error={!!errors.date}
-						helperText={errors.date?.message}
+					<Controller
+						name="date"
+						control={control}
+						render={({ field }) => (
+							<LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={dateFnsLocale}>
+								<DatePicker
+									label="Date"
+									value={field.value ? new Date(field.value) : null}
+									onChange={(date) => {
+										field.onChange(date?.toISOString().split("T")[0] ?? "");
+									}}
+									slotProps={{
+										textField: {
+											fullWidth: true,
+											error: !!errors.date,
+											helperText: errors.date?.message,
+										},
+										openPickerButton: {
+											sx: { cursor: "pointer" },
+										},
+									}}
+								/>
+							</LocalizationProvider>
+						)}
+					/>
+
+					<TextField label="Description" fullWidth multiline minRows={2} {...register("description")} />
+					<Controller
+						control={control}
+						name="recurring"
+						render={({ field }) => (
+							<FormControlLabel
+								control={<Switch checked={field.value} {...field} />}
+								label="Recurring Transaction"
+							/>
+						)}
 					/>
 				</DialogContent>
 

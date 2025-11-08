@@ -1,5 +1,6 @@
 import { useTransactions } from "@/api/transactionsApi";
 import MonthlyChart from "@/components/charts/MonthlyChart";
+import useGetDateFnsLocale from "@/hooks/useGetDateFnsLocale";
 import type { TransactionData } from "@/types/globalTypes";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -11,10 +12,13 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import clsx from "clsx";
+import { parseISO } from "date-fns";
 import { format } from "date-fns/format";
+import type { FC } from "react";
 
-const Dashboard: React.FC = () => {
+const Dashboard: FC = () => {
 	const { data, isLoading, error } = useTransactions(0, 50);
+	const dateFnsLocale = useGetDateFnsLocale();
 
 	if (isLoading) {
 		return (
@@ -123,9 +127,17 @@ const Dashboard: React.FC = () => {
 										</Typography>
 									}
 									secondary={
-										<Typography variant="body2" color="text.secondary">
-											{t.category || "Uncategorized"} • {format(new Date(t.date), "dd MMM yyyy")}
-										</Typography>
+										<Box className="flex items-center gap-1">
+											<Typography variant="body2" color="text.secondary">
+												{t.category || "Uncategorized"}
+											</Typography>
+											<Typography variant="body2" color="text.secondary">
+												•
+											</Typography>
+											<Typography variant="body2" color="text.secondary">
+												{format(parseISO(t.date), "dd MMM yyyy", { locale: dateFnsLocale })}
+											</Typography>
+										</Box>
 									}
 								/>
 
