@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import type { ChartData, ChartOptions } from "chart.js";
 import { CategoryScale, Chart, LinearScale, LineController, LineElement, PointElement } from "chart.js";
 import zoomPlugin from "chartjs-plugin-zoom";
@@ -33,8 +34,8 @@ export default function BalanceChart() {
 	};
 
 	return (
-		<div className="h-3/4 w-full max-w-3xl">
+		<Box className="h-3/4 w-full max-w-3xl">
 			<Line data={data} options={options} className="dark:brightness-0 dark:invert" />
-		</div>
+		</Box>
 	);
 }

@@ -47,10 +47,10 @@ export default class ErrorBoundary extends Component<Props, State> {
 					</Typography>
 
 					<Box className="flex gap-4">
-						<Button variant="outlined" color="primary" onClick={this.resetError} className="!mt-4">
+						<Button variant="outlined" color="primary" onClick={this.resetError} className="mt-4">
 							<span className="material-icons mr-2">replay</span>Try Again
 						</Button>
-						<Button variant="contained" color="primary" onClick={this.handleReload} className="!mt-4">
+						<Button variant="contained" color="primary" onClick={this.handleReload} className="mt-4">
 							<span className="material-icons mr-2">refresh</span>Reload App
 						</Button>
 					</Box>

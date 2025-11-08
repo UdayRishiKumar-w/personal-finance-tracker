@@ -1,4 +1,5 @@
 import { useCreateTransaction, useUpdateTransaction } from "@/api/transactionsApi";
+import { showSnackbar } from "@/store/snack-bar/snackbarSlice";
 import type { TransactionData } from "@/types/globalTypes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "@mui/material/Button";
@@ -9,7 +10,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import { useEffect, type FC } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm, type SubmitHandler } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import * as z from "zod";
 
 const transactionSchema = z.object({
@@ -30,27 +32,30 @@ interface TransactionFormProps {
 
 const TransactionForm: FC<TransactionFormProps> = ({ open, onClose, editTransaction }) => {
 	const { mutateAsync: createTx } = useCreateTransaction();
-	const { mutateAsync: updateTx } = useUpdateTransaction(); // exception handling
+	const { mutateAsync: updateTx } = useUpdateTransaction();
+
+	const transactionFormDefaultValues: TransactionFormValues = {
+		title: "",
+		type: "EXPENSE",
+		category: "",
+		amount: 0,
+		date: new Date().toISOString().split("T")[0],
+	};
 
 	const {
 		register,
 		handleSubmit,
 		reset,
+		control,
 		formState: { errors, isSubmitting },
 	} = useForm<TransactionFormValues>({
 		resolver: zodResolver(transactionSchema),
-		defaultValues: {
-			title: "",
-			type: "EXPENSE",
-			category: "",
-			amount: 0,
-			date: new Date().toISOString().split("T")[0],
-		},
+		defaultValues: { ...transactionFormDefaultValues },
+		shouldFocusError: true,
 	});
 
-	// Fix this
 	useEffect(() => {
-		if (editTransaction) {
+		if (open && editTransaction) {
 			reset({
 				title: editTransaction.title,
 				type: editTransaction.type,
@@ -58,18 +63,30 @@ const TransactionForm: FC<TransactionFormProps> = ({ open, onClose, editTransact
 				amount: editTransaction.amount,
 				date: editTransaction.date.split("T")[0],
 			});
-		} else {
-			reset();
+		} else if (!open) {
+			reset({ ...transactionFormDefaultValues });
 		}
-	}, [editTransaction, reset]);
+	}, [open, editTransaction, reset]);
 
-	const onSubmit = async (values: TransactionFormValues) => {
-		if (editTransaction) {
-			await updateTx({ id: editTransaction.id || 0, payload: { ...editTransaction, ...values } });
-		} else {
-			await createTx(values);
+	const dispatch = useDispatch();
+
+	const onSubmit: SubmitHandler<TransactionFormValues> = async (values) => {
+		try {
+			if (editTransaction) {
+				if (!editTransaction.id) {
+					dispatch(
+						showSnackbar({ message: "Cannot update transaction without valid ID", severity: "error" }),
+					);
+					return;
+				}
+				await updateTx({ id: editTransaction.id, payload: values });
+			} else {
+				await createTx(values);
+			}
+			onClose();
+		} catch {
+			dispatch(showSnackbar({ message: "Transaction submission failed", severity: "error" }));
 		}
-		onClose();
 	};
 
 	return (
@@ -87,10 +104,17 @@ const TransactionForm: FC<TransactionFormProps> = ({ open, onClose, editTransact
 						helperText={errors.title?.message}
 					/>
 
-					<TextField required select fullWidth label="Type" {...register("type")}>
-						<MenuItem value="INCOME">Income</MenuItem>
-						<MenuItem value="EXPENSE">Expense</MenuItem>
-					</TextField>
+					<Controller
+						name="type"
+						control={control}
+						defaultValue="EXPENSE"
+						render={({ field }) => (
+							<TextField select fullWidth required label="Type" {...field}>
+								<MenuItem value="INCOME">Income</MenuItem>
+								<MenuItem value="EXPENSE">Expense</MenuItem>
+							</TextField>
+						)}
+					/>
 
 					<TextField
 						required
@@ -126,7 +150,9 @@ const TransactionForm: FC<TransactionFormProps> = ({ open, onClose, editTransact
 				</DialogContent>
 
 				<DialogActions>
-					<Button onClick={onClose}>Cancel</Button>
+					<Button onClick={onClose} disabled={isSubmitting}>
+						Cancel
+					</Button>
 					<Button variant="contained" type="submit" disabled={isSubmitting}>
 						{isSubmitting ? "Saving..." : editTransaction ? "Update" : "Add"}
 					</Button>

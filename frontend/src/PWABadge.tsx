@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { clsx } from "clsx/lite";
+import { clsx } from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
 
@@ -62,14 +62,14 @@ function PWABadge() {
 			role="alert"
 			aria-labelledby="toast-message"
 			className={clsx(
-				"fixed right-4 bottom-4 z-50 flex flex-col items-center rounded border border-gray-300 p-4 shadow-lg transition-transform duration-500 dark:shadow-white",
+				"fixed right-4 bottom-4 z-50 flex flex-col items-center rounded border border-gray-300 bg-gray-50 p-4 text-gray-900 shadow-lg transition-transform duration-500 dark:bg-gray-950 dark:text-gray-100 dark:shadow-white",
 				{
 					"translate-y-0 opacity-100": isOffline || needRefresh,
 					"translate-y-20 opacity-0": !(isOffline || needRefresh),
 				},
 			)}
 		>
-			<Typography id="toast-message" className="mb-2 text-center text-gray-800">
+			<Typography id="toast-message" className="mb-2 text-center">
 				{isOffline
 					? "You are offline. Some features may not work."
 					: "New content available, click reload to update."}

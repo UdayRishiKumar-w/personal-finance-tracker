@@ -1,6 +1,7 @@
 package com.example.pft.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.example.pft.enums.TransactionType;
@@ -31,7 +32,7 @@ public class Transaction implements Serializable {
 
 	private String title;
 
-	private Double amount;
+	private BigDecimal amount;
 
 	private String category;
 

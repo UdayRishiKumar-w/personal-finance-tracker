@@ -3,6 +3,7 @@ import LanguageSelector from "@/components/LanguageSelector";
 import ToggleTheme from "@/components/ToggleTheme";
 import type { RootState } from "@/store/store";
 import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -30,7 +31,7 @@ const NavBar = () => {
 					{t("appName")}
 				</Typography>
 
-				<div className="flex items-center gap-2">
+				<Box className="flex items-center gap-2">
 					{isAuthenticated && (
 						<>
 							<Button
@@ -54,7 +55,7 @@ const NavBar = () => {
 					<LanguageSelector />
 					<ToggleTheme />
 					{isAuthenticated && <Logout />}
-				</div>
+				</Box>
 			</Toolbar>
 		</AppBar>
 	);

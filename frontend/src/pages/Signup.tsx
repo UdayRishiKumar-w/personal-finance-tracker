@@ -92,13 +92,15 @@ const Signup: FC = () => {
 
 	return (
 		<>
-			<div className="flex h-full items-center justify-center overflow-auto">
+			<Box className="flex h-full items-center justify-center overflow-auto">
 				<form
 					onSubmit={handleSubmit(onSubmit)}
 					className="w-full max-w-xs rounded-lg p-8 shadow-2xl sm:max-w-md dark:shadow-neutral-50"
 					noValidate
 				>
-					<h2 className="mb-6 text-center text-2xl font-bold">{t("signup")}</h2>
+					<Typography variant="h2" className="mb-6 text-center text-2xl font-bold">
+						{t("signup")}
+					</Typography>
 
 					<Box className="mb-4 flex flex-col gap-4 sm:flex-row">
 						<TextField
@@ -194,14 +196,16 @@ const Signup: FC = () => {
 						alignItems="center"
 						className="mt-2 text-center text-sm"
 					>
-						<Typography variant="body2">{t("alreadyHaveAccount")}</Typography>
+						<Typography variant="body2" component="span">
+							{t("alreadyHaveAccount")}
+						</Typography>
 
 						<Link component={RouterLink} to="/login" className="ml-1.5 rtl:mr-1.5 rtl:ml-0">
 							{t("login")}
 						</Link>
 					</Stack>
 				</form>
-			</div>
+			</Box>
 
 			{isPending && <Loader text={t("signingUp")} />}
 		</>

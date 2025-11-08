@@ -3,7 +3,11 @@ package com.example.pft.service;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -38,12 +42,35 @@ public class RedisService {
 		}
 	}
 
-	public void delete(final String key) {
+	public void delete(@NonNull final String key) {
 		try {
 			this.redisTemplate.delete(key);
 		} catch (final DataAccessException e) {
 			log.error("Failed to delete data from Redis for key {}: {}", key, e.getMessage());
 			throw new RuntimeException("Redis delete failed", e);
+		}
+	}
+
+	public void evictByPattern(final String pattern) {
+		if (pattern == null || pattern.isEmpty()) {
+			throw new IllegalArgumentException("Pattern must not be null or empty");
+		}
+
+		try {
+			this.redisTemplate.execute((RedisCallback<Void>) connection -> {
+				final ScanOptions options = ScanOptions.scanOptions().match(pattern).count(100).build();
+				try (final Cursor<byte[]> cursor = connection.keyCommands().scan(options)) {
+					while (cursor.hasNext()) {
+						connection.keyCommands().del(cursor.next());
+					}
+				} catch (final Exception e) {
+					log.error("Error scanning or deleting keys for pattern: {}", pattern, e);
+				}
+				return null;
+			});
+		} catch (final DataAccessException e) {
+			log.error("Failed to evict keys by pattern {} from Redis: {}", pattern, e.getMessage());
+			throw new RuntimeException("Redis evictByPattern failed", e);
 		}
 	}
 }

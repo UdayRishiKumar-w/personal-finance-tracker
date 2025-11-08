@@ -1,5 +1,6 @@
 import { useTransactions } from "@/api/transactionsApi";
 import { useTheme } from "@/context/ThemeContext";
+import Box from "@mui/material/Box";
 import type { ChartData, ChartOptions } from "chart.js";
 import {
 	BarController,
@@ -12,7 +13,7 @@ import {
 	PointElement,
 	Tooltip,
 } from "chart.js";
-import { format, subMonths } from "date-fns";
+import { differenceInCalendarMonths, format, subMonths } from "date-fns";
 import type { FC } from "react";
 import { useMemo } from "react";
 import { Bar } from "react-chartjs-2";
@@ -34,14 +35,16 @@ const MonthlyChart: FC<MonthlyChartProps> = ({ months = 6 }) => {
 	const { incomeData, expenseData } = useMemo(() => {
 		const inc = new Array(months).fill(0);
 		const exp = new Array(months).fill(0);
-		transactions.forEach((t: { date: string | number | Date; type: string; amount: unknown }) => {
-			const monthIndex =
-				months - 1 - Math.floor((new Date().getTime() - new Date(t.date).getTime()) / (30 * 24 * 3600 * 1000));
+		const now = new Date();
+		for (const t of transactions) {
+			const transactionDate = new Date(t.date);
+			const monthsAgo = differenceInCalendarMonths(now, transactionDate);
+			const monthIndex = months - 1 - monthsAgo;
 			if (monthIndex >= 0 && monthIndex < months) {
 				if (t.type === "INCOME") inc[monthIndex] += Number(t.amount);
 				else if (t.type === "EXPENSE") exp[monthIndex] += Number(t.amount);
 			}
-		});
+		}
 		return { incomeData: inc, expenseData: exp };
 	}, [transactions, months]);
 
@@ -92,9 +95,9 @@ const MonthlyChart: FC<MonthlyChartProps> = ({ months = 6 }) => {
 	};
 
 	return (
-		<div className="aspect-2/1 w-full">
+		<Box className="aspect-2/1 w-full">
 			<Bar data={dataConfig} options={options} />
-		</div>
+		</Box>
 	);
 };
 

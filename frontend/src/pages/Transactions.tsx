@@ -1,7 +1,9 @@
-import { useDeleteTransaction, useTransactions } from "@/api/transactionsApi";
+import { useTransactions } from "@/api/transactionsApi";
 import TransactionForm from "@/components/forms/TransactionForm";
+import ConfirmDeleteDialog from "@/components/transaction/ConfirmDeleteDialog";
 import type { TransactionData } from "@/types/globalTypes";
 import AddIcon from "@mui/icons-material/Add";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -10,17 +12,22 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import type { GridColDef } from "@mui/x-data-grid/";
 import { DataGrid } from "@mui/x-data-grid/DataGrid";
+import clsx from "clsx";
 import { format, parseISO } from "date-fns";
 import type { FC } from "react";
 import { useState } from "react";
 
 const Transactions: FC = () => {
-	const [page] = useState(0);
+	const [paginationModel, setPaginationModel] = useState({
+		page: 0,
+		pageSize: 10,
+	});
+
 	const [openForm, setOpenForm] = useState(false);
 	const [editTx, setEditTx] = useState<TransactionData | null>(null);
-	const { data, isLoading } = useTransactions(page, 20);
-	const { mutate: deleteTx, isPending: deleting } = useDeleteTransaction();
-
+	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+	const [deleteId, setDeleteId] = useState<number | null>(null);
+	const { data, isLoading, error } = useTransactions(paginationModel.page, paginationModel.pageSize);
 	const transactions = (data?.content ?? []) as TransactionData[];
 
 	const columns: GridColDef[] = [
@@ -30,15 +37,18 @@ const Transactions: FC = () => {
 			headerName: "Type",
 			width: 120,
 			renderCell: (params) => (
-				<span
-					className={
+				<Typography
+					variant="body2"
+					component="span"
+					className={clsx(
+						"font-semibold",
 						params.value === "EXPENSE"
-							? "font-semibold text-red-600 dark:text-red-400"
-							: "font-semibold text-green-600 dark:text-green-400"
-					}
+							? "text-red-600 dark:text-red-400"
+							: "text-green-600 dark:text-green-400",
+					)}
 				>
 					{params.value}
-				</span>
+				</Typography>
 			),
 		},
 		{ field: "category", headerName: "Category", width: 150 },
@@ -46,8 +56,8 @@ const Transactions: FC = () => {
 			field: "date",
 			headerName: "Date",
 			width: 160,
-			valueFormatter: (params: string) => {
-				return format(parseISO(params), "dd MMM yyyy");
+			valueFormatter: (value: string) => {
+				return value ? format(parseISO(value), "dd MMM yyyy") : "";
 			},
 		},
 		{ field: "amount", headerName: "Amount", width: 120 },
@@ -57,7 +67,7 @@ const Transactions: FC = () => {
 			width: 180,
 			sortable: false,
 			renderCell: (params) => (
-				<div className="flex h-full items-center space-x-2 rtl:space-x-reverse">
+				<Box className="flex h-full items-center space-x-2">
 					<Button
 						variant="outlined"
 						size="small"
@@ -72,52 +82,67 @@ const Transactions: FC = () => {
 						variant="outlined"
 						color="error"
 						size="small"
-						disabled={deleting}
-						onClick={() => deleteTx(params.row.id)}
+						onClick={() => {
+							setDeleteId(params.row.id);
+							setOpenDeleteDialog(true);
+						}}
 					>
 						Delete
 					</Button>
-				</div>
+				</Box>
 			),
 		},
 	];
 
 	if (isLoading) {
 		return (
-			<div className="flex h-full items-center justify-center">
+			<Box className="flex h-full items-center justify-center">
 				<CircularProgress />
-			</div>
+			</Box>
+		);
+	}
+
+	if (error) {
+		return (
+			<Box className="flex h-full items-center justify-center">
+				<Typography color="error">Failed to load transactions. Please try again.</Typography>
+			</Box>
 		);
 	}
 
 	return (
-		<div className="space-y-4 p-4">
-			<div className="flex items-center justify-between">
+		<Box className="space-y-4 p-4">
+			<Box className="flex items-center justify-between">
 				<Typography variant="h5" className="font-bold">
 					Transactions
 				</Typography>
 				<Button
 					variant="contained"
 					startIcon={<AddIcon />}
-					onClick={() => setOpenForm(true)}
+					onClick={() => {
+						setEditTx(null);
+						setOpenForm(true);
+					}}
 					className="rounded-xl"
 				>
 					Add
 				</Button>
-			</div>
+			</Box>
 
 			<Card className="rounded-2xl bg-white shadow-md dark:bg-gray-800">
 				<CardHeader title={<Typography variant="h6">All Transactions</Typography>} />
 				<CardContent>
-					<div style={{ height: 600, width: "100%" }}>
+					<Box style={{ height: 600, width: "100%" }}>
 						<DataGrid
 							rows={transactions}
 							columns={columns}
 							getRowId={(row) => row.id}
+							rowCount={data?.totalElements ?? 0}
+							paginationMode="server"
 							pageSizeOptions={[10, 20, 50]}
-							initialState={{
-								pagination: { paginationModel: { pageSize: 10 } },
-							}}
+							paginationModel={paginationModel}
+							onPaginationModelChange={(model) => setPaginationModel(model)}
+							disableRowSelectionOnClick
 							sx={{
 								"& .MuiDataGrid-cell": { outline: "none" },
 								"& .MuiDataGrid-columnHeaders": {
@@ -125,7 +150,7 @@ const Transactions: FC = () => {
 								},
 							}}
 						/>
-					</div>
+					</Box>
 				</CardContent>
 			</Card>
 
@@ -137,7 +162,15 @@ const Transactions: FC = () => {
 				}}
 				editTransaction={editTx}
 			/>
-		</div>
+			<ConfirmDeleteDialog
+				open={openDeleteDialog}
+				onClose={() => {
+					setDeleteId(null);
+					setOpenDeleteDialog(false);
+				}}
+				deleteId={deleteId}
+			/>
+		</Box>
 	);
 };
 

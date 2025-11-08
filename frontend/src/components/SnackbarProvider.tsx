@@ -14,7 +14,7 @@ export const SnackbarProvider: FC = () => {
 			open={open}
 			autoHideDuration={2000}
 			onClose={() => dispatch(hideSnackbar())}
-			anchorOrigin={{ vertical: "top", horizontal: "right" }}
+			anchorOrigin={{ vertical: "top", horizontal: "center" }}
 			sx={{
 				mt: 5.5,
 			}}

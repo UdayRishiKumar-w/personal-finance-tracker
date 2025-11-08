@@ -2,11 +2,12 @@ import api from "@/api/api-config";
 import type { TransactionData } from "@/types/globalTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export const useTransactions = (page = 0, size = 20) => {
+export const useTransactions = (page = 0, size = 10) => {
 	return useQuery({
 		queryKey: ["transactions", page, size],
 		queryFn: async () => {
-			const { data } = await api.get(`/transactions?page=${page}&size=${size}`);
+			const params = new URLSearchParams({ page: String(page), size: String(size) });
+			const { data } = await api.get(`/transactions?${params}`);
 			return data;
 		},
 		retry: true,
@@ -41,7 +42,10 @@ export const useDeleteTransaction = () => {
 export const useTransactionsRange = (from: string, to: string) => {
 	return useQuery({
 		queryKey: ["transactions-range", from, to],
-		queryFn: async () => api.get(`/transactions/range?from=${from}&to=${to}`).then((r) => r.data),
+		queryFn: async () => {
+			const params = new URLSearchParams({ from, to });
+			return api.get(`/transactions/range?${params}`).then((r) => r.data);
+		},
 		enabled: !!from && !!to,
 	});
 };
