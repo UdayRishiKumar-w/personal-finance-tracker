@@ -11,8 +11,9 @@ ENV VITE_NONCE_ENABLED=${VITE_NONCE_ENABLED}
 
 COPY package.json package-lock.json* ./
 
+# https://overcast.blog/13-docker-chaching-strategies-you-should-know-b6b37e556781
 # Install dependencies using npm ci with a cache mount for faster subsequent builds
-RUN --mount=type=cache,target=/root/.npm npm ci
+RUN --mount=type=cache,target=/root/.npm,id=npm-cache-pft,sharing=locked npm ci --ignore-scripts
 # RUN npm ci
 
 COPY . .
