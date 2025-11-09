@@ -34,7 +34,7 @@
 		"editor.defaultFormatter": "redhat.java"
 	},
 	"[xml]": {
-		"editor.defaultFormatter": "DotJoshJohnson.xml"
+		"editor.defaultFormatter": "redhat.vscode-xml"
 	},
 	"[nginx]": {
 		"editor.defaultFormatter": "teclado.vscode-nginx-format"

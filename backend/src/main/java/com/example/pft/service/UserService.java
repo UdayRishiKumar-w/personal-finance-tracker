@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +32,7 @@ public class UserService {
 
 	@Transactional
 	@CachePut(value = "users", key = "#user.email")
-	public User saveUser(final User user) {
+	public User saveUser(@NonNull final User user) {
 		return this.userRepository.save(user);
 	}
 
