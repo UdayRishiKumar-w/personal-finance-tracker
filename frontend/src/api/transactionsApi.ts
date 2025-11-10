@@ -1,8 +1,12 @@
 import api from "@/api/api-config";
+import type { RootState } from "@/store/store";
 import type { TransactionData } from "@/types/globalTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 
 export const useTransactions = (page = 0, size = 10) => {
+	const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+
 	return useQuery({
 		queryKey: ["transactions", page, size],
 		queryFn: async () => {
@@ -11,6 +15,7 @@ export const useTransactions = (page = 0, size = 10) => {
 			return data;
 		},
 		retry: true,
+		enabled: isAuthenticated,
 	}); // use stale data while no network like that handle, use pagination tan stack - try.
 };
 

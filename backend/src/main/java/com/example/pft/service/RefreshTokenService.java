@@ -24,6 +24,8 @@ import lombok.RequiredArgsConstructor;
 public class RefreshTokenService {
 	@Value("${app.cookie.secure:true}")
 	private boolean cookieSecure;
+	@Value("${app.cookie.sameSite}")
+	private String sameSite;
 	@Value("${jwt.refresh-expiration}")
 	private long refreshExpirationMs;
 
@@ -106,7 +108,7 @@ public class RefreshTokenService {
 			.secure(this.cookieSecure)
 			.path("/")
 			.maxAge(Duration.ZERO)
-			.sameSite("Strict")
+			.sameSite(this.sameSite)
 			.build();
 
 		final ResponseCookie refreshCookie = ResponseCookie
@@ -115,7 +117,7 @@ public class RefreshTokenService {
 			.secure(this.cookieSecure)
 			.path("/")
 			.maxAge(Duration.ZERO)
-			.sameSite("Strict")
+			.sameSite(this.sameSite)
 			.build();
 
 		response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
