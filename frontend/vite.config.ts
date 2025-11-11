@@ -63,6 +63,7 @@ export default defineConfig(({ mode }) => {
 						"mui-icons": ["@mui/icons-material"],
 						stylis: ["stylis", "@mui/stylis-plugin-rtl"],
 						"mui-grid": ["@mui/x-data-grid"],
+						"mui-date-pickers": ["@mui/x-date-pickers"],
 						redux: ["@reduxjs/toolkit", "react-redux"],
 						hookform: ["react-hook-form", "@hookform/resolvers", "zod"],
 						i18n: [
@@ -102,6 +103,7 @@ export default defineConfig(({ mode }) => {
 		},
 		define: {
 			"process.env.NODE_ENV": JSON.stringify(mode),
+			"process.env.VITE_SITE_URL": JSON.stringify(env.VITE_SITE_URL || ""),
 		},
 	};
 });
