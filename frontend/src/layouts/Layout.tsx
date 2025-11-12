@@ -7,9 +7,9 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
 	useHealthCheckQuery();
 
 	return (
-		<Box className="flex h-dvh flex-col bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+		<Box className="flex h-dvh flex-col overflow-hidden bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
 			<NavBar />
-			<main className="flex-1">{children}</main>
+			<main className="relative h-full flex-1 overflow-auto">{children}</main>
 		</Box>
 	);
 };

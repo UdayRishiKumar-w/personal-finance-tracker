@@ -1,12 +1,12 @@
 import { useTransactions } from "@/api/transactionsApi";
 import MonthlyChart from "@/components/charts/MonthlyChart";
+import CircularLoader from "@/components/common/CircularLoader";
 import useGetDateFnsLocale from "@/hooks/useGetDateFnsLocale";
 import type { TransactionData } from "@/types/globalTypes";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
-import CircularProgress from "@mui/material/CircularProgress";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -21,11 +21,7 @@ const Dashboard: FC = () => {
 	const dateFnsLocale = useGetDateFnsLocale();
 
 	if (isLoading) {
-		return (
-			<Box className="flex h-full items-center justify-center">
-				<CircularProgress />
-			</Box>
-		);
+		return <CircularLoader />;
 	}
 
 	if (error) {

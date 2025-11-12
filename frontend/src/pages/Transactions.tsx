@@ -1,4 +1,5 @@
 import { useTransactions } from "@/api/transactionsApi";
+import CircularLoader from "@/components/common/CircularLoader";
 import TransactionForm from "@/components/forms/TransactionForm";
 import ConfirmDeleteDialog from "@/components/transaction/ConfirmDeleteDialog";
 import useGetDateFnsLocale from "@/hooks/useGetDateFnsLocale";
@@ -9,7 +10,6 @@ import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
-import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import type { GridColDef } from "@mui/x-data-grid/";
 import { DataGrid } from "@mui/x-data-grid/DataGrid";
@@ -111,11 +111,7 @@ const Transactions: FC = () => {
 	];
 
 	if (isLoading) {
-		return (
-			<Box className="flex h-full items-center justify-center">
-				<CircularProgress />
-			</Box>
-		);
+		return <CircularLoader />;
 	}
 
 	if (error) {
@@ -148,7 +144,7 @@ const Transactions: FC = () => {
 			<Card className="rounded-2xl bg-white shadow-md dark:bg-gray-800">
 				<CardHeader title={<Typography variant="h6">All Transactions</Typography>} />
 				<CardContent>
-					<Box style={{ height: 600, width: "100%" }}>
+					<Box style={{ height: 425, width: "100%" }}>
 						<DataGrid
 							rows={transactions}
 							columns={columns}
@@ -163,6 +159,9 @@ const Transactions: FC = () => {
 								"& .MuiDataGrid-cell": { outline: "none" },
 								"& .MuiDataGrid-columnHeaders": {
 									bgcolor: "background.paper",
+								},
+								"& .MuiDataGrid-virtualScroller": {
+									scrollBehavior: "smooth",
 								},
 							}}
 						/>
