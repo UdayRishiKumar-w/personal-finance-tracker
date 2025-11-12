@@ -1,7 +1,7 @@
 import { languageOptions, type LanguageCode } from "@/Constants";
 import { getLangSupported } from "@/utils/commonUtils";
 import LanguageIcon from "@mui/icons-material/Language";
-import InputAdornment from "@mui/material/InputAdornment";
+import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { type SelectChangeEvent } from "@mui/material/Select";
 import i18next from "i18next";
@@ -51,11 +51,15 @@ const LanguageSelector: FC = () => {
 			variant="standard"
 			className="text-black dark:text-white [&>svg]:text-black dark:[&>svg]:text-white"
 			disableUnderline
-			startAdornment={
-				<InputAdornment position="start">
-					<LanguageIcon className="mr-2" />
-				</InputAdornment>
-			}
+			renderValue={(value) => {
+				const lang = languageOptions.find((l) => l.code === value);
+				return (
+					<Box className="flex items-center">
+						<LanguageIcon className="mr-2 text-2xl rtl:mr-0 rtl:ml-2" />
+						{lang?.language || ""}
+					</Box>
+				);
+			}}
 			inputProps={{ "aria-label": "Select the localization language needed" }}
 		>
 			{languageOptions.map(({ language, code }) => (
