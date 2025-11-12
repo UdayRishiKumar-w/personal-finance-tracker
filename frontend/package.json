@@ -24,7 +24,8 @@
 		"prepare": "cd .. && husky frontend/.husky || true",
 		"i18n:extract": " npx i18next-cli extract",
 		"i18n:types": " npx i18next-cli types",
-		"i18n:lint": "npx i18next-cli lint"
+		"i18n:lint": "npx i18next-cli lint",
+		"commit": "commit"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.14.0",
@@ -61,6 +62,9 @@
 	},
 	"devDependencies": {
 		"@axe-core/react": "^4.11.0",
+		"@commitlint/cli": "^20.1.0",
+		"@commitlint/config-conventional": "^20.0.0",
+		"@commitlint/prompt-cli": "^20.1.0",
 		"@eslint/js": "^9.39.0",
 		"@playwright/test": "^1.56.1",
 		"@tailwindcss/vite": "^4.1.16",
