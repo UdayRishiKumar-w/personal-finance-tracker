@@ -1,8 +1,15 @@
-# Personal Finance Tracker Application
+# Personal Finance Tracker — Backend
 
-## Overview
+This folder contains the Spring Boot REST API that powers the Personal Finance Tracker backend.
 
-The Personal Finance Tracker (PFT) is a application designed to help users manage their personal finances. This application leverages various technologies and frameworks to provide a robust and scalable solution.
+Summary
+
+- Java 21, Spring Boot 3.x
+- Spring Data JPA for persistence
+- Spring Security (JWT + refresh tokens)
+- Flyway for schema migrations
+- MapStruct + Lombok to reduce mapping/boilerplate
+- Integration tests use Testcontainers (Postgres/Redis)
 
 ## Features
 
@@ -17,61 +24,66 @@ The Personal Finance Tracker (PFT) is a application designed to help users manag
 - **JJWT**: For JSON Web Tokens, JJWT is used to handle authentication and authorization tokens.
 - **Testcontainers**: For integration testing, Testcontainers is used to run tests in isolated environments.
 
-## Getting Started
+Prerequisites
 
-### Prerequisites
+- Java 21 (or compatible JDK)
+- Maven (wrapper included: use `mvnw`/`mvnw.cmd`)
+- Optional: Docker + Docker Compose (for Postgres/Redis)
 
-- Java 21
-- Maven
-- Docker (optional, for running Redis and PostgreSQL)
+Quick start (dev profile)
 
-### Installation
+1) Build and run locally (dev profile):
 
-1. Clone the repository:
-
-```sh
-   git clone <repository-url>
-   cd personal-finance-tracker
+```pwsh
+cd backend
+.\mvnw clean install
+.\mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
-2. Install the dependencies:
+2) The API will start on the configured port (default in `application-dev.properties`). Use the frontend `VITE_API_BASE_URL` to point to this address during frontend development.
 
-```sh
-mvn clean install
+Environment variables and configuration
+
+- `SPRING_DATASOURCE_URL` — JDBC URL for Postgres (example: `jdbc:postgresql://localhost:5432/pft`)
+- `SPRING_DATASOURCE_USERNAME` and `SPRING_DATASOURCE_PASSWORD`
+- `SPRING_REDIS_HOST` and `SPRING_REDIS_PORT` — Redis connection
+- `JWT_SECRET` — secret used to sign access tokens
+- `JWT_REFRESH_SECRET` — secret for refresh tokens (keep this secure)
+- `SPRING_PROFILES_ACTIVE` — choose `dev`, `test`, or `prod`
+
+Database migrations (Flyway)
+
+- Migration scripts are under `src/main/resources/db/migration`.
+- Flyway runs automatically on application startup (unless disabled). Use migration filenames with the `V{version}__desc.sql` convention.
+
+Run with Docker / docker-compose
+If you prefer a production-like stack locally, use the repository root `docker-compose.yaml` which will bring up Postgres and Redis together with the backend.
+
+```pwsh
+docker-compose up --build
 ```
 
-### Running the Application
+Testing
 
-To run the application in development mode, use the following command:
+- Unit tests and component tests:
 
-```sh
-mvn spring-boot:run
+```pwsh
+cd backend
+.\mvnw test
 ```
 
-### Running Tests
+- Integration tests with Testcontainers (spins up Postgres/Redis):
 
-To run the tests, use the following command:
-
-```sh
-mvn test
+```pwsh
+.\mvnw verify
 ```
 
-### Additional Commands
+Security
 
-- **Build the Application**:
+- JWT-based access tokens and refresh tokens are implemented. Review `security/` package for configuration and filters.
 
-    ```sh
-    mvn clean package
-    ```
+Common commands
 
-- **Run Integration Tests with Testcontainers**:
-
-    ```sh
-    mvn verify
-    ```
-
-- **Clean the Project**:
-
-    ```sh
-    mvn clean
-    ```
+- Build: `.\mvnw clean package`
+- Run tests: `.\mvnw test`
+- Run integration tests: `.\mvnw verify`

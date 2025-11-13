@@ -6,68 +6,111 @@ The Personal Finance Tracker is a web application designed to help users manage 
 
 ## Project Structure
 
-The project is divided into two main parts: the frontend and the backend.
+Repository layout
 
-### Frontend
+- `backend/` — Spring Boot REST API (Java 21, Maven)
+- `frontend/` — React + TypeScript app (Vite)
+- `docker-compose.yaml` — To serve - with Postgres/Redis and the app
 
-The frontend is built using React and Vite. It includes the following key components:
+- Quickly understand the app's core capabilities and architecture
+- See technologies and libraries used (frontend and backend)
+- Follow step-by-step instructions to run locally or with Docker
 
-- **Features**: Contains slices for authentication, transactions, and reports.
-- **Pages**: Includes the main pages such as Dashboard and Settings.
-- **Components**: Reusable UI components and chart wrappers.
-- **Utils**: Utility functions for API calls.
+Key features
 
-### Backend
+- Transaction management (create/read/update/delete)
+- Budget and savings goals tracking
+- Reports & charts (monthly spends, trends)
+- Authentication (JWT, Bcrypt) with refresh tokens
+- Role-based access control (users/admin)
+- Internationalization (i18n) and RTL support
+- PWA-ready frontend (offline support, installable)
 
-The backend is built using Spring Boot and Maven. It includes:
+Architecture & Tech stack
 
-- **Controllers**: Handles API requests for authentication, transactions, and reports.
-- **Services**: Contains business logic for handling user authentication and transaction management.
-- **Entities**: Defines the data models for User, Account, and Transaction.
-- **Security**: Configures JWT-based authentication.
+- Frontend: React 19, TypeScript, Vite, Tailwind CSS, MUI, React Query
+- Backend: Spring Boot 3.x, Java 21, Spring Data JPA, Spring Security, Flyway
+- Database: PostgreSQL (production), H2 available for local development
+- Cache: Redis
+- Auth: JWT using JJWT, Bcrypt
+- Mapping/Boilerplate: MapStruct + Lombok
+- Testing: JUnit, Spring Test, Testcontainers (integration), Vitest & Playwright on frontend
 
-## Getting Started
+Quick start:-
+Prerequisites: Java 21, Maven, Node.js (>=16), npm, Docker
 
-To get started with the project, follow these steps:
+1) Clone the repository:
 
-1. **Clone the repository**:
+```pwsh
+cd backend
+.\mvnw clean install
+.\mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+```
 
-    ```sh
-    git clone <repository-url>
-    cd personal-finance-tracker
-    ```
+2) Start the backend (from repository root):
 
-2. **Set up the backend**:
+```pwsh
+cd backend
+.\mvnw clean install
+.\mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+```
 
-    - Navigate to the `backend` directory.
-    - Use Maven to build the project:
+Notes:
 
-        ```sh
-        ./mvnw clean install
-        ```
+- The dev profile uses `application-dev.properties` (see `backend/src/main/resources`).
+- To run against a real Postgres or Redis, set the corresponding environment variables (see `backend/README.md`).
 
-    - Run the application:
+3) Start the frontend (separate terminal):
 
-        ```sh
-        ./mvnw spring-boot:run
-        ```
+```pwsh
+cd frontend
+npm install
+npm run dev
+```
 
-3. **Set up the frontend**:
+The Vite server will print an address (default `http://localhost:5173`). The frontend uses `VITE_API_BASE_URL` from `.env` or environment to contact the backend.
 
-    - Navigate to the `frontend` directory.
-    - Install dependencies:
+4) Run everything with Docker:
 
-        ```sh
-        npm install
-        ```
+```pwsh
+docker-compose up --build
+```
 
-    - Start the development server:
+This will start the services defined in `docker-compose.yaml` (Postgres, Redis, backend, etc.).
 
-        ```sh
-        npm run dev
-        ```
+Testing
+
+- Backend unit & integration tests:
+
+```pwsh
+cd backend
+.\mvnw test
+# or run integration tests including Testcontainers:
+.\mvnw verify
+```
+
+- Frontend unit & e2e tests:
+
+```pwsh
+cd frontend
+npm install
+npm run test
+npm run e2e
+```
+
+Where to look in the codebase
+
+- Backend: `backend/src/main/java` — controllers, services, repositories, security
+- Frontend: `frontend/src` — pages, components, store, api
+- Migrations: `backend/src/main/resources/db/migration` (Flyway)
 
 ## Technologies Used
 
-- **Frontend**: React, Vite, Tailwind CSS, Redux, Redux toolkit
-- **Backend**: Spring Boot, Java, Maven, JWT for authentication
+- **Frontend**: React, Material UI, React Query, React-Router, Chart.js, Axios, React hook form, React-i18next, React Testing Library, Vite, Tailwind CSS, Redux, Redux toolkit, Vitest, Playwright.
+- **Backend**: Spring Boot, Java, Maven, JWT for authentication, Spring Data JPA, Redis, PostgreSQL,Lombok, Mapstruct, Flyway, Spring Security, Spring Actuator, Open API for Documentation.
+- **Deployment**: Docker, Docker-compose, Nginx.
+
+Contact
+
+- Author: Ganji Uday Rishi Kumar — `udayrishi.ganji.w@gmail.com`
+- GitHub: `https://github.com/UdayRishiKumar-w/personal-finance-tracker`

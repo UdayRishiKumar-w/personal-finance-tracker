@@ -1,6 +1,6 @@
-# Personal Finance Tracker
+# Personal Finance Tracker — Frontend
 
-This is a personal finance tracker application built using React, TypeScript, and Vite. The app helps you track your income, expenses, savings, and financial goals easily.
+React + Material UI + TypeScript frontend built with Vite. Designed to be fast, accessible and PWA-ready.
 
 ## Features
 
@@ -10,96 +10,89 @@ This is a personal finance tracker application built using React, TypeScript, an
 - Multi-language support
 - Dark-Light Theme
 - Responsive design
+- PWA support
 
-## Getting Started
+What’s included
 
-### Prerequisites
+- Pages: Dashboard, Transactions, Login, Signup, Not Found
+- Components: charts, transaction forms, layout, snackbar/toasts, theme toggle
+- State: Redux Toolkit + React Query for server state
+- i18n: `react-i18next` with language files under `public/locales`
+- Tests: Vitest (unit) and Playwright (E2E)
 
-- Node.js (v14 or later)
-- npm (v6 or later)
+Prerequisites
 
-### Installation
+- Node.js >=16
+- npm
 
-1. Clone the repository:
+Environment
 
-    ```sh
-    git clone https://github.com/UdayRishiKumar-w/personal-finance-tracker.git
-    ```
+- The project reads runtime variables from `.env` or the environment. Key variables:
+    - `VITE_API_BASE_URL` — the backend API base URL (e.g., `http://localhost:8080/api`)
 
-2. Navigate to the project directory:
+Quick start (development)
 
-    ```sh
-    cd personal-finance-tracker
-    ```
-
-3. Install the dependencies:
-
-    ```sh
-    npm install
-    ```
-
-### Development
-
-To start the development server, run:
-
-```sh
+```pwsh
+cd frontend
+npm install
 npm run dev
 ```
 
-This will start the Vite development server with hot module replacement (HMR).
+Vite will print the dev URL (usually `http://localhost:5173`). Open it and you should be able to login or use seeded data when the backend is running.
 
-### Building for Production
+Build for production
 
-To build the project for production, run:
-
-```sh
+```pwsh
+cd frontend
 npm run build
+npm run preview   # preview the production build locally
 ```
 
-This will compile the TypeScript code and build the project using Vite.
+PWA and assets
 
-### Linting and Formatting
+- Use `npm run generate-pwa-assets` to generate icons and manifest assets before building for production.
 
-To lint the project, run:
+Testing
 
-```sh
-npm run lint
-```
+- Unit tests (Vitest): `npm run test`
+- UI mode (Vitest with UI): `npm run test:ui`
+- E2E (Playwright): `npm run e2e`
 
-To format the project, run:
+Linting & formatting
 
-```sh
-npm run format
-```
+- ESLint: `npm run lint`
+- Stylelint (CSS): `npm run lint:css`
+- Prettier: `npm run format`
 
-### Testing
+Key files and folders
 
-To run the tests, use:
+- `src/pages` — application pages (Dashboard, Transactions, Login, Signup)
+- `src/components` — shared UI components and forms
+- `src/api` — api clients (axios wrapper, endpoints)
+- `src/store` — Redux store slices and providers
+- `public/locales` — translation files for supported languages
 
-```sh
-npm run test
-```
+Deployment
 
-For unit testing showing UI, use:
+- Build using `npm run build` and serve the `dist`
+- `nginx.conf` is provided as example for containerized deployments.
 
-```sh
-npm run test:ui
-```
+Useful npm scripts
 
-For end-to-end testing, use:
+- `dev` — start Vite dev server.
+- `build` — typecheck + build.
+- `preview`: Preview the production build.
+- `typecheck`: Run TypeScript type checking.
+- `generate-pwa-assets`: Generate PWA assets.
+- `test:watch`: Run tests in watch mode.
+- `test:coverage`: Run tests with coverage reporting.
+- `e2e:headed`: Run end-to-end tests in headed mode.
+- `e2e:ui`: Show the end-to-end test report.
+- `i18n:extract`: Extract the translation keys.
+- `i18n:types`: Generate the translation types.
+- `commit`: Prompt for commit message.
 
-```sh
-npm run e2e
-```
+Accessibility & Internationalization
 
-### Additional Scripts
-
-- `npm run typecheck`: Run TypeScript type checking.
-- `npm run generate-pwa-assets`: Generate PWA assets.
-- `npm run lint:css`: Lint CSS files.
-- `npm run preview`: Preview the production build.
-- `npm run build-commit`: Build, lint, format, and commit the project.
-- `npm run test:watch`: Run tests in watch mode.
-- `npm run test:coverage`: Run tests with coverage reporting.
-- `npm run e2e:headed`: Run end-to-end tests in headed mode.
-- `npm run e2e:ui`: Show the end-to-end test report.
+- Project includes `@axe-core/react` during dev for accessibility checks.
+- Language resources are under `public/locales` and extracted with `i18next-cli` scripts in `package.json`.
