@@ -2,6 +2,7 @@ import api, { healthApi } from "@/api/api-config";
 import { queryClient } from "@/api/queryClient";
 import { setAuthenticated, setLoggedOut } from "@/store/auth/authSlice";
 import type { SignupReqData } from "@/types/apiTypes";
+import { handleApiError, handleApiResponse } from "@/utils/commonUtils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -28,8 +29,12 @@ export const useLoginMutation = () => {
 
 	return useMutation({
 		mutationFn: async ({ email, password }: { email: string; password: string }) => {
-			const { data } = await api.post("/auth/login", { email, password });
-			return data;
+			try {
+				const response = await api.post("/auth/login", { email, password });
+				return handleApiResponse(response);
+			} catch (e) {
+				handleApiError(e);
+			}
 		},
 		onSuccess: (data) => {
 			dispatch(setAuthenticated(data.user));
@@ -42,8 +47,12 @@ export const useSignUpMutation = () => {
 
 	return useMutation({
 		mutationFn: async (payload: SignupReqData) => {
-			const { data } = await api.post("/auth/signup", payload);
-			return data;
+			try {
+				const response = await api.post("/auth/signup", payload);
+				return handleApiResponse(response);
+			} catch (e) {
+				handleApiError(e);
+			}
 		},
 		onSuccess: (data) => {
 			dispatch(setAuthenticated(data.user));
@@ -56,7 +65,12 @@ export const useLogout = () => {
 	const navigate = useNavigate();
 	return useMutation({
 		mutationFn: async () => {
-			await api.post("/auth/logout");
+			try {
+				const response = await api.post("/auth/logout");
+				return handleApiResponse(response);
+			} catch (e) {
+				handleApiError(e);
+			}
 		},
 		onSuccess: () => {
 			dispatch(setLoggedOut());

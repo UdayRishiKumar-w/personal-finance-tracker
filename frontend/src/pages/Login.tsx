@@ -73,6 +73,7 @@ const Login: FC = () => {
 				email: data.email.trim(),
 				password: data.password,
 			});
+			dispatch(showSnackbar({ message: "Logged in successfully!", severity: "success" }));
 			reset();
 		} catch (err) {
 			dispatch(showSnackbar({ message: (err as Error).message || "Login failed", severity: "error" }));

@@ -32,8 +32,8 @@ const ConfirmDeleteDialog: React.FC<ConfirmDeleteDialogProps> = ({ open, onClose
 			}
 			await deleteTx(deleteId);
 			onClose();
-		} catch {
-			dispatch(showSnackbar({ message: "Error occurred while deleting transaction", severity: "error" }));
+		} catch (e) {
+			dispatch(showSnackbar({ message: (e as Error).message, severity: "error" }));
 		}
 	};
 

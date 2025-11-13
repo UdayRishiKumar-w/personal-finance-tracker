@@ -85,7 +85,7 @@ const Signup: FC = () => {
 			await signup(data);
 			reset();
 		} catch (err) {
-			dispatch(showSnackbar({ message: "Sign up failed", severity: "error" }));
+			dispatch(showSnackbar({ message: (err as Error).message, severity: "error" }));
 			console.error(err);
 		}
 	};

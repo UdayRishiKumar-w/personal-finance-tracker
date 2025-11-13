@@ -17,3 +17,8 @@ export interface TransactionData {
 	description?: string;
 	recurring?: boolean;
 }
+
+export interface BackendError {
+	message: string;
+	status: number;
+}

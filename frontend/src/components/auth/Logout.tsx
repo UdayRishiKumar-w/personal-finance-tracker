@@ -13,8 +13,8 @@ const Logout: FC = () => {
 	const handleLogout = async () => {
 		try {
 			await logout();
-		} catch {
-			dispatch(showSnackbar({ message: "Logout failed", severity: "error" }));
+		} catch (e) {
+			dispatch(showSnackbar({ message: (e as Error).message, severity: "error" }));
 		}
 	};
 

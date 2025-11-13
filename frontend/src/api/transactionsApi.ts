@@ -1,6 +1,7 @@
 import api from "@/api/api-config";
 import type { RootState } from "@/store/store";
 import type { TransactionData } from "@/types/globalTypes";
+import { handleApiError, handleApiResponse } from "@/utils/commonUtils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 
@@ -22,7 +23,14 @@ export const useTransactions = (page = 0, size = 10) => {
 export const useCreateTransaction = () => {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: (payload: TransactionData) => api.post("/transactions", payload).then((r) => r.data),
+		mutationFn: async (payload: TransactionData) => {
+			try {
+				const response = await api.post("/transactions", payload).then((r) => r.data);
+				return handleApiResponse(response);
+			} catch (e) {
+				handleApiError(e);
+			}
+		},
 		onSuccess: () => qc.invalidateQueries({ queryKey: ["transactions"] }),
 	});
 };
@@ -30,8 +38,14 @@ export const useCreateTransaction = () => {
 export const useUpdateTransaction = () => {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: ({ id, payload }: { id: number; payload: TransactionData }) =>
-			api.put(`/transactions/${id}`, payload).then((r) => r.data),
+		mutationFn: async ({ id, payload }: { id: number; payload: TransactionData }) => {
+			try {
+				const response = await api.put(`/transactions/${id}`, payload).then((r) => r.data);
+				return handleApiResponse(response);
+			} catch (e) {
+				handleApiError(e);
+			}
+		},
 		onSuccess: () => qc.invalidateQueries({ queryKey: ["transactions"] }),
 	});
 };
@@ -39,7 +53,14 @@ export const useUpdateTransaction = () => {
 export const useDeleteTransaction = () => {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: (id: number) => api.delete(`/transactions/${id}`),
+		mutationFn: async (id: number) => {
+			try {
+				const response = await api.delete(`/transactions/${id}`);
+				return handleApiResponse(response);
+			} catch (e) {
+				handleApiError(e);
+			}
+		},
 		onSuccess: () => qc.invalidateQueries({ queryKey: ["transactions"] }),
 	});
 };

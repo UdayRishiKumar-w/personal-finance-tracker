@@ -97,8 +97,8 @@ const TransactionForm: FC<TransactionFormProps> = ({ open, onClose, editTransact
 				await createTx(values);
 			}
 			onClose();
-		} catch {
-			dispatch(showSnackbar({ message: "Transaction submission failed", severity: "error" }));
+		} catch (e) {
+			dispatch(showSnackbar({ message: (e as Error).message, severity: "error" }));
 		}
 	};
 
