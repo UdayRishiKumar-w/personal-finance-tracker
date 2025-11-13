@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.pft.entity.RefreshToken;
 import com.example.pft.entity.User;
+import com.example.pft.exception.UnauthorizedException;
 import com.example.pft.repository.RefreshTokenRepository;
 import com.example.pft.repository.UserRepository;
 import com.example.pft.security.JwtTokenProvider;
@@ -88,15 +89,15 @@ public class RefreshTokenService {
 	public boolean isValidRefreshToken(final String refreshToken) {
 		final RefreshToken token = this.refreshTokenRepository
 			.findByToken(refreshToken)
-			.orElseThrow(() -> new RuntimeException("Invalid refresh token."));
+			.orElseThrow(() -> new UnauthorizedException("Invalid refresh token."));
 
 		if (token.isExpired()) {
 			final User user = token.getUser();
 			user.setRefreshToken(null);
 
 			this.userService.saveUser(user);
-			throw new RuntimeException("Refresh token expired. Please login again.");
-		} // UnauthorizedException
+			throw new UnauthorizedException("Refresh token expired. Please login again.");
+		}
 
 		return true;
 	}

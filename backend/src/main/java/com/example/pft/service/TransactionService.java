@@ -19,6 +19,7 @@ import com.example.pft.dto.PaginatedResponse;
 import com.example.pft.dto.TransactionDTO;
 import com.example.pft.entity.Transaction;
 import com.example.pft.entity.User;
+import com.example.pft.exception.ForbiddenException;
 import com.example.pft.mapper.TransactionMapper;
 import com.example.pft.repository.TransactionRepository;
 import com.example.pft.util.Constants;
@@ -54,7 +55,7 @@ public class TransactionService {
 			.orElseThrow(() -> new EntityNotFoundException("Transaction not found"));
 
 		if (!transaction.getUser().getId().equals(user.getId()))
-			throw new RuntimeException("Forbidden");
+			throw new ForbiddenException("You do not have permission to access this transaction");
 		return this.transactionMapper.toDto(transaction);
 	}
 

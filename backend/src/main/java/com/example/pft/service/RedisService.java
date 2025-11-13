@@ -10,6 +10,8 @@ import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import com.example.pft.exception.InvalidateException;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,7 +23,7 @@ public class RedisService {
 
 	private final RedisTemplate<String, Object> redisTemplate;
 
-	public void save(final String key, final Object value, final long ttlMinutes) {
+	public void save(final String key, final Object value, final int ttlMinutes) {
 		if (ttlMinutes <= 0) {
 			throw new IllegalArgumentException("TTL must be positive, got: " + ttlMinutes);
 		}
@@ -29,7 +31,7 @@ public class RedisService {
 			this.redisTemplate.opsForValue().set(key, value, ttlMinutes, TimeUnit.MINUTES);
 		} catch (final DataAccessException e) {
 			log.error("Failed to save data to Redis for key {}: {}", key, e.getMessage());
-			throw new RuntimeException("Redis save failed", e);
+			throw new InvalidateException("Failed to save data to Redis: " + e.getMessage());
 		}
 	}
 
@@ -38,7 +40,7 @@ public class RedisService {
 			return this.redisTemplate.opsForValue().get(key);
 		} catch (final DataAccessException e) {
 			log.error("Failed to get data from Redis for key {}: {}", key, e.getMessage());
-			throw new RuntimeException("Redis get failed", e);
+			throw new InvalidateException("Failed to retrieve data from Redis: " + e.getMessage());
 		}
 	}
 
@@ -47,7 +49,7 @@ public class RedisService {
 			this.redisTemplate.delete(key);
 		} catch (final DataAccessException e) {
 			log.error("Failed to delete data from Redis for key {}: {}", key, e.getMessage());
-			throw new RuntimeException("Redis delete failed", e);
+			throw new InvalidateException("Failed to delete data from Redis: " + e.getMessage());
 		}
 	}
 
@@ -70,7 +72,7 @@ public class RedisService {
 			});
 		} catch (final DataAccessException e) {
 			log.error("Failed to evict keys by pattern {} from Redis: {}", pattern, e.getMessage());
-			throw new RuntimeException("Redis evictByPattern failed", e);
+			throw new InvalidateException("Failed to evict keys by pattern from Redis: " + e.getMessage());
 		}
 	}
 }

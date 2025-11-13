@@ -25,6 +25,7 @@ import com.example.pft.dto.SignUpRequestDTO;
 import com.example.pft.dto.UserDTO;
 import com.example.pft.entity.User;
 import com.example.pft.enums.Role;
+import com.example.pft.exception.ConflictException;
 import com.example.pft.mapper.UserMapper;
 import com.example.pft.repository.UserRepository;
 import com.example.pft.security.JwtTokenProvider;
@@ -70,7 +71,7 @@ public class AuthController {
 	) {
 		// Check if user already exists
 		if (this.userRepository.existsByEmail(request.email())) {
-			return ResponseEntity.status(409).body(Map.of("message", "User already exists"));
+			throw new ConflictException("User with email " + request.email() + " already exists");
 		}
 
 		final User newUser = this.userMapper.toEntity(request);
