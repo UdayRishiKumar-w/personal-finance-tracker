@@ -48,8 +48,12 @@ const Dashboard: FC = () => {
 				<Card elevation={3} className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800">
 					<CardHeader
 						title={
-							<Typography variant="body2" className="text-gray-500 dark:text-gray-400">
-								Balance
+							<Typography
+								variant="body1"
+								className="text-gray-600 dark:text-gray-300"
+								aria-label="Balance"
+							>
+								<span aria-hidden="true">💰</span> Balance
 							</Typography>
 						}
 					/>
@@ -63,8 +67,12 @@ const Dashboard: FC = () => {
 				<Card elevation={3} className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800">
 					<CardHeader
 						title={
-							<Typography variant="body2" className="text-gray-500 dark:text-gray-400">
-								Total Income
+							<Typography
+								variant="body1"
+								className="text-gray-600 dark:text-gray-300"
+								aria-label="Total Income"
+							>
+								<span aria-hidden="true">📈</span> Total Income
 							</Typography>
 						}
 					/>
@@ -78,8 +86,12 @@ const Dashboard: FC = () => {
 				<Card elevation={3} className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800">
 					<CardHeader
 						title={
-							<Typography variant="body2" className="text-gray-500 dark:text-gray-400">
-								Total Expense
+							<Typography
+								variant="body1"
+								className="text-gray-600 dark:text-gray-300"
+								aria-label="Total Expense"
+							>
+								<span aria-hidden="true">📉</span> Total Expense
 							</Typography>
 						}
 					/>
@@ -99,7 +111,7 @@ const Dashboard: FC = () => {
 						</Typography>
 					}
 				/>
-				<CardContent>
+				<CardContent className="flex justify-center">
 					<MonthlyChart months={6} />
 				</CardContent>
 			</Card>

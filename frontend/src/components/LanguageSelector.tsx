@@ -55,7 +55,7 @@ const LanguageSelector: FC = () => {
 				const lang = languageOptions.find((l) => l.code === value);
 				return (
 					<Box className="flex items-center">
-						<LanguageIcon className="mr-2 text-2xl rtl:mr-0 rtl:ml-2" />
+						<LanguageIcon className="me-2 text-2xl" />
 						{lang?.language || ""}
 					</Box>
 				);

@@ -1,11 +1,11 @@
 import tailwindcss from "@tailwindcss/vite";
+import { devtools } from "@tanstack/devtools-vite";
 import react from "@vitejs/plugin-react-swc";
 import { fileURLToPath, URL } from "node:url";
 import { defineConfig, loadEnv } from "vite";
-// import { analyzer } from "vite-bundle-analyzer";
+import { analyzer } from "vite-bundle-analyzer";
 import { imagetools } from "vite-imagetools"; // https://github.com/JonasKruckenberg/imagetools/blob/main/docs/_media/getting-started.md
-// import VitePluginChecker from "vite-plugin-checker";
-import { devtools } from "@tanstack/devtools-vite";
+import VitePluginChecker from "vite-plugin-checker";
 import htmlMinifier from "vite-plugin-html-minifier";
 import preload from "vite-plugin-preload";
 import { VitePWA } from "vite-plugin-pwa";
@@ -35,16 +35,17 @@ export default defineConfig(({ mode }) => {
 			removeConsole(),
 			preload({ mode: "prefetch" }),
 			...(isDev ? [devtools()] : []),
-			// VitePluginChecker({
-			// 	typescript: true, // Enable TypeScript checking
-			// 	// eslint: {
-			// 	// 	lintCommand: 'eslint "./src/**/*.{ts,tsx,js,jsx}"', // Stop the build on ESLint warnings
-			// 	// },
-			// 	stylelint: {
-			// 		lintCommand: 'stylelint "src/**/*.{css,scss,tsx,jsx}"  --max-warnings 0',
-			// 	},
-			// }),
-			// analyzer(),
+			VitePluginChecker({
+				typescript: true, // Enable TypeScript checking
+				eslint: {
+					lintCommand: 'eslint "./src/**/*.{ts,tsx,js,jsx}" --max-warnings 0', // Stop the build on ESLint warnings
+					useFlatConfig: true,
+				},
+				stylelint: {
+					lintCommand: 'stylelint "src/**/*.{css,scss,tsx,jsx}"  --max-warnings 0',
+				},
+			}),
+			env.VITE_ANALYZER_ENABLED === "true" && analyzer(),
 			htmlMinifier(),
 		],
 		resolve: {

@@ -200,7 +200,7 @@ const Signup: FC = () => {
 							{t("alreadyHaveAccount")}
 						</Typography>
 
-						<Link component={RouterLink} to="/login" className="ml-1.5 rtl:mr-1.5 rtl:ml-0">
+						<Link component={RouterLink} to="/login" className="ms-1.5">
 							{t("login")}
 						</Link>
 					</Stack>

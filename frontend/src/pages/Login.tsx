@@ -156,7 +156,7 @@ const Login: FC = () => {
 							{t("dontHaveAccount")}
 						</Typography>
 
-						<Link component={RouterLink} to="/signup" className="ml-1.5 rtl:mr-1.5 rtl:ml-0">
+						<Link component={RouterLink} to="/signup" className="ms-1.5">
 							{t("signUp")}
 						</Link>
 					</Stack>
