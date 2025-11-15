@@ -23,5 +23,7 @@ public interface UserMapper {
 	@Mapping(target = "updatedAt", ignore = true)
 	@Mapping(target = "role", ignore = true)
 	@Mapping(target = "password", ignore = true)
+	@Mapping(target = "refreshToken", ignore = true)
+	@Mapping(target = "transactions", ignore = true)
 	User toEntity(SignUpRequestDTO request);
 }

@@ -11,7 +11,8 @@ Thumbs.db
 *.sln
 *.sw?
 coverage/
-.github
+.github/*
+!.github/workflows/
 
 target/
 *.class

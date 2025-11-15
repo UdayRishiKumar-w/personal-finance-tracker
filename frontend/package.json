@@ -5,7 +5,7 @@
 	"version": "1.0.0",
 	"type": "module",
 	"scripts": {
-		"typecheck": "tsc --build",
+		"typecheck": "tsc --noEmit",
 		"dev": "vite",
 		"build": "tsc -b && vite build",
 		"generate-pwa-assets": "pwa-assets-generator",
