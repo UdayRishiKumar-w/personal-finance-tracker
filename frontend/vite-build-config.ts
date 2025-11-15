@@ -104,6 +104,9 @@ export const vitePWAOptions: Partial<VitePWAOptions> = {
 		globPatterns: ["**/*.{js,css,html,ico,png,svg,jpg,jpeg,json,txt}"],
 		cleanupOutdatedCaches: true,
 		clientsClaim: true,
+		// skipWaiting: true, // Force activate new service worker immediately
+		cacheId: "pft",
+		navigationPreload: true,
 		sourcemap: false,
 		runtimeCaching: [
 			{
