@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,7 +24,9 @@ import com.example.pft.dto.SignUpRequestDTO;
 import com.example.pft.dto.UserDTO;
 import com.example.pft.entity.User;
 import com.example.pft.enums.Role;
+import com.example.pft.exception.BadRequestException;
 import com.example.pft.exception.ConflictException;
+import com.example.pft.exception.UnauthorizedException;
 import com.example.pft.mapper.UserMapper;
 import com.example.pft.repository.UserRepository;
 import com.example.pft.security.JwtTokenProvider;
@@ -110,11 +111,11 @@ public class AuthController {
 		final String refreshToken = this.getRefreshTokenFromCookie(request);
 
 		if (!Utils.isNotNullOrBlank(refreshToken)) {
-			return ResponseEntity.badRequest().body(Map.of("error", "Refresh token is required."));
+			throw new BadRequestException("Refresh token is required.");
 		}
 
 		if (!this.refreshTokenService.isValidRefreshToken(refreshToken)) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid refresh token."));
+			throw new UnauthorizedException("Invalid refresh token.");
 		}
 
 		final String email = this.tokenProvider.getUsernameFromToken(refreshToken);
@@ -132,7 +133,7 @@ public class AuthController {
 		final String refreshToken = this.getRefreshTokenFromCookie(request);
 
 		if (!Utils.isNotNullOrBlank(refreshToken)) {
-			return ResponseEntity.badRequest().body(Map.of("error", "Refresh token is required."));
+			throw new BadRequestException("Refresh token is required.");
 		}
 
 		return this.refreshTokenService.clearRefreshToken(response, refreshToken);
@@ -166,7 +167,7 @@ public class AuthController {
 	@GetMapping("/me")
 	public ResponseEntity<Map<String, Object>> getCurrentUser(final Principal principal) {
 		if (principal == null) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			throw new UnauthorizedException("User not found");
 		}
 
 		try {
@@ -174,7 +175,7 @@ public class AuthController {
 			return ResponseEntity.ok(Map.of("user", this.userMapper.toDto(user)));
 		} catch (final Exception e) {
 			log.error("Failed to load user for principal: {}", principal.getName(), e);
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "User not found"));
+			throw new UnauthorizedException("User not found");
 		}
 	}
 

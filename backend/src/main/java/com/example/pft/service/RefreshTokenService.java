@@ -82,7 +82,7 @@ public class RefreshTokenService {
 			this.clearAuthCookies(response);
 			response.addHeader("Clear-Site-Data", "\"cookies\", \"storage\"");
 			return ResponseEntity.ok("Logged out successfully.");
-		}).orElse(ResponseEntity.badRequest().body("Invalid refresh token."));
+		}).orElseThrow(() -> new UnauthorizedException("Invalid refresh token."));
 	}
 
 	@Transactional

@@ -19,11 +19,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.example.pft.dto.PaginatedResponse;
 import com.example.pft.dto.TransactionDTO;
 import com.example.pft.entity.User;
+import com.example.pft.exception.BadRequestException;
+import com.example.pft.exception.ResourceNotFoundException;
+import com.example.pft.exception.UnauthorizedException;
 import com.example.pft.repository.UserRepository;
 import com.example.pft.service.TransactionService;
 
@@ -47,11 +49,11 @@ public class TransactionController {
 	private User getCurrentUser() {
 		final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken)
-			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authentication required");
+			throw new UnauthorizedException("Authentication required");
 		final String email = auth.getName();
 		return this.userRepository
 			.findByEmail(email)
-			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+			.orElseThrow(() -> new ResourceNotFoundException("User not found"));
 	}
 
 	@PostMapping
@@ -95,10 +97,10 @@ public class TransactionController {
 		@RequestParam(required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate to
 	) {
 		if (from.isAfter(to)) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "From date must be before or equal to to date");
+			throw new BadRequestException("From date must be before or equal to to date");
 		}
 		if (java.time.temporal.ChronoUnit.DAYS.between(from, to) > 365) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Date range cannot exceed 365 days");
+			throw new BadRequestException("Date range cannot exceed 365 days");
 		}
 		final User user = this.getCurrentUser();
 		return ResponseEntity.ok(this.service.fetchTransactionsBetween(user, from, to));
