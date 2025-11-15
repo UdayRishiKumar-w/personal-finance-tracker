@@ -76,13 +76,13 @@ const manifest: Partial<ManifestOptions> = {
 		{
 			src: "images/mobile.png",
 			type: "image/png",
-			sizes: "750x1334",
+			sizes: "1440x2960",
 			form_factor: "narrow",
 		},
 		{
 			src: "images/desktop.png",
 			type: "image/png",
-			sizes: "1918x870",
+			sizes: "3840x1700",
 			form_factor: "wide",
 		},
 	],

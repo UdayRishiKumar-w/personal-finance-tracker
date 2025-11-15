@@ -25,7 +25,7 @@ export const useCreateTransaction = () => {
 	return useMutation({
 		mutationFn: async (payload: TransactionData) => {
 			try {
-				const response = await api.post("/transactions", payload).then((r) => r.data);
+				const response = await api.post("/transactions", payload);
 				return handleApiResponse(response);
 			} catch (e) {
 				handleApiError(e);
@@ -40,7 +40,7 @@ export const useUpdateTransaction = () => {
 	return useMutation({
 		mutationFn: async ({ id, payload }: { id: number; payload: TransactionData }) => {
 			try {
-				const response = await api.put(`/transactions/${id}`, payload).then((r) => r.data);
+				const response = await api.put(`/transactions/${id}`, payload);
 				return handleApiResponse(response);
 			} catch (e) {
 				handleApiError(e);
