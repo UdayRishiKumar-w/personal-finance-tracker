@@ -110,6 +110,21 @@ export const vitePWAOptions: Partial<VitePWAOptions> = {
 		sourcemap: false,
 		runtimeCaching: [
 			{
+				urlPattern: ({ request }) => request.mode === "navigate",
+				handler: "NetworkFirst",
+				options: {
+					cacheName: "pages",
+					networkTimeoutSeconds: 3,
+					expiration: {
+						maxEntries: 50,
+						maxAgeSeconds: 60 * 60 * 24 * 7,
+					},
+					cacheableResponse: {
+						statuses: [0, 200],
+					},
+				},
+			},
+			{
 				urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
 				handler: "CacheFirst",
 				options: {
