@@ -1,4 +1,4 @@
-"*.{js,mjs,ts,.cjs}":
+"*.{js,mjs,ts,cjs}":
     - eslint --fix
     - prettier --write
 

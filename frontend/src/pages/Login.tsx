@@ -162,7 +162,7 @@ const Login: FC = () => {
 					</Stack>
 				</form>
 			</Box>
-			{isPending && <Loader text={t("loggingIn")} />}
+			{isPending && <Loader text={`${t("loggingIn")}...`} />}
 		</>
 	);
 };

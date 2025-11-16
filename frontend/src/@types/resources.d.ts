@@ -16,14 +16,14 @@ interface Resources {
 		invalidEmail: "Invalid email address";
 		lastName: "Last Name";
 		lastNameRequired: "Last Name is required";
-		loggingIn: "Logging in...";
+		loggingIn: "Logging in";
 		login: "Login";
 		password: "Password";
 		passwordComplexity: "Password must contain letters, numbers, and special characters";
 		passwordMinRequired: "Password must be at least 10 characters long";
 		passwordRequired: "Password is required";
 		signUp: "Sign Up";
-		signingUp: "Signing up...";
+		signingUp: "Signing up";
 		signup: "Sign up";
 	};
 }

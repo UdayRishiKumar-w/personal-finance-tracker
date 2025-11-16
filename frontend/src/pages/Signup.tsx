@@ -207,7 +207,7 @@ const Signup: FC = () => {
 				</form>
 			</Box>
 
-			{isPending && <Loader text={t("signingUp")} />}
+			{isPending && <Loader text={`${t("signingUp")}...`} />}
 		</>
 	);
 };

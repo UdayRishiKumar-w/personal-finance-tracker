@@ -12,13 +12,13 @@
 	"invalidEmail": "無効なメールアドレスです",
 	"lastName": "姓",
 	"lastNameRequired": "姓は必須です",
-	"loggingIn": "ログイン中...",
+	"loggingIn": "ログイン中",
 	"login": "ログイン",
 	"password": "パスワード",
 	"passwordComplexity": "パスワードには文字、数字、記号を含める必要があります",
 	"passwordMinRequired": "パスワードは10文字以上でなければなりません",
 	"passwordRequired": "パスワードは必須です",
-	"signingUp": "サインアップ中...",
+	"signingUp": "サインアップ中",
 	"signup": "サインアップ",
 	"signUp": "新規登録"
 }
