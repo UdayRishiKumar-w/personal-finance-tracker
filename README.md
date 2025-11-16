@@ -1,5 +1,7 @@
 # Personal Finance Tracker
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/168d0e978f494ec19c5d0ed53f024969)](https://app.codacy.com/gh/UdayRishiKumar-w/personal-finance-tracker?utm_source=github.com&utm_medium=referral&utm_content=UdayRishiKumar-w/personal-finance-tracker&utm_campaign=Badge_Grade)
+
 ## Overview
 
 The Personal Finance Tracker is a web application designed to help users manage their finances effectively. It provides features for tracking transactions, generating reports, and managing user authentication.
