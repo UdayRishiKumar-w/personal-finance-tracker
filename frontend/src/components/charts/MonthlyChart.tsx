@@ -1,5 +1,6 @@
 import { useTransactions } from "@/api/transactionsApi";
 import { useTheme } from "@/context/ThemeContext";
+import useIsRTL from "@/hooks/useIsRTL";
 import Box from "@mui/material/Box";
 import type { ChartData, ChartOptions } from "chart.js";
 import {
@@ -27,6 +28,7 @@ interface MonthlyChartProps {
 const MonthlyChart: FC<MonthlyChartProps> = ({ months = 6 }) => {
 	const { data } = useTransactions(0, 1000);
 	const transactions = data?.content ?? [];
+	const isRTL = useIsRTL();
 
 	const labels = Array.from({ length: months })
 		.map((_, i) => subMonths(new Date(), months - i - 1))
@@ -75,19 +77,30 @@ const MonthlyChart: FC<MonthlyChartProps> = ({ months = 6 }) => {
 			legend: {
 				position: "top",
 				labels: { color: isDark ? "#e5e7eb" : "#374151" },
+				rtl: isRTL,
 			},
 			tooltip: {
 				backgroundColor: isDark ? "#1f2937" : "#f9fafb",
 				titleColor: isDark ? "#f9fafb" : "#111827",
 				bodyColor: isDark ? "#e5e7eb" : "#111827",
+				rtl: isRTL,
+				callbacks: {
+					label(ctx) {
+						const label = ctx.dataset.label ?? "";
+						const value = ctx.parsed?.y ?? "";
+						return isRTL ? `${value}: ${label}` : `${label}: ${value}`;
+					},
+				},
 			},
 		},
 		scales: {
 			x: {
+				reverse: isRTL,
 				ticks: { color: isDark ? "#e5e7eb" : "#374151" },
 				grid: { display: false },
 			},
 			y: {
+				position: isRTL ? "right" : "left",
 				ticks: { color: isDark ? "#e5e7eb" : "#374151" },
 				grid: { color: isDark ? "#374151" : "#e5e7eb" },
 			},

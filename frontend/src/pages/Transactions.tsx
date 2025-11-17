@@ -30,7 +30,7 @@ const Transactions: FC = () => {
 	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 	const [deleteId, setDeleteId] = useState<number | null>(null);
 	const { data, isLoading, error } = useTransactions(paginationModel.page, paginationModel.pageSize);
-	const transactions = (data?.content ?? []) as TransactionData[];
+	const transactions = data?.content ?? [];
 
 	const columns: GridColDef[] = [
 		{ field: "title", headerName: "Title", flex: 1, minWidth: 150 },
@@ -153,7 +153,9 @@ const Transactions: FC = () => {
 							paginationMode="server"
 							pageSizeOptions={[10, 20, 50]}
 							paginationModel={paginationModel}
-							onPaginationModelChange={(model) => setPaginationModel(model)}
+							onPaginationModelChange={(model) => {
+								setPaginationModel(model);
+							}}
 							disableRowSelectionOnClick
 							sx={{
 								"& .MuiDataGrid-cell": { outline: "none" },

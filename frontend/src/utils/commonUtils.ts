@@ -37,7 +37,7 @@ export const handleApiError = (error: unknown): never => {
 			alertMessage = error.message;
 		}
 	} else if (error instanceof Error) {
-		alertMessage = error?.message || alertMessage;
+		alertMessage = error.message || alertMessage;
 	}
 
 	throw new Error(alertMessage);

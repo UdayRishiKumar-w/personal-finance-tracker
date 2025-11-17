@@ -3,6 +3,7 @@ import Loader from "@/components/common/Loader";
 import PrivateRoute from "@/components/common/PrivateRoute";
 import { setAuthenticated, setLoggedOut } from "@/store/auth/authSlice";
 import type { RootState } from "@/store/store";
+import type { User } from "@/types/storeTypes";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -18,9 +19,9 @@ export default function AppRouter() {
 	const [isLoading, setIsLoading] = useState(true);
 	const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
-	const checkAuth = () => {
+	const checkAuth = (): boolean => {
 		try {
-			return JSON.parse(localStorage.getItem("isLoggedIn") || "false");
+			return !!JSON.parse(localStorage.getItem("isLoggedIn") || "false");
 		} catch {
 			return false;
 		}
@@ -29,13 +30,15 @@ export default function AppRouter() {
 	useEffect(() => {
 		if (checkAuth()) {
 			api.get("/auth/me")
-				.then(({ data }) => {
+				.then(({ data }: { data: { user: User } }) => {
 					dispatch(setAuthenticated(data.user));
 				})
 				.catch(() => {
 					dispatch(setLoggedOut());
 				})
-				.finally(() => setIsLoading(false));
+				.finally(() => {
+					setIsLoading(false);
+				});
 		} else {
 			setIsLoading(false);
 		}

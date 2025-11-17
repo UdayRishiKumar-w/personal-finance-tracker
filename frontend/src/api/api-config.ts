@@ -37,7 +37,9 @@ let isRefreshing = false;
 let failedQueue: Array<(tokenRefreshed: boolean) => void> = [];
 
 const processQueue = (success: boolean) => {
-	failedQueue.forEach((cb) => cb(success));
+	failedQueue.forEach((cb) => {
+		cb(success);
+	});
 	failedQueue = [];
 };
 

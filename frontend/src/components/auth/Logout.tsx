@@ -22,7 +22,9 @@ const Logout: FC = () => {
 		<IconButton
 			color="inherit"
 			disabled={isPending}
-			onClick={handleLogout}
+			onClick={() => {
+				void handleLogout();
+			}}
 			title={isPending ? "Logging out" : "Logout"}
 		>
 			<LogoutIcon className="text-red-600" />

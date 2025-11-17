@@ -34,8 +34,12 @@ function PWABadge() {
 	const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
 	useEffect(() => {
-		const handleOnline = () => setIsOffline(false);
-		const handleOffline = () => setIsOffline(true);
+		const handleOnline = () => {
+			setIsOffline(false);
+		};
+		const handleOffline = () => {
+			setIsOffline(true);
+		};
 
 		globalThis.addEventListener("online", handleOnline);
 		globalThis.addEventListener("offline", handleOffline);
@@ -76,7 +80,13 @@ function PWABadge() {
 			</Typography>
 			<Box className="flex space-x-2">
 				{needRefresh && (
-					<Button variant="contained" color="primary" onClick={async () => updateServiceWorker(true)}>
+					<Button
+						variant="contained"
+						color="primary"
+						onClick={() => {
+							void updateServiceWorker(true);
+						}}
+					>
 						Reload
 					</Button>
 				)}
@@ -107,6 +117,6 @@ function registerPeriodicSync(period: number, swUrl: string, r: ServiceWorkerReg
 			},
 		});
 
-		if (resp?.status === 200) await r.update();
+		if (resp.status === 200) await r.update();
 	}, period);
 }

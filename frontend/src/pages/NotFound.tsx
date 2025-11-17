@@ -23,7 +23,9 @@ const NotFound = () => {
 			<Button
 				variant="contained"
 				color="primary"
-				onClick={() => navigate("/dashboard")}
+				onClick={() => {
+					void navigate("/dashboard");
+				}}
 				className="animate-fade-in mt-6"
 			>
 				Go to Dashboard

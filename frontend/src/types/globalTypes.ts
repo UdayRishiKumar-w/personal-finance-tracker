@@ -22,3 +22,11 @@ export interface BackendError {
 	message: string;
 	status: number;
 }
+
+export interface PaginatedResponse<T> {
+	content: Array<T>;
+	totalElements: number;
+	totalPages: number;
+	page: number;
+	size: number;
+}

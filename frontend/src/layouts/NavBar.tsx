@@ -23,7 +23,9 @@ const NavBar = () => {
 	const location = useLocation();
 	const [menuOpen, setMenuOpen] = useState(false);
 
-	const toggleMenu = () => setMenuOpen((prev) => !prev);
+	const toggleMenu = () => {
+		setMenuOpen((prev) => !prev);
+	};
 
 	const navItems = [
 		{ label: "Dashboard", to: "/dashboard" },
@@ -95,7 +97,9 @@ const NavBar = () => {
 								component={NavLink}
 								to={to}
 								end
-								onClick={() => setMenuOpen(false)}
+								onClick={() => {
+									setMenuOpen(false);
+								}}
 								className={clsx(
 									"w-full justify-end rounded-md px-3 py-2 text-sm font-medium transition-all duration-200 ease-in-out hover:shadow-md active:scale-[0.98]",
 									location.pathname === to

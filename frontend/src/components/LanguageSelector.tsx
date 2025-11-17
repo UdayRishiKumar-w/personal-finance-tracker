@@ -19,7 +19,7 @@ const LanguageSelector: FC = () => {
 		if (lng) {
 			const supportedLng = getLangSupported(lng);
 			setLanguage(supportedLng);
-			i18next.changeLanguage(supportedLng);
+			void i18next.changeLanguage(supportedLng);
 		}
 	}, [searchParams]);
 
@@ -35,7 +35,7 @@ const LanguageSelector: FC = () => {
 			{ replace: true },
 		);
 
-		i18next.changeLanguage(selectedLanguage);
+		void i18next.changeLanguage(selectedLanguage);
 	};
 
 	useEffect(() => {

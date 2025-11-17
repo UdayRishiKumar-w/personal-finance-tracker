@@ -75,7 +75,7 @@ if (import.meta.env.DEV) {
 		const React = await import("react");
 		const ReactDOM = await import("react-dom");
 		const axe = await import("@axe-core/react");
-		axe.default(React, ReactDOM, 1000);
+		void axe.default(React, ReactDOM, 1000);
 	} catch (error) {
 		console.error("Error loading dependencies:", error);
 	}

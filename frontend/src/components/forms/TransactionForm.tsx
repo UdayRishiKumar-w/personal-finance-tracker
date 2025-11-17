@@ -106,7 +106,11 @@ const TransactionForm: FC<TransactionFormProps> = ({ open, onClose, editTransact
 		<Dialog open={open} onClose={onClose} fullWidth>
 			<DialogTitle>{editTransaction ? "Edit Transaction" : "Add Transaction"}</DialogTitle>
 
-			<form onSubmit={handleSubmit(onSubmit)}>
+			<form
+				onSubmit={() => {
+					void handleSubmit(onSubmit);
+				}}
+			>
 				<DialogContent className="space-y-4">
 					<TextField
 						required

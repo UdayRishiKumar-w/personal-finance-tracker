@@ -104,7 +104,6 @@ export default defineConfig(({ mode }) => {
 		},
 		define: {
 			"process.env.NODE_ENV": JSON.stringify(mode),
-			"process.env.VITE_SITE_URL": JSON.stringify(env.VITE_SITE_URL || "http://localhost:5173"),
 		},
 	};
 });

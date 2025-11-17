@@ -35,7 +35,9 @@ const Login: FC = () => {
 	const { mutateAsync: login, isPending } = useLoginMutation();
 
 	const [showPassword, setShowPassword] = useState(false);
-	const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+	const togglePasswordVisibility = () => {
+		setShowPassword((prev) => !prev);
+	};
 
 	const {
 		register,
@@ -60,7 +62,7 @@ const Login: FC = () => {
 				keepErrors: true,
 			},
 		);
-		trigger(erroredFields);
+		void trigger(erroredFields);
 	}, [i18n.language, reset, trigger, errors]);
 
 	useEffect(() => {
@@ -85,7 +87,9 @@ const Login: FC = () => {
 		<>
 			<Box className="flex h-full items-center justify-center overflow-auto">
 				<form
-					onSubmit={handleSubmit(onSubmit)}
+					onSubmit={() => {
+						void handleSubmit(onSubmit);
+					}}
 					className="w-full max-w-xs rounded-lg p-8 shadow-2xl sm:max-w-md dark:shadow-neutral-50"
 					noValidate
 				>
@@ -130,7 +134,9 @@ const Login: FC = () => {
 										<InputAdornment position="end">
 											<IconButton
 												onClick={togglePasswordVisibility}
-												onMouseDown={(e) => e.preventDefault()}
+												onMouseDown={(e) => {
+													e.preventDefault();
+												}}
 												edge="end"
 												aria-label={showPassword ? "Hide password" : "Show password"}
 											>
