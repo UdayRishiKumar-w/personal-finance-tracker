@@ -26,18 +26,18 @@ const createSignupSchema = (t: TFunction<"translation", undefined>) =>
 		firstName: z
 			.string()
 			.trim()
-			.min(1, { message: t("firstNameRequired") }),
+			.min(1, { error: t("firstNameRequired") }),
 		lastName: z
 			.string()
 			.trim()
-			.min(1, { message: t("lastNameRequired") }),
+			.min(1, { error: t("lastNameRequired") }),
 		email: z.email({ error: t("invalidEmail") }).transform((val) => val.trim()),
 		password: z
 			.string()
 			.trim()
-			.min(10, { message: t("passwordMinRequired") })
+			.min(10, { error: t("passwordMinRequired") })
 			.regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).+$/, {
-				message: t("passwordComplexity"),
+				error: t("passwordComplexity"),
 			}),
 	});
 
