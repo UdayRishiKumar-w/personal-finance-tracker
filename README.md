@@ -109,8 +109,12 @@ Where to look in the codebase
 ## Technologies Used
 
 - **Frontend**: React, Material UI, React Query, React-Router, Chart.js, Axios, React hook form, React-i18next, React Testing Library, Vite, Tailwind CSS, Redux, Redux toolkit, Vitest, Playwright.
-- **Backend**: Spring Boot, Java, Maven, JWT for authentication, Spring Data JPA, Redis, PostgreSQL,Lombok, Mapstruct, Flyway, Spring Security, Spring Actuator, Open API for Documentation.
+- **Backend**: Spring Boot, Java, Maven, JWT for authentication, Spring Data JPA, Redis, PostgreSQL, Lombok, Mapstruct, Flyway, Spring Security, Spring Actuator, Open API for Documentation.
 - **Deployment**: Docker, Docker-compose, Nginx.
+
+### Screenshots
+<img width="220.5" height="222.5" alt="light-house-results" src="https://github.com/user-attachments/assets/0e6cbbe1-d32e-46fd-9758-77022a1a16f7" />
+
 
 Contact
 
