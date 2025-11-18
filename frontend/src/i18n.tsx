@@ -20,8 +20,8 @@ export default i18next
 		},
 		saveMissing: true,
 		detection: {
-			order: ["querystring", "navigator"],
-			// caches: ["localStorage"],
+			order: ["localStorage", "querystring", "navigator"],
+			caches: ["localStorage"],
 			lookupQuerystring: "lng",
 		},
 		load: "languageOnly",
