@@ -8,11 +8,11 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
 
-const Dashboard = lazy(async () => import("@/pages/Dashboard"));
-const Login = lazy(async () => import("@/pages/Login"));
-const Signup = lazy(async () => import("@/pages/Signup"));
-const NotFound = lazy(async () => import("@/pages/NotFound"));
-const Transactions = lazy(async () => import("@/pages/Transactions"));
+const Dashboard = lazy(() => import("@/pages/Dashboard"));
+const Login = lazy(() => import("@/pages/Login"));
+const Signup = lazy(() => import("@/pages/Signup"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
+const Transactions = lazy(() => import("@/pages/Transactions"));
 
 export default function AppRouter() {
 	const dispatch = useDispatch();
