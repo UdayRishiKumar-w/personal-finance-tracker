@@ -44,9 +44,8 @@ Prerequisites: Java 21, Maven, Node.js (>=16), npm, Docker
 1) Clone the repository:
 
 ```pwsh
-cd backend
-.\mvnw clean install
-.\mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+git clone https://github.com/UdayRishiKumar-w/personal-finance-tracker.git
+cd personal-finance-tracker
 ```
 
 2) Start the backend (from repository root):
@@ -70,12 +69,12 @@ npm install
 npm run dev
 ```
 
-The Vite server will print an address (default `http://localhost:5173`). The frontend uses `VITE_API_BASE_URL` from `.env` or environment to contact the backend.
+The Vite server will print an address (default `http://localhost:5173`). The frontend uses `VITE_API_BASE_URL` from the .env` or the environment to contact the backend.
 
 4) Run everything with Docker:
 
 ```pwsh
-docker-compose up --build
+docker compose up --build
 ```
 
 This will start the services defined in `docker-compose.yaml` (Postgres, Redis, backend, etc.).
