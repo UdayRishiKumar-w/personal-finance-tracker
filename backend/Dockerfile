@@ -25,7 +25,7 @@ RUN --mount=type=cache,target=/root/.m2,id=maven-cache-pft \
 # RUN mvn clean package -DskipTests -B
 
 # Stage 2: The final production image
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:21.0.9_10-jre-alpine-3.23
 
 # Set the working directory
 WORKDIR /app
