@@ -87,9 +87,7 @@ const Login: FC = () => {
 		<>
 			<Box className="flex h-full items-center justify-center overflow-auto">
 				<form
-					onSubmit={() => {
-						void handleSubmit(onSubmit);
-					}}
+					onSubmit={handleSubmit(onSubmit)}
 					className="w-full max-w-xs rounded-lg p-8 shadow-2xl sm:max-w-md dark:shadow-neutral-50"
 					noValidate
 				>
