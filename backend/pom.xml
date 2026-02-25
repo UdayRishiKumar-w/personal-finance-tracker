@@ -31,6 +31,7 @@
 		<java.version>21</java.version>
 		<jjwt.version>0.12.6</jjwt.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
+		<!-- <sentry.version>8.27.0</sentry.version> -->
 	</properties>
 	<dependencies>
 		<dependency>
@@ -78,7 +79,26 @@
 			<artifactId>testcontainers-redis</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		<!--
+		https://medium.com/simform-engineering/revolutionize-monitoring-empowering-spring-boot-applications-with-prometheus-and-grafana-e99c5c7248cf -->
+		<!--
+		https://medium.com/@contactkumaramit9139/monitoring-spring-boot-applications-with-prometheus-and-grafana-21445260dad4 -->
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<!--
+		https://medium.com/@bectorhimanshu/logging-and-monitoring-in-springboot-with-loki-and-visualizing-loki-logs-in-grafana-f15bad714996 -->
+		<!-- <dependency>
+			<groupId>com.github.loki4j</groupId>
+			<artifactId>loki-logback-appender</artifactId>
+			<version>1.5.1</version>
+		</dependency> -->
+		<!-- <dependency>
+			<groupId>io.sentry</groupId>
+			<artifactId>sentry-spring-boot-4-starter</artifactId>
+		</dependency> -->
 		<!-- <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-client</artifactId>
@@ -209,6 +229,17 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<!-- <dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>io.sentry</groupId>
+				<artifactId>sentry-bom</artifactId>
+				<version>${sentry.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement> -->
 
 	<build>
 		<plugins>

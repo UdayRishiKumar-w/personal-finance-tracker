@@ -1,0 +1,303 @@
+{
+	"id": null,
+	"uid": "pft-api-monitoring",
+	"title": "PFT - API & JVM Monitoring",
+	"timezone": "browser",
+	"schemaVersion": 39,
+	"version": 1,
+	"refresh": "30s",
+	"tags": ["pft", "api", "jvm", "production"],
+	"panels": [
+		{
+			"type": "stat",
+			"title": "HTTP 5xx Error Rate (%)",
+			"id": 1,
+			"gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+			"targets": [
+				{
+					"refId": "A",
+					"expr": "job:pft_backend:http_requests_error_rate:percentage"
+				}
+			],
+			"options": {
+				"reduceOptions": {
+					"calcs": ["lastNotNull"],
+					"fields": "",
+					"values": false
+				},
+				"orientation": "auto",
+				"textMode": "auto",
+				"colorMode": "value",
+				"graphMode": "area",
+				"justifyMode": "auto"
+			},
+			"fieldConfig": {
+				"defaults": {
+					"unit": "percent",
+					"thresholds": {
+						"mode": "absolute",
+						"steps": [
+							{ "color": "green", "value": null },
+							{ "color": "yellow", "value": 2 },
+							{ "color": "red", "value": 5 }
+						]
+					}
+				},
+				"overrides": []
+			}
+		},
+		{
+			"type": "stat",
+			"title": "Request Rate (req/s)",
+			"id": 2,
+			"gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
+			"targets": [
+				{
+					"refId": "A",
+					"expr": "job:pft_backend:http_requests:rate5m"
+				}
+			],
+			"options": {
+				"reduceOptions": {
+					"calcs": ["lastNotNull"],
+					"fields": "",
+					"values": false
+				},
+				"orientation": "auto",
+				"textMode": "value",
+				"colorMode": "value",
+				"graphMode": "area",
+				"justifyMode": "auto"
+			},
+			"fieldConfig": {
+				"defaults": {
+					"unit": "req/s"
+				},
+				"overrides": []
+			}
+		},
+		{
+			"type": "stat",
+			"title": "Active Instances (up)",
+			"id": 3,
+			"gridPos": { "x": 12, "y": 0, "w": 6, "h": 4 },
+			"targets": [
+				{
+					"refId": "A",
+					"expr": "sum(up{job=\"pft-backend\"})"
+				}
+			],
+			"options": {
+				"reduceOptions": {
+					"calcs": ["lastNotNull"],
+					"fields": "",
+					"values": false
+				},
+				"orientation": "auto",
+				"textMode": "value",
+				"colorMode": "value",
+				"graphMode": "none",
+				"justifyMode": "auto"
+			},
+			"fieldConfig": {
+				"defaults": {
+					"unit": "none",
+					"thresholds": {
+						"mode": "absolute",
+						"steps": [
+							{ "color": "red", "value": 0 },
+							{ "color": "green", "value": 1 }
+						]
+					}
+				},
+				"overrides": []
+			}
+		},
+		{
+			"type": "timeseries",
+			"title": "Request Rate by Endpoint",
+			"id": 4,
+			"gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+			"targets": [
+				{
+					"refId": "A",
+					"expr": "sum(rate(http_server_requests_seconds_count[5m])) by (uri)",
+					"legendFormat": "{{uri}}"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"unit": "req/s"
+				},
+				"overrides": []
+			},
+			"options": {
+				"legend": {
+					"displayMode": "table",
+					"placement": "right"
+				},
+				"tooltip": {
+					"mode": "single"
+				}
+			}
+		},
+		{
+			"type": "timeseries",
+			"title": "HTTP P95 Latency (seconds)",
+			"id": 5,
+			"gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
+			"targets": [
+				{
+					"refId": "A",
+					"expr": "job:pft_backend:http_request_duration_seconds:p95"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"unit": "s",
+					"thresholds": {
+						"mode": "absolute",
+						"steps": [
+							{ "color": "green", "value": null },
+							{ "color": "yellow", "value": 0.75 },
+							{ "color": "red", "value": 1.5 }
+						]
+					}
+				},
+				"overrides": []
+			},
+			"options": {
+				"legend": {
+					"displayMode": "hidden",
+					"placement": "bottom"
+				},
+				"tooltip": {
+					"mode": "single"
+				}
+			}
+		},
+		{
+			"type": "table",
+			"title": "HTTP Status Codes (Last 5m)",
+			"id": 6,
+			"gridPos": { "x": 0, "y": 12, "w": 24, "h": 8 },
+			"targets": [
+				{
+					"refId": "A",
+					"expr": "sum(rate(http_server_requests_seconds_count[5m])) by (status, method, uri)",
+					"format": "table",
+					"instant": true
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"mappings": [],
+					"thresholds": {
+						"mode": "absolute",
+						"steps": [{ "color": "green", "value": null }]
+					}
+				},
+				"overrides": []
+			},
+			"options": {
+				"showHeader": true
+			}
+		},
+		{
+			"type": "timeseries",
+			"title": "Heap Memory Used (MiB)",
+			"id": 7,
+			"gridPos": { "x": 0, "y": 20, "w": 12, "h": 8 },
+			"targets": [
+				{
+					"refId": "A",
+					"expr": "sum(jvm_memory_used_bytes{area=\"heap\"}) / (1024 * 1024)",
+					"legendFormat": "heap used"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"unit": "MiB"
+				},
+				"overrides": []
+			},
+			"options": {
+				"legend": {
+					"displayMode": "table",
+					"placement": "right"
+				},
+				"tooltip": {
+					"mode": "single"
+				}
+			}
+		},
+		{
+			"type": "timeseries",
+			"title": "System CPU Usage (%)",
+			"id": 8,
+			"gridPos": { "x": 12, "y": 20, "w": 12, "h": 8 },
+			"targets": [
+				{
+					"refId": "A",
+					"expr": "system_cpu_usage * 100",
+					"legendFormat": "system cpu"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"unit": "percent",
+					"thresholds": {
+						"mode": "absolute",
+						"steps": [
+							{ "color": "green", "value": null },
+							{ "color": "yellow", "value": 70 },
+							{ "color": "red", "value": 90 }
+						]
+					}
+				},
+				"overrides": []
+			},
+			"options": {
+				"legend": {
+					"displayMode": "hidden",
+					"placement": "bottom"
+				},
+				"tooltip": {
+					"mode": "single"
+				}
+			}
+		},
+		{
+			"type": "timeseries",
+			"title": "DB Connections Active",
+			"id": 9,
+			"gridPos": { "x": 0, "y": 28, "w": 12, "h": 8 },
+			"targets": [
+				{
+					"refId": "A",
+					"expr": "jdbc_connections_active",
+					"legendFormat": "active"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"unit": "none"
+				},
+				"overrides": []
+			},
+			"options": {
+				"legend": {
+					"displayMode": "hidden",
+					"placement": "bottom"
+				},
+				"tooltip": {
+					"mode": "single"
+				}
+			}
+		}
+	],
+	"time": {
+		"from": "now-6h",
+		"to": "now"
+	}
+}
