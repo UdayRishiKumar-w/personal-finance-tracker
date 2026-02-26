@@ -60,7 +60,8 @@ export default defineConfig(({ mode }) => {
 				output: {
 					manualChunks: {
 						react: ["react", "react-dom", "react-router-dom"],
-						mui: ["@mui/material", "@emotion/react", "@emotion/styled"],
+						mui: ["@mui/material"],
+						emotion: ["@emotion/react", "@emotion/styled"],
 						"mui-icons": ["@mui/icons-material"],
 						stylis: ["stylis", "@mui/stylis-plugin-rtl"],
 						"mui-grid": ["@mui/x-data-grid"],

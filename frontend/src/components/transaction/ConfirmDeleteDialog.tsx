@@ -65,7 +65,7 @@ const ConfirmDeleteDialog: React.FC<ConfirmDeleteDialogProps> = ({ open, onClose
 					Cancel
 				</Button>
 
-				<Button variant="contained" color="error" type="submit" onClick={handleDelete} disabled={deleting}>
+				<Button variant="contained" color="error" onClick={handleDelete} disabled={deleting}>
 					{deleting ? "Deleting..." : "Delete"}
 				</Button>
 			</DialogActions>

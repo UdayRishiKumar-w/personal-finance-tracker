@@ -72,7 +72,7 @@ const Login: FC = () => {
 	const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
 		try {
 			await login({
-				email: data.email.trim(),
+				email: data.email,
 				password: data.password,
 			});
 			dispatch(showSnackbar({ message: "Logged in successfully!", severity: "success" }));

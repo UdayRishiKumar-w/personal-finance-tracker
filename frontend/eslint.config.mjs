@@ -13,7 +13,7 @@ import eslintPluginPlaywright from "eslint-plugin-playwright";
 import eslintPluginReactRedux from "eslint-plugin-react-redux";
 import testingLibrary from "eslint-plugin-testing-library";
 import eslintPluginVitest from "eslint-plugin-vitest";
-import eslintPluginZodX from "eslint-plugin-zod-x";
+import eslintPluginZod from "eslint-plugin-zod";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 /** @type {import('eslint').Linter.Config} */
@@ -23,7 +23,7 @@ export default defineConfig([
 	eslintPluginJs.configs.recommended,
 
 	// Zod rules
-	eslintPluginZodX.configs.recommended,
+	eslintPluginZod.configs.recommended,
 
 	// TypeScript rules
 	tseslint.configs.recommendedTypeChecked,
