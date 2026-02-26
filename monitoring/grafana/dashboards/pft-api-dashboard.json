@@ -239,7 +239,7 @@
 			"targets": [
 				{
 					"refId": "A",
-					"expr": "system_cpu_usage * 100",
+					"expr": "avg(system_cpu_usage{job=\"pft-backend\"}) * 100",
 					"legendFormat": "system cpu"
 				}
 			],

@@ -152,6 +152,16 @@ services:
             - "--config.file=/etc/prometheus/prometheus.yml"
             - "--storage.tsdb.path=/prometheus"
             - "--storage.tsdb.retention.time=15d"
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "wget -q --spider http://localhost:9090/-/healthy || exit 1",
+                ]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+            start_period: 10s
         depends_on:
             backend:
                 condition: service_healthy
@@ -175,6 +185,26 @@ services:
             prometheus:
                 condition: service_started
 
+    loki:
+        image: grafana/loki:3.6.7
+        container_name: pft-loki
+        restart: always
+        command: ["-config.file=/etc/loki/config.yml"]
+        ports:
+            - "3100:3100"
+        volumes:
+            - ./monitoring/loki/config.yml:/etc/loki/config.yml:ro
+            - loki-data:/loki
+            - loki-data:/wal
+
+        healthcheck:
+            test:
+                ["CMD-SHELL", "wget -qO- http://localhost:3100/ready || exit 1"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 20s
+
 volumes:
     db_data:
     pgadmin_data:
@@ -183,3 +213,4 @@ volumes:
     backend-logs:
     prometheus-data:
     grafana-data:
+    loki-data:

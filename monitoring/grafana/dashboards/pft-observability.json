@@ -1,0 +1,225 @@
+{
+	"id": null,
+	"uid": "pft-observability",
+	"title": "PFT - Spring Boot Observability",
+	"schemaVersion": 39,
+	"version": 1,
+	"refresh": "15s",
+	"tags": ["pft", "spring-boot", "logs", "metrics"],
+	"templating": {
+		"list": [
+			{
+				"name": "app_name",
+				"type": "constant",
+				"label": "Application",
+				"query": "pft",
+				"current": { "text": "pft", "value": "pft", "selected": true }
+			},
+			{
+				"name": "log_keyword",
+				"type": "textbox",
+				"label": "Log Query",
+				"query": "",
+				"current": { "text": "", "value": "" }
+			}
+		]
+	},
+	"panels": [
+		{
+			"type": "stat",
+			"title": "Total Requests (24h)",
+			"id": 1,
+			"gridPos": { "x": 0, "y": 0, "w": 4, "h": 4 },
+			"datasource": { "type": "prometheus", "uid": "Prometheus" },
+			"targets": [
+				{
+					"refId": "A",
+					"expr": "sum(increase(http_server_requests_seconds_count{application=\"pft\", uri!=\"/actuator/prometheus\"}[24h]))"
+				}
+			],
+			"options": {
+				"reduceOptions": {
+					"calcs": ["lastNotNull"],
+					"fields": "",
+					"values": false
+				},
+				"colorMode": "value",
+				"graphMode": "none",
+				"justifyMode": "auto"
+			}
+		},
+		{
+			"type": "stat",
+			"title": "5xx Error Count (24h)",
+			"id": 2,
+			"gridPos": { "x": 4, "y": 0, "w": 4, "h": 4 },
+			"datasource": { "type": "prometheus", "uid": "Prometheus" },
+			"targets": [
+				{
+					"refId": "A",
+					"expr": "sum(increase(http_server_requests_seconds_count{application=\"pft\", status=~\"5..\"}[24h]))"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"thresholds": {
+						"mode": "absolute",
+						"steps": [
+							{ "color": "green", "value": null },
+							{ "color": "yellow", "value": 10 },
+							{ "color": "red", "value": 100 }
+						]
+					}
+				}
+			},
+			"options": {
+				"reduceOptions": {
+					"calcs": ["lastNotNull"],
+					"fields": "",
+					"values": false
+				},
+				"colorMode": "value",
+				"graphMode": "none",
+				"justifyMode": "auto"
+			}
+		},
+		{
+			"type": "stat",
+			"title": "P95 Latency (1m)",
+			"id": 3,
+			"gridPos": { "x": 8, "y": 0, "w": 4, "h": 4 },
+			"datasource": { "type": "prometheus", "uid": "Prometheus" },
+			"targets": [
+				{
+					"refId": "A",
+					"expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{application=\"pft\", uri!=\"/actuator/prometheus\"}[1m])) by (le))"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"unit": "s"
+				},
+				"overrides": []
+			},
+			"options": {
+				"reduceOptions": {
+					"calcs": ["lastNotNull"],
+					"fields": "",
+					"values": false
+				},
+				"colorMode": "value",
+				"graphMode": "none",
+				"justifyMode": "auto"
+			}
+		},
+		{
+			"type": "timeseries",
+			"title": "Request Rate by Endpoint",
+			"id": 4,
+			"gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+			"datasource": { "type": "prometheus", "uid": "Prometheus" },
+			"targets": [
+				{
+					"refId": "A",
+					"expr": "sum(rate(http_server_requests_seconds_count{application=\"pft\", uri!=\"/actuator/prometheus\"}[1m])) by (uri)",
+					"legendFormat": "{{uri}}"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"unit": "req/s"
+				},
+				"overrides": []
+			},
+			"options": {
+				"legend": {
+					"displayMode": "table",
+					"placement": "right"
+				},
+				"tooltip": {
+					"mode": "multi"
+				}
+			}
+		},
+		{
+			"type": "timeseries",
+			"title": "JVM Heap Used (MiB)",
+			"id": 5,
+			"gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
+			"datasource": { "type": "prometheus", "uid": "Prometheus" },
+			"targets": [
+				{
+					"refId": "A",
+					"expr": "sum(jvm_memory_used_bytes{application=\"pft\", area=\"heap\"}) / (1024 * 1024)",
+					"legendFormat": "heap used"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"unit": "MiB"
+				},
+				"overrides": []
+			},
+			"options": {
+				"legend": {
+					"displayMode": "table",
+					"placement": "right"
+				},
+				"tooltip": {
+					"mode": "multi"
+				}
+			}
+		},
+		{
+			"type": "timeseries",
+			"title": "Log Level Rate (INFO/ERROR/etc)",
+			"id": 6,
+			"gridPos": { "x": 0, "y": 12, "w": 8, "h": 8 },
+			"datasource": { "type": "loki", "uid": "Loki" },
+			"targets": [
+				{
+					"refId": "A",
+					"expr": "sum by (level) (rate({app=\"pft\"} |= \"$log_keyword\" [1m]))",
+					"queryType": "range"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {},
+				"overrides": []
+			},
+			"options": {
+				"legend": {
+					"displayMode": "list",
+					"placement": "bottom"
+				},
+				"tooltip": {
+					"mode": "single"
+				}
+			}
+		},
+		{
+			"type": "logs",
+			"title": "Application Logs (Loki)",
+			"id": 7,
+			"gridPos": { "x": 8, "y": 12, "w": 16, "h": 8 },
+			"datasource": { "type": "loki", "uid": "Loki" },
+			"targets": [
+				{
+					"refId": "A",
+					"expr": "{app=\"pft\"} |= \"$log_keyword\"",
+					"queryType": "range"
+				}
+			],
+			"options": {
+				"showTime": true,
+				"showLabels": false,
+				"wrapLogMessage": true,
+				"enableLogDetails": true
+			}
+		}
+	],
+	"time": {
+		"from": "now-1h",
+		"to": "now"
+	}
+}

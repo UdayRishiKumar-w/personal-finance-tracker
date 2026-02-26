@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+
+	<property name="APP_NAME" value="pft" />
+	<property name="LOKI_URL" value="${LOKI_URL:-http://loki:3100}" />
+
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="net.logstash.logback.encoder.LogstashEncoder">
+			<customFields>{"app":"${APP_NAME}"}</customFields>
+		</encoder>
+	</appender>
+
+	<springProfile name="prod">
+		<appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+			<http>
+				<url>${LOKI_URL}/loki/api/v1/push</url>
+			</http>
+			<format>
+				<label>
+					<pattern>app=${APP_NAME},level=%level,logger=%logger</pattern>
+				</label>
+				<message>
+					<pattern>%msg%n%ex</pattern>
+				</message>
+			</format>
+		</appender>
+
+		<root level="INFO">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="LOKI" />
+		</root>
+	</springProfile>
+
+	<springProfile name="!prod">
+		<root level="INFO">
+			<appender-ref ref="CONSOLE" />
+		</root>
+	</springProfile>
+
+</configuration>
