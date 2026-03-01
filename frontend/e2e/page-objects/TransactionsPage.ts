@@ -75,6 +75,9 @@ export class TransactionsPage extends BasePage {
 		await this.deleteButton.first().click();
 		await this.waitForStable(this.page.getByRole("dialog").filter({ hasText: /delete transaction/i }));
 		await this.confirmDeleteButton.click();
+		await expect(this.page.getByRole("dialog").filter({ hasText: /delete transaction/i })).toBeHidden({
+			timeout: 10000,
+		});
 	}
 
 	async editFirstTransaction(newTitle: string) {

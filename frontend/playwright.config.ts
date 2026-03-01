@@ -39,7 +39,7 @@ export default defineConfig({
 	webServer: {
 		command: "npm run build:e2e && npm run preview",
 		port: PORT,
-		reuseExistingServer: true,
+		reuseExistingServer: !IS_CI,
 		timeout: 240_000,
 		stdout: "pipe",
 	},

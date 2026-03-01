@@ -84,7 +84,7 @@ test.describe("Transactions CRUD", () => {
 	});
 
 	test("error fallback when API fails", async ({ page, transactionsPage }) => {
-		await page.route("**/api/transactions?**", async (route) => {
+		await page.route("**/api/transactions**", async (route) => {
 			await route.fulfill({ status: 500, contentType: "application/json", body: JSON.stringify({}) });
 		});
 		await transactionsPage.goto();
@@ -103,7 +103,7 @@ test.describe("Transactions CRUD", () => {
 		await expect(transactionsPage.dialog.getByText(/category is required/i)).toBeVisible();
 	});
 
-	test("edge: recurring toggle retains state", async ({ transactionsPage }) => {
+	test("edge: form resets state after cancel", async ({ transactionsPage }) => {
 		await transactionsPage.openAddDialog();
 
 		const switchInput = transactionsPage.recurringSwitch;

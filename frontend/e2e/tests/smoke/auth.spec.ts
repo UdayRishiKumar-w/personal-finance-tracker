@@ -49,6 +49,7 @@ test.describe("Authentication", () => {
 		await page.addInitScript(() => localStorage.setItem("isLoggedIn", "true"));
 		await mockLogout(page);
 		await mockMe(page, defaultUser);
+		await mockTransactions(page, []);
 		await dashboardPage.goto();
 		await dashboardPage.logout();
 		await expect(page).toHaveURL(/\/login$/);

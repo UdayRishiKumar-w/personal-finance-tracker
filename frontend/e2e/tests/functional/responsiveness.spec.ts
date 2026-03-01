@@ -9,18 +9,14 @@ test.describe("Dashboard responsiveness", () => {
 		await page.setViewportSize({ width: 390, height: 844 }); // iPhone 12-ish
 		await page.goto("/dashboard");
 
-		const h0 = page.getByRole("heading", { name: /balance/i });
-		const h1 = page.getByRole("heading", { name: /total income/i });
-		const h2 = page.getByRole("heading", { name: /total expense/i });
-		await expect(h0).toBeVisible();
-		await expect(h1).toBeVisible();
-		await expect(h2).toBeVisible();
+		const card0 = page.getByRole("heading", { name: /balance/i });
+		const card1 = page.getByRole("heading", { name: /total income/i });
+		const card2 = page.getByRole("heading", { name: /total expense/i });
+		await expect(card0).toBeVisible();
+		await expect(card1).toBeVisible();
+		await expect(card2).toBeVisible();
 
-		const [b0, b1, b2] = await Promise.all([
-			page.getByLabel(/balance/i).boundingBox(),
-			page.getByLabel(/total income/i).boundingBox(),
-			page.getByLabel(/total expense/i).boundingBox(),
-		]);
+		const [b0, b1, b2] = await Promise.all([card0.boundingBox(), card1.boundingBox(), card2.boundingBox()]);
 		expect(b0 && b1 && b2).toBeTruthy();
 		// x positions should be reasonably close; y positions should be increasing
 		expect(Math.abs((b0!.x ?? 0) - (b1!.x ?? 0))).toBeLessThan(50);

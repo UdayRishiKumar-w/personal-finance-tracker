@@ -79,22 +79,13 @@ export async function mockMe(page: Page, user: TestUser = defaultUser) {
 }
 
 export async function ensureAuthenticated(page: Page, user: TestUser = defaultUser) {
-	await page.addInitScript(() => {
+	await page.addInitScript((userData) => {
 		try {
 			localStorage.setItem("isLoggedIn", "true");
-			localStorage.setItem(
-				"user",
-				JSON.stringify({
-					id: 1,
-					firstName: "Test",
-					lastName: "User",
-					email: "test.user@example.com",
-					role: "USER",
-				}),
-			);
+			localStorage.setItem("user", JSON.stringify(userData));
 		} catch {
 			// ignore
 		}
-	});
+	}, user);
 	await mockMe(page, user);
 }

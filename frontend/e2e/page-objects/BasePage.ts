@@ -1,4 +1,6 @@
 import { expect, type Locator, type Page } from "@playwright/test";
+import * as fs from "node:fs";
+import * as path from "node:path";
 
 export class BasePage {
 	protected readonly page: Page;
@@ -55,6 +57,10 @@ export class BasePage {
 	}
 
 	async takeScreenshot(name: string) {
-		await this.page.screenshot({ path: `e2e/screenshots/${name}.png`, fullPage: true });
+		const screenshotDir = "e2e/screenshots";
+		if (!fs.existsSync(screenshotDir)) {
+			fs.mkdirSync(screenshotDir, { recursive: true });
+		}
+		await this.page.screenshot({ path: path.join(screenshotDir, `${name}.png`), fullPage: true });
 	}
 }

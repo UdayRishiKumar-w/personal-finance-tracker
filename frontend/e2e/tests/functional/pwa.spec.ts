@@ -7,7 +7,12 @@ test.describe("PWA", () => {
 		await page.goto("/dashboard");
 		const hasManifest = await page.evaluate(() => !!document.querySelector('link[rel="manifest"]'));
 		expect(hasManifest).toBeTruthy();
-		const hasSWApi = await page.evaluate(() => "serviceWorker" in navigator);
-		expect(hasSWApi).toBeTruthy();
+		const swRegistration = await page.evaluate(async () => {
+			if (!("serviceWorker" in navigator)) return null;
+			const registration = await navigator.serviceWorker.getRegistration();
+			return registration ? { active: !!registration.active } : null;
+		});
+		expect(swRegistration).not.toBeNull();
+		expect(swRegistration?.active).toBe(true);
 	});
 });

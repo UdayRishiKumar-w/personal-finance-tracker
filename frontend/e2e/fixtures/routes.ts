@@ -5,18 +5,21 @@ const apiBasePattern = "**/api";
 
 export type Paginated<T> = PaginatedResponse<T>;
 
-export function buildPaginated<T>(content: T[], total?: number, page = 0): Paginated<T> {
+export function buildPaginated<T>(content: T[], total?: number, page = 0, size?: number): Paginated<T> {
+	const totalElements = total ?? content.length;
+	const pageSize = size ?? content.length;
 	return {
 		content,
-		totalElements: total ?? content.length,
-		totalPages: 1,
-		size: content.length,
+		totalElements,
+		totalPages: pageSize > 0 ? Math.ceil(totalElements / pageSize) : 1,
+		size: pageSize,
 		page,
 	};
 }
 
 export async function mockTransactions(page: Page, rows: TransactionData[] = []) {
 	await page.route(new RegExp(`${apiBasePattern.replaceAll("**", ".*")}/transactions.*`), async (route, request) => {
+		if (request.method().toUpperCase() !== "GET") return route.continue();
 		const url = new URL(request.url());
 		const size = Number(url.searchParams.get("size") ?? 10);
 		const pageIdx = Number(url.searchParams.get("page") ?? 0);
@@ -32,6 +35,7 @@ export async function mockTransactions(page: Page, rows: TransactionData[] = [])
 
 export async function mockCreateTransaction(page: Page, handler?: (payload: TransactionData) => TransactionData) {
 	await page.route(`${apiBasePattern}/transactions`, async (route, request: Request) => {
+		if (request.method().toUpperCase() !== "POST") return route.continue();
 		const payload = (await request.postDataJSON()) as TransactionData;
 		const created: TransactionData = handler
 			? handler(payload)

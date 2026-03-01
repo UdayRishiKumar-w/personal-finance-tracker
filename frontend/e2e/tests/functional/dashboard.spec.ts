@@ -36,7 +36,7 @@ test.describe("Dashboard", () => {
 
 	test("error handling on API failure", async ({ page, dashboardPage }) => {
 		await ensureAuthenticated(page, defaultUser);
-		await page.route("**/api/transactions?**", async (route) => {
+		await page.route("**/api/transactions**", async (route) => {
 			await route.fulfill({
 				status: 500,
 				contentType: "application/json",
