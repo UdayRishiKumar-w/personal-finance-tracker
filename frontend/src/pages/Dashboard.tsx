@@ -27,7 +27,9 @@ const Dashboard: FC = () => {
 	if (error) {
 		return (
 			<Box className="flex h-full items-center justify-center">
-				<Typography color="error">Failed to load dashboard data. Please try again.</Typography>
+				<Typography role="alert" color="error">
+					Failed to load dashboard data. Please try again.
+				</Typography>
 			</Box>
 		);
 	}
@@ -39,132 +41,147 @@ const Dashboard: FC = () => {
 	const balance = totalIncome - totalExpense;
 
 	return (
-		<Box className="space-y-6 p-4 text-gray-900 dark:text-gray-100">
-			<Typography variant="h4" className="font-bold text-gray-800 dark:text-gray-100">
-				Dashboard
-			</Typography>
+		<Box className="h-full overflow-auto" tabIndex={0}>
+			<Box className="space-y-6 p-4 text-gray-900 dark:text-gray-100">
+				<Typography variant="h4" component="h1" className="font-bold text-gray-800 dark:text-gray-100">
+					Dashboard
+				</Typography>
 
-			<Box className="grid grid-cols-1 gap-4 md:grid-cols-3">
-				<Card elevation={3} className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800">
-					<CardHeader
-						title={
-							<Typography
-								variant="body1"
-								className="text-gray-600 dark:text-gray-300"
-								aria-label="Balance"
-							>
-								<span aria-hidden="true">💰</span> Balance
-							</Typography>
-						}
-					/>
-					<CardContent>
-						<Typography variant="h5" className="font-semibold">
-							{balance.toFixed(2)}
-						</Typography>
-					</CardContent>
-				</Card>
-
-				<Card elevation={3} className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800">
-					<CardHeader
-						title={
-							<Typography
-								variant="body1"
-								className="text-gray-600 dark:text-gray-300"
-								aria-label="Total Income"
-							>
-								<span aria-hidden="true">📈</span> Total Income
-							</Typography>
-						}
-					/>
-					<CardContent>
-						<Typography variant="h5" className="font-semibold text-green-600 dark:text-green-400">
-							{totalIncome.toFixed(2)}
-						</Typography>
-					</CardContent>
-				</Card>
-
-				<Card elevation={3} className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800">
-					<CardHeader
-						title={
-							<Typography
-								variant="body1"
-								className="text-gray-600 dark:text-gray-300"
-								aria-label="Total Expense"
-							>
-								<span aria-hidden="true">📉</span> Total Expense
-							</Typography>
-						}
-					/>
-					<CardContent>
-						<Typography variant="h5" className="font-semibold text-red-600 dark:text-red-400">
-							{totalExpense.toFixed(2)}
-						</Typography>
-					</CardContent>
-				</Card>
-			</Box>
-
-			<Card elevation={3} className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800">
-				<CardHeader
-					title={
-						<Typography variant="h6" className="font-semibold text-gray-800 dark:text-gray-100">
-							Income vs Expense (Last 6 Months)
-						</Typography>
-					}
-				/>
-				<CardContent className="flex justify-center">
-					<MonthlyChart months={6} />
-				</CardContent>
-			</Card>
-
-			<Card elevation={3} className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800">
-				<CardHeader
-					title={
-						<Typography variant="h6" className="font-semibold text-gray-800 dark:text-gray-100">
-							Recent Transactions
-						</Typography>
-					}
-				/>
-				<CardContent>
-					<List disablePadding>
-						{transactions.slice(0, 8).map((t: TransactionData) => (
-							<ListItem key={t.id} divider className="flex items-center justify-between py-1.5">
-								<ListItemText
-									primary={
-										<Typography variant="body2" fontWeight="medium">
-											{t.title}
-										</Typography>
-									}
-									secondary={
-										<Box className="flex items-center gap-1">
-											<Typography variant="body2" color="text.secondary">
-												{t.category || "Uncategorized"}
-											</Typography>
-											<Typography variant="body2" color="text.secondary">
-												•
-											</Typography>
-											<Typography variant="body2" color="text.secondary">
-												{format(parseISO(t.date), "dd MMM yyyy", { locale: dateFnsLocale })}
-											</Typography>
-										</Box>
-									}
-								/>
-
+				<Box className="grid grid-cols-1 gap-4 md:grid-cols-3">
+					<Card elevation={3} className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800">
+						<CardHeader
+							title={
 								<Typography
-									variant="body2"
-									className={clsx([
-										"font-semibold",
-										t.type === "EXPENSE"
-											? "text-red-600 dark:text-red-400"
-											: "text-green-600 dark:text-green-400",
-									])}
+									variant="body1"
+									component="h2"
+									className="text-gray-900 dark:text-gray-100"
+									aria-label="Balance"
 								>
-									{Number(t.amount).toFixed(2)}
+									<span aria-hidden="true">💰</span> Balance
 								</Typography>
-							</ListItem>
-						))}
-					</List>
-				</CardContent>
-			</Card>
+							}
+						/>
+						<CardContent>
+							<Typography variant="h5" component="h3" className="font-semibold">
+								{balance.toFixed(2)}
+							</Typography>
+						</CardContent>
+					</Card>
+
+					<Card elevation={3} className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800">
+						<CardHeader
+							title={
+								<Typography
+									variant="body1"
+									component="h2"
+									className="text-gray-900 dark:text-gray-100"
+									aria-label="Total Income"
+								>
+									<span aria-hidden="true">📈</span> Total Income
+								</Typography>
+							}
+						/>
+						<CardContent>
+							<Typography
+								variant="h5"
+								component="h3"
+								className="font-semibold text-green-600 dark:text-green-400"
+							>
+								{totalIncome.toFixed(2)}
+							</Typography>
+						</CardContent>
+					</Card>
+
+					<Card elevation={3} className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800">
+						<CardHeader
+							title={
+								<Typography
+									variant="body1"
+									component="h2"
+									className="text-gray-900 dark:text-gray-100"
+									aria-label="Total Expense"
+								>
+									<span aria-hidden="true">📉</span> Total Expense
+								</Typography>
+							}
+						/>
+						<CardContent>
+							<Typography
+								variant="h5"
+								component="h3"
+								className="font-semibold text-red-600 dark:text-red-400"
+							>
+								{totalExpense.toFixed(2)}
+							</Typography>
+						</CardContent>
+					</Card>
+				</Box>
+
+				<Box className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+					<Card elevation={3} className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800">
+						<CardHeader
+							title={
+								<Typography variant="h6" className="font-semibold text-gray-800 dark:text-gray-100">
+									Income vs Expense (Last 6 Months)
+								</Typography>
+							}
+						/>
+						<CardContent className="flex justify-center">
+							<MonthlyChart months={6} />
+						</CardContent>
+					</Card>
+
+					<Card elevation={3} className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800">
+						<CardHeader
+							title={
+								<Typography
+									variant="h6"
+									component="h2"
+									className="font-semibold text-gray-900 dark:text-gray-100"
+								>
+									Recent Transactions
+								</Typography>
+							}
+						/>
+						<CardContent>
+							<List>
+								{transactions.slice(0, 5).map((transaction) => (
+									<ListItem key={transaction.id} divider className="px-0">
+										<ListItemText
+											primary={transaction.title}
+											secondary={`${format(parseISO(transaction.date), "MMM d, yyyy", { locale: dateFnsLocale })} • ${transaction.category || "Uncategorized"}`}
+											slotProps={{
+												primary: {
+													className: "font-medium dark:text-gray-100",
+												},
+												secondary: {
+													className: "dark:text-gray-400",
+												},
+											}}
+										/>
+										<Typography
+											className={clsx(
+												"font-bold",
+												transaction.type === "EXPENSE"
+													? "text-red-600 dark:text-red-400"
+													: "text-green-600 dark:text-green-400",
+											)}
+										>
+											{transaction.type === "INCOME" ? "+" : "-"}
+											{Number(transaction.amount).toFixed(2)}
+										</Typography>
+									</ListItem>
+								))}
+								{transactions.length === 0 && (
+									<Typography variant="body2" color="textSecondary" className="py-4 text-center">
+										No recent transactions found
+									</Typography>
+								)}
+							</List>
+						</CardContent>
+					</Card>
+				</Box>
+			</Box>
 		</Box>
 	);
 };

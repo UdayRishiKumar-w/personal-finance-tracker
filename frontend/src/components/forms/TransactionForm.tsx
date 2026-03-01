@@ -24,7 +24,7 @@ const transactionSchema = z.object({
 	title: z.string().min(1, "Title is required"),
 	type: z.enum(["INCOME", "EXPENSE"]),
 	category: z.string().min(1, "Category is required"),
-	amount: z.preprocess(Number, z.number().positive("Amount must be positive")),
+	amount: z.number().positive("Amount must be positive"),
 	date: z.string().min(1, "Date is required"),
 	description: z.string(),
 	recurring: z.boolean().default(false).nonoptional(),
@@ -61,7 +61,7 @@ const TransactionForm: FC<TransactionFormProps> = ({ open, onClose, editTransact
 		formState: { errors, isSubmitting },
 	} = useForm<TransactionFormValues>({
 		resolver: zodResolver(transactionSchema),
-		defaultValues: { ...transactionFormDefaultValues },
+		defaultValues: transactionFormDefaultValues,
 		shouldFocusError: true,
 	});
 
@@ -109,7 +109,7 @@ const TransactionForm: FC<TransactionFormProps> = ({ open, onClose, editTransact
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<DialogContent className="space-y-4">
 					<TextField
-						required
+						autoFocus
 						fullWidth
 						label="Title"
 						{...register("title")}
@@ -130,7 +130,6 @@ const TransactionForm: FC<TransactionFormProps> = ({ open, onClose, editTransact
 					/>
 
 					<TextField
-						required
 						fullWidth
 						label="Category"
 						{...register("category")}
@@ -139,11 +138,10 @@ const TransactionForm: FC<TransactionFormProps> = ({ open, onClose, editTransact
 					/>
 
 					<TextField
-						required
 						fullWidth
 						label="Amount"
 						type="number"
-						{...register("amount")}
+						{...register("amount", { valueAsNumber: true })}
 						error={!!errors.amount}
 						helperText={errors.amount?.message}
 					/>
@@ -178,9 +176,9 @@ const TransactionForm: FC<TransactionFormProps> = ({ open, onClose, editTransact
 					<Controller
 						control={control}
 						name="recurring"
-						render={({ field }) => (
+						render={({ field: { value, onChange, ...field } }) => (
 							<FormControlLabel
-								control={<Switch checked={field.value} {...field} />}
+								control={<Switch checked={!!value} onChange={onChange} {...field} />}
 								label="Recurring Transaction"
 							/>
 						)}
@@ -188,10 +186,10 @@ const TransactionForm: FC<TransactionFormProps> = ({ open, onClose, editTransact
 				</DialogContent>
 
 				<DialogActions>
-					<Button onClick={onClose} disabled={isSubmitting}>
+					<Button onClick={onClose} color="inherit" disabled={isSubmitting}>
 						Cancel
 					</Button>
-					<Button variant="contained" type="submit" disabled={isSubmitting}>
+					<Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>
 						{isSubmitting ? "Saving..." : editTransaction ? "Update" : "Add"}
 					</Button>
 				</DialogActions>

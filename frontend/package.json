@@ -8,10 +8,11 @@
 		"typecheck": "tsc --noEmit",
 		"dev": "vite",
 		"build": "tsc -b && vite build",
+		"build:e2e": "tsc -b && vite build --mode e2e",
 		"generate-pwa-assets": "pwa-assets-generator",
 		"lint": "eslint src e2e tests  --report-unused-disable-directives --max-warnings=0 --fix",
 		"lint:css": "stylelint \"src/**/*.{css,scss,tsx,jsx}\" --fix",
-		"preview": "vite preview",
+		"preview": "vite preview --port 4173 --strictPort",
 		"format": "prettier --write .",
 		"build-commit": "tsc -b && npm run lint && npm run lint:css && npm run format && vite build",
 		"test": "vitest",
@@ -61,6 +62,7 @@
 		"zod": "^4.3.6"
 	},
 	"devDependencies": {
+		"@axe-core/playwright": "^4.8.3",
 		"@axe-core/react": "^4.11.1",
 		"@commitlint/cli": "^20.4.2",
 		"@commitlint/config-conventional": "^20.4.2",

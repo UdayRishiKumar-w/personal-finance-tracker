@@ -17,6 +17,7 @@ import { vitePWAOptions } from "./vite-build-config";
 export default defineConfig(({ mode }) => {
 	const isDev = mode === "development";
 	const env = loadEnv(mode, process.cwd(), "");
+	const isE2E = mode === "e2e";
 
 	return {
 		...(env.VITE_NONCE_ENABLED === "true" && {
@@ -25,7 +26,7 @@ export default defineConfig(({ mode }) => {
 			},
 		}),
 		server: {
-			open: isDev,
+			open: isDev && !isE2E,
 		},
 		plugins: [
 			react(),
@@ -34,17 +35,21 @@ export default defineConfig(({ mode }) => {
 			imagetools(),
 			removeConsole(),
 			preload({ mode: "prefetch" }),
-			...(isDev ? [devtools()] : []),
-			VitePluginChecker({
-				typescript: true, // Enable TypeScript checking
-				eslint: {
-					lintCommand: 'eslint "./src/**/*.{ts,tsx,js,jsx}" --max-warnings 0', // Stop the build on ESLint warnings
-					useFlatConfig: true,
-				},
-				stylelint: {
-					lintCommand: 'stylelint "src/**/*.{css,scss,tsx,jsx}"  --max-warnings 0',
-				},
-			}),
+			...(isDev && !isE2E ? [devtools()] : []),
+			...(isE2E
+				? []
+				: [
+						VitePluginChecker({
+							typescript: true,
+							eslint: {
+								lintCommand: 'eslint "./src/**/*.{ts,tsx,js,jsx}" --max-warnings 0',
+								useFlatConfig: true,
+							},
+							stylelint: {
+								lintCommand: 'stylelint "src/**/*.{css,scss,tsx,jsx}"  --max-warnings 0',
+							},
+						}),
+					]),
 			env.VITE_ANALYZER_ENABLED === "true" && analyzer(),
 			htmlMinifier(),
 		],

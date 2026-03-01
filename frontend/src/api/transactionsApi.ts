@@ -17,7 +17,7 @@ export const useTransactions = (page = 0, size = 10) => {
 			);
 			return data;
 		},
-		retry: true,
+		retry: import.meta.env.MODE !== "e2e",
 		enabled: isAuthenticated,
 	}); // use stale data while no network like that handle, use pagination tan stack - try.
 };

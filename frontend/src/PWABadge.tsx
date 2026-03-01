@@ -73,7 +73,7 @@ function PWABadge() {
 				},
 			)}
 		>
-			<Typography id="toast-message" className="mb-2 text-center">
+			<Typography id="toast-message" className="mb-2 text-center text-gray-800 dark:text-gray-200">
 				{isOffline
 					? "You are offline. Some features may not work."
 					: "New content available, click reload to update."}

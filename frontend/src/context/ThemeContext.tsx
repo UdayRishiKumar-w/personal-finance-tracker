@@ -84,12 +84,14 @@ export const getMuiTheme = (mode: ThemeMode, direction: "ltr" | "rtl", locale: L
 				mode,
 				...(mode === "dark"
 					? {
-							background: { default: "#121212", paper: "#1e1e1e" },
-							text: { primary: "#fff" },
+							background: { default: "#000000", paper: "#121212" },
+							text: { primary: "#ffffff", secondary: "#d1d1d1" },
+							primary: { main: "#90caf9" },
 						}
 					: {
-							background: { default: "#f5f5f5", paper: "#fff" },
-							text: { primary: "#000" },
+							background: { default: "#ffffff", paper: "#f5f5f5" },
+							text: { primary: "#000000", secondary: "#3c3c3c" },
+							primary: { main: "#1976d2" },
 						}),
 			},
 		},

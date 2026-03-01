@@ -109,7 +109,7 @@ const MonthlyChart: FC<MonthlyChartProps> = ({ months = 6 }) => {
 
 	return (
 		<Box className="aspect-2/1 w-full md:w-3/4">
-			<Bar data={dataConfig} options={options} />
+			<Bar data={dataConfig} options={options} aria-label="Income vs Expense chart" />
 		</Box>
 	);
 };

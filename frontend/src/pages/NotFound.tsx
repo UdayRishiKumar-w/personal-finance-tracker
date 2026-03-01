@@ -16,7 +16,7 @@ const NotFound = () => {
 				404 - Page Not Found
 			</Typography>
 
-			<Typography variant="body1" className="animate-fade-in mt-4 text-lg text-gray-600 dark:text-gray-500">
+			<Typography variant="body1" className="animate-fade-in mt-4 text-lg text-gray-700 dark:text-gray-500">
 				Sorry, the page you're looking for doesn't exist or has been moved.
 			</Typography>
 

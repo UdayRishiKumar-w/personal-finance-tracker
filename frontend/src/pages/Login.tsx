@@ -91,7 +91,7 @@ const Login: FC = () => {
 					className="w-full max-w-xs rounded-lg p-8 shadow-2xl sm:max-w-md dark:shadow-neutral-50"
 					noValidate
 				>
-					<Typography variant="h2" className="mb-6 text-center text-2xl font-bold">
+					<Typography variant="h2" component="h1" className="mb-6 text-center text-2xl font-bold">
 						{t("login")}
 					</Typography>
 
