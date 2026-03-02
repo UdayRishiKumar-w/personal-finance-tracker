@@ -21,12 +21,12 @@ import { useDispatch } from "react-redux";
 import * as z from "zod";
 
 const transactionSchema = z.object({
-	title: z.string().min(1, "Title is required"),
+	title: z.string().trim().min(1, "Title is required"),
 	type: z.enum(["INCOME", "EXPENSE"]),
-	category: z.string().min(1, "Category is required"),
+	category: z.string().trim().min(1, "Category is required"),
 	amount: z.number().positive("Amount must be positive"),
-	date: z.string().min(1, "Date is required"),
-	description: z.string(),
+	date: z.string().trim().min(1, "Date is required"),
+	description: z.string().trim(),
 	recurring: z.boolean().default(false).nonoptional(),
 });
 

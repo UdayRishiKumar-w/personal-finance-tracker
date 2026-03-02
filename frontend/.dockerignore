@@ -23,8 +23,6 @@ lerna-debug.log
 *.tsbuildinfo
 
 # Test files and reports
-e2e
-tests
 playwright-report
 test-results
 playwright.config.ts
@@ -33,14 +31,7 @@ playwright.config.ts
 *.md
 .husky
 .lintstagedrc.yaml
-.prettierignore
-.prettierrc.json
 commitlint.config.ts
-eslint.config.mjs
-stylelint.config.mjs
-postcss.config.js
-i18next.config.ts
-pwa-assets.config.ts
 vercel.json
 
 # OS files

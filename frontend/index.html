@@ -19,7 +19,7 @@
 		<title>Personal Finance Tracker</title>
 		<script>
 			(function () {
-				const theme = localStorage.getItem("theme");
+				const theme = localStorage.getItem("mui-mode");
 				if (!theme && globalThis.matchMedia("(prefers-color-scheme: dark)").matches) {
 					document.documentElement.classList.add("dark");
 				}

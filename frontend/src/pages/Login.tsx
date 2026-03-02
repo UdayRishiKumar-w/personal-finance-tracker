@@ -24,7 +24,7 @@ import * as z from "zod";
 const createLoginSchema = (t: TFunction<"translation", undefined>) =>
 	z.object({
 		email: z.email({ error: t("invalidEmail") }).transform((val) => val.trim()),
-		password: z.string().min(1, t("passwordRequired")),
+		password: z.string().trim().min(1, t("passwordRequired")),
 	});
 
 type LoginFormData = z.infer<ReturnType<typeof createLoginSchema>>;
