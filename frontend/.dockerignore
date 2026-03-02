@@ -12,15 +12,48 @@ dev-dist
 *.log
 coverage
 
+# Debug logs
 npm-debug.log
 yarn-debug.log
 yarn-error.log
+pnpm-debug.log
+lerna-debug.log
+
+# TypeScript build info
 *.tsbuildinfo
+
+# Test files and reports
+e2e
+tests
 playwright-report
 test-results
-README.md
+playwright.config.ts
 
+# Development and configuration files
+*.md
 .husky
+.lintstagedrc.yaml
+.prettierignore
+.prettierrc.json
+commitlint.config.ts
+eslint.config.mjs
+stylelint.config.mjs
+postcss.config.js
+i18next.config.ts
+pwa-assets.config.ts
+vercel.json
+
+# OS files
 .DS_Store
 Thumbs.db
+
+# Cache and temporary files
+.eslintcache
+
+# Environment files
+.env*
+!.env.example
+
+# Git files
+.gitignore
 

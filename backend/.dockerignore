@@ -4,6 +4,10 @@ build/
 .mvn
 data/
 
+# Ignore Maven wrapper
+mvnw
+mvnw.cmd
+
 # Ignore IDE files
 *.iml
 .idea/
@@ -18,19 +22,27 @@ Thumbs.db
 
 # Ignore logs
 *.log
+logs/
 
 # Ignore environment files
 .env
+.env*
 
-# Ignore test reports
+# Ignore test reports and test files
 test-output/
 surefire-reports/
 jacoco.exec
+src/test/
+**/*Test.java
+**/*Tests.java
 
 # Ignore Docker files themselves
 Dockerfile
 compose.yaml
 
-HELP.md
+# Ignore documentation
+*.md
 
-src/test
+# Ignore Git files
+.gitignore
+.gitattributes
