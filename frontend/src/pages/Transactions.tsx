@@ -45,8 +45,8 @@ const Transactions: FC = () => {
 					className={clsx(
 						"font-semibold",
 						params.value === "EXPENSE"
-							? "text-red-600 dark:text-red-400"
-							: "text-green-600 dark:text-green-400",
+							? "text-red-700 dark:text-red-400"
+							: "text-green-700 dark:text-green-400",
 					)}
 				>
 					{params.value}
@@ -91,6 +91,8 @@ const Transactions: FC = () => {
 							setEditTx(params.row);
 							setOpenForm(true);
 						}}
+						aria-label={`edit transaction ${params.row.title}`}
+						data-testid="edit-transaction-button"
 					>
 						Edit
 					</Button>
@@ -102,6 +104,8 @@ const Transactions: FC = () => {
 							setDeleteId(params.row.id);
 							setOpenDeleteDialog(true);
 						}}
+						aria-label={`delete transaction ${params.row.title}`}
+						data-testid="delete-transaction-button"
 					>
 						Delete
 					</Button>
@@ -125,7 +129,7 @@ const Transactions: FC = () => {
 	return (
 		<Box className="space-y-4 p-4">
 			<Box className="flex items-center justify-between">
-				<Typography variant="h5" className="font-bold">
+				<Typography variant="h5" className="font-bold" data-testid="transactions-heading">
 					Transactions
 				</Typography>
 				<Button
@@ -136,6 +140,8 @@ const Transactions: FC = () => {
 						setOpenForm(true);
 					}}
 					className="rounded-xl"
+					data-testid="add-transaction-button"
+					aria-label="add new transaction"
 				>
 					Add
 				</Button>
@@ -144,7 +150,7 @@ const Transactions: FC = () => {
 			<Card className="rounded-2xl bg-white shadow-md dark:bg-gray-800">
 				<CardHeader title={<Typography variant="h6">All Transactions</Typography>} />
 				<CardContent>
-					<Box style={{ height: 425, width: "100%" }}>
+					<Box data-testid="transactions-datagrid" style={{ height: 425, width: "100%" }}>
 						<DataGrid
 							rows={transactions}
 							columns={columns}

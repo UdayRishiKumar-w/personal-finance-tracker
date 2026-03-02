@@ -54,7 +54,7 @@ const ConfirmDeleteDialog: React.FC<ConfirmDeleteDialogProps> = ({ open, onClose
 			<DialogContent>
 				<Typography variant="body1" component="span">
 					Do you really want to delete this transaction?{" "}
-					<Typography component="span" variant="body1" className="font-medium text-red-600 dark:text-red-400">
+					<Typography component="span" variant="body1" className="font-medium text-red-700 dark:text-red-400">
 						This action cannot be undone.
 					</Typography>
 				</Typography>

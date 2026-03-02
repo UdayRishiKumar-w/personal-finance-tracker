@@ -111,6 +111,7 @@ test.describe("Transactions CRUD", () => {
 		await switchInput.click();
 
 		await transactionsPage.cancelButton.click();
+		await expect(transactionsPage.dialog).toBeHidden();
 		await transactionsPage.openAddDialog();
 
 		await expect(switchInput).not.toBeChecked();

@@ -1,11 +1,11 @@
 import { expect, test } from "../../fixtures/index";
 
 test.describe("Internationalization", () => {
-	test("switch language updates labels and html attributes", async ({ page, loginPage }) => {
+	test("switch language updates labels and html attributes", async ({ page, loginPage, switchLanguage }) => {
 		await loginPage.goto();
 
 		// Switch to German
-		await loginPage.switchLanguage(/deutsch/i);
+		await switchLanguage(/deutsch/i);
 
 		// Verify HTML lang attribute
 		await expect(page.locator("html")).toHaveAttribute("lang", "de");

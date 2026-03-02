@@ -5,7 +5,7 @@ import type { FC } from "react";
 const CircularLoader: FC = () => {
 	return (
 		<Box className="flex h-full items-center justify-center">
-			<CircularProgress />
+			<CircularProgress aria-label="Loading" />
 		</Box>
 	);
 };

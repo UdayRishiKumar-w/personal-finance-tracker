@@ -11,10 +11,10 @@ export class DashboardPage extends BasePage {
 	constructor(page: Page) {
 		super(page);
 		this.heading = page.getByRole("heading", { name: /dashboard/i });
-		this.balanceLabel = page.getByLabel(/balance/i);
-		this.incomeLabel = page.getByLabel(/total income/i);
-		this.expenseLabel = page.getByLabel(/total expense/i);
-		this.logoutButton = page.getByTitle(/logout/i);
+		this.balanceLabel = page.getByTestId("balance-card").getByText(/balance/i);
+		this.incomeLabel = page.getByTestId("income-card").getByText(/total income/i);
+		this.expenseLabel = page.getByTestId("expense-card").getByText(/total expense/i);
+		this.logoutButton = page.getByTestId("desktop-logout-button").or(page.getByTestId("mobile-logout-button"));
 	}
 
 	async goto() {
@@ -22,10 +22,20 @@ export class DashboardPage extends BasePage {
 	}
 
 	async logout() {
-		await this.logoutButton.click();
+		const desktopLogout = this.page.getByTestId("desktop-logout-button");
+		if (await desktopLogout.isVisible()) {
+			await desktopLogout.click();
+			return;
+		}
+
+		// Mobile flow
+		const menuButton = this.page.getByLabel(/toggle menu/i);
+		await menuButton.click();
+		await this.page.getByTestId("mobile-logout-button").click();
 	}
 
-	getCardValue(label: Locator) {
-		return this.page.getByRole("heading", { name: /^\d+(\.\d{2})?$/ }).filter({ has: label });
+	getCardValue(label: "balance" | "income" | "expense") {
+		const card = this.page.getByTestId(`${label}-card`);
+		return card.getByRole("heading", { name: /^\d+(\.\d{2})?$/ });
 	}
 }

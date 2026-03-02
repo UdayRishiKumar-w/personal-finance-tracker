@@ -47,7 +47,7 @@ const NavBar = () => {
 					{t("appName")}
 				</Typography>
 
-				<Box className="hidden items-center gap-3 md:flex">
+				<Box data-testid="desktop-nav" className="hidden items-center gap-3 md:flex">
 					{isAuthenticated &&
 						navItems.map(({ label, to }) => (
 							<Button
@@ -55,11 +55,12 @@ const NavBar = () => {
 								component={NavLink}
 								to={to}
 								end
-								color="primary"
+								color="inherit"
 								size="small"
 								className={clsx({ "rounded-md shadow-md": location.pathname === to })}
 								variant="text"
 								sx={({ palette }) => ({
+									color: palette.mode === "dark" ? palette.primary.light : palette.primary.dark,
 									"&.active": {
 										backgroundColor: palette.primary.main,
 										color: palette.primary.contrastText,
@@ -72,7 +73,7 @@ const NavBar = () => {
 
 					<LanguageSelector />
 					<ToggleTheme />
-					{isAuthenticated && <Logout />}
+					{isAuthenticated && <Logout data-testid="desktop-logout-button" />}
 				</Box>
 
 				<Box className="flex items-center md:hidden">
@@ -88,7 +89,7 @@ const NavBar = () => {
 				</Box>
 			</Toolbar>
 
-			<Collapse in={menuOpen} timeout="auto" unmountOnExit>
+			<Collapse in={menuOpen} timeout="auto" unmountOnExit data-testid="mobile-menu">
 				<Box className="flex flex-col items-end gap-3 bg-white/90 p-4 shadow-md backdrop-blur-md transition-all duration-300 md:hidden dark:bg-gray-900/90">
 					{isAuthenticated &&
 						navItems.map(({ label, to }) => (
@@ -115,7 +116,7 @@ const NavBar = () => {
 
 					<Box className="flex w-full justify-end gap-3">
 						<ToggleTheme />
-						{isAuthenticated && <Logout />}
+						{isAuthenticated && <Logout data-testid="mobile-logout-button" />}
 					</Box>
 				</Box>
 			</Collapse>

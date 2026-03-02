@@ -21,13 +21,13 @@ test.describe("Dashboard", () => {
 		const balance = (totalIncome - totalExpense).toFixed(2);
 
 		await expect(dashboardPage.balanceLabel).toBeVisible();
-		await expect(page.getByRole("heading", { name: balance })).toBeVisible();
+		await expect(dashboardPage.getCardValue("balance")).toHaveText(balance);
 
 		await expect(dashboardPage.incomeLabel).toBeVisible();
-		await expect(page.getByRole("heading", { name: totalIncome.toFixed(2) })).toBeVisible();
+		await expect(dashboardPage.getCardValue("income")).toHaveText(totalIncome.toFixed(2));
 
 		await expect(dashboardPage.expenseLabel).toBeVisible();
-		await expect(page.getByRole("heading", { name: totalExpense.toFixed(2) })).toBeVisible();
+		await expect(dashboardPage.getCardValue("expense")).toHaveText(totalExpense.toFixed(2));
 
 		await expect(page.getByText(/recent transactions/i)).toBeVisible();
 		await expect(page.getByText(/salary/i)).toBeVisible();

@@ -8,8 +8,8 @@ const NotFound = () => {
 
 	return (
 		<Box className="flex h-full flex-col items-center justify-center bg-gray-50 px-4 text-center text-gray-900 dark:bg-gray-950 dark:text-gray-100">
-			<Box className="mb-6 animate-bounce text-red-500">
-				<span className="material-icons !text-8xl">error_outline</span>
+			<Box className="mb-6 animate-bounce text-red-700">
+				<span className="material-icons text-8xl!">error_outline</span>
 			</Box>
 
 			<Typography variant="h1" className="animate-fade-in text-4xl font-bold text-gray-800 dark:text-gray-300">
@@ -24,7 +24,7 @@ const NotFound = () => {
 				variant="contained"
 				color="primary"
 				onClick={() => {
-					void navigate("/dashboard");
+					navigate("/dashboard");
 				}}
 				className="animate-fade-in mt-6"
 			>

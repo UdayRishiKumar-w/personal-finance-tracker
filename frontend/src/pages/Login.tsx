@@ -88,10 +88,11 @@ const Login: FC = () => {
 			<Box className="flex h-full items-center justify-center overflow-auto">
 				<form
 					onSubmit={handleSubmit(onSubmit)}
-					className="w-full max-w-xs rounded-lg p-8 shadow-2xl sm:max-w-md dark:shadow-neutral-50"
+					className="w-full max-w-xs rounded-lg p-8 shadow-2xl sm:max-w-md dark:shadow-neutral-800"
 					noValidate
+					data-testid="login-form"
 				>
-					<Typography variant="h2" component="h1" className="mb-6 text-center text-2xl font-bold">
+					<Typography variant="h2" component="h2" className="mb-6 text-center text-2xl font-bold">
 						{t("login")}
 					</Typography>
 
@@ -109,6 +110,7 @@ const Login: FC = () => {
 							slotProps={{
 								htmlInput: {
 									title: t("enterEmail"),
+									"data-testid": "login-email-input",
 								},
 							}}
 						/>
@@ -126,6 +128,7 @@ const Login: FC = () => {
 							slotProps={{
 								htmlInput: {
 									title: t("enterPassword"),
+									"data-testid": "login-password-input",
 								},
 								input: {
 									endAdornment: (
@@ -137,6 +140,7 @@ const Login: FC = () => {
 												}}
 												edge="end"
 												aria-label={showPassword ? "Hide password" : "Show password"}
+												data-testid="toggle-password-visibility"
 											>
 												{showPassword ? <VisibilityOff /> : <Visibility />}
 											</IconButton>
@@ -147,7 +151,14 @@ const Login: FC = () => {
 						/>
 					</Box>
 
-					<Button type="submit" variant="contained" color="primary" fullWidth disabled={isPending}>
+					<Button
+						type="submit"
+						variant="contained"
+						color="primary"
+						fullWidth
+						disabled={isPending}
+						data-testid="login-submit-button"
+					>
 						{t("login")}
 					</Button>
 					<Stack
@@ -160,7 +171,7 @@ const Login: FC = () => {
 							{t("dontHaveAccount")}
 						</Typography>
 
-						<Link component={RouterLink} to="/signup" className="ms-1.5">
+						<Link component={RouterLink} to="/signup" className="ms-1.5" data-testid="goto-signup-link">
 							{t("signUp")}
 						</Link>
 					</Stack>

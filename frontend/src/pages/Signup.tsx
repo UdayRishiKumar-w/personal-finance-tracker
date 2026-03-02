@@ -97,10 +97,11 @@ const Signup: FC = () => {
 			<Box className="flex h-full items-center justify-center overflow-auto">
 				<form
 					onSubmit={handleSubmit(onSubmit)}
-					className="w-full max-w-xs rounded-lg p-8 shadow-2xl sm:max-w-md dark:shadow-neutral-50"
+					className="w-full max-w-xs rounded-lg p-8 shadow-2xl sm:max-w-md dark:shadow-neutral-800"
 					noValidate
+					data-testid="signup-form"
 				>
-					<Typography variant="h2" component="h1" className="mb-6 text-center text-2xl font-bold">
+					<Typography variant="h2" component="h2" className="mb-6 text-center text-2xl font-bold">
 						{t("signup")}
 					</Typography>
 
@@ -117,6 +118,7 @@ const Signup: FC = () => {
 							slotProps={{
 								htmlInput: {
 									title: t("enterFirstName"),
+									"data-testid": "signup-firstName-input",
 								},
 							}}
 						/>
@@ -132,6 +134,7 @@ const Signup: FC = () => {
 							slotProps={{
 								htmlInput: {
 									title: t("enterLastName"),
+									"data-testid": "signup-lastName-input",
 								},
 							}}
 						/>
@@ -151,6 +154,7 @@ const Signup: FC = () => {
 							slotProps={{
 								htmlInput: {
 									title: t("enterEmail"),
+									"data-testid": "signup-email-input",
 								},
 							}}
 						/>
@@ -169,6 +173,7 @@ const Signup: FC = () => {
 								htmlInput: {
 									minLength: 10,
 									title: t("passwordComplexity"),
+									"data-testid": "signup-password-input",
 								},
 								input: {
 									endAdornment: (
@@ -180,6 +185,7 @@ const Signup: FC = () => {
 												}}
 												edge="end"
 												aria-label={showPassword ? "Hide password" : "Show password"}
+												data-testid="toggle-password-visibility"
 											>
 												{showPassword ? <VisibilityOff /> : <Visibility />}
 											</IconButton>
@@ -190,7 +196,14 @@ const Signup: FC = () => {
 						/>
 					</Box>
 
-					<Button variant="contained" color="primary" fullWidth type="submit" disabled={isPending}>
+					<Button
+						variant="contained"
+						color="primary"
+						fullWidth
+						type="submit"
+						disabled={isPending}
+						data-testid="signup-submit-button"
+					>
 						{t("signup")}
 					</Button>
 
@@ -204,7 +217,7 @@ const Signup: FC = () => {
 							{t("alreadyHaveAccount")}
 						</Typography>
 
-						<Link component={RouterLink} to="/login" className="ms-1.5">
+						<Link component={RouterLink} to="/login" className="ms-1.5" data-testid="goto-login-link">
 							{t("login")}
 						</Link>
 					</Stack>

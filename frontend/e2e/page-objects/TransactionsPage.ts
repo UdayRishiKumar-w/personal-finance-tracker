@@ -2,6 +2,7 @@ import { expect, type Locator, type Page } from "@playwright/test";
 import { BasePage } from "./BasePage";
 
 export class TransactionsPage extends BasePage {
+	readonly heading: Locator;
 	readonly addTransactionButton: Locator;
 	readonly dialog: Locator;
 	readonly titleInput: Locator;
@@ -18,7 +19,8 @@ export class TransactionsPage extends BasePage {
 
 	constructor(page: Page) {
 		super(page);
-		this.addTransactionButton = page.getByRole("button", { name: /add/i }).first();
+		this.heading = page.getByTestId("transactions-heading");
+		this.addTransactionButton = page.getByTestId("add-transaction-button");
 		this.dialog = page.getByRole("dialog");
 		this.titleInput = this.dialog.getByLabel(/title/i);
 		this.typeSelect = this.dialog.getByLabel(/type/i);
@@ -28,8 +30,8 @@ export class TransactionsPage extends BasePage {
 		this.recurringSwitch = this.dialog.getByLabel(/recurring/i);
 		this.submitButton = this.dialog.getByRole("button", { name: /add|update|save/i }).last();
 		this.cancelButton = this.dialog.getByRole("button", { name: /cancel/i });
-		this.editButton = page.getByRole("button", { name: /edit/i });
-		this.deleteButton = page.getByRole("button", { name: /delete/i });
+		this.editButton = page.getByTestId("edit-transaction-button");
+		this.deleteButton = page.getByTestId("delete-transaction-button");
 		this.confirmDeleteButton = page
 			.getByRole("dialog")
 			.filter({ hasText: /delete/i })
@@ -72,7 +74,12 @@ export class TransactionsPage extends BasePage {
 	}
 
 	async deleteFirstTransaction() {
-		await this.deleteButton.first().click();
+		const row = this.page.getByRole("row").nth(1); // Usually nth(0) is header
+		const btn = row.getByTestId("delete-transaction-button");
+
+		await btn.scrollIntoViewIfNeeded();
+		await btn.click();
+
 		await this.waitForStable(this.page.getByRole("dialog").filter({ hasText: /delete transaction/i }));
 		await this.confirmDeleteButton.click();
 		await expect(this.page.getByRole("dialog").filter({ hasText: /delete transaction/i })).toBeHidden({
@@ -81,7 +88,12 @@ export class TransactionsPage extends BasePage {
 	}
 
 	async editFirstTransaction(newTitle: string) {
-		await this.editButton.first().click();
+		const row = this.page.getByRole("row").nth(1);
+		const btn = row.getByTestId("edit-transaction-button");
+
+		await btn.scrollIntoViewIfNeeded();
+		await btn.click();
+
 		await this.waitForStable(this.dialog);
 		await this.titleInput.fill(newTitle);
 		await this.submitForm();

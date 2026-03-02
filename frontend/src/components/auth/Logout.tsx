@@ -6,7 +6,11 @@ import IconButton from "@mui/material/IconButton";
 import type { FC } from "react";
 import { useDispatch } from "react-redux";
 
-const Logout: FC = () => {
+interface LogoutProps {
+	"data-testid"?: string;
+}
+
+const Logout: FC<LogoutProps> = ({ "data-testid": testId }) => {
 	const { mutateAsync: logout, isPending } = useLogout();
 	const dispatch = useDispatch();
 
@@ -26,8 +30,9 @@ const Logout: FC = () => {
 				void handleLogout();
 			}}
 			title={isPending ? "Logging out" : "Logout"}
+			data-testid={testId}
 		>
-			<LogoutIcon className="text-red-600" />
+			<LogoutIcon className="text-red-700" />
 			{isPending && <Loader />}
 		</IconButton>
 	);

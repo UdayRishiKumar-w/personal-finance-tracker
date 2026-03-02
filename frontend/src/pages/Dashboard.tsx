@@ -48,7 +48,11 @@ const Dashboard: FC = () => {
 				</Typography>
 
 				<Box className="grid grid-cols-1 gap-4 md:grid-cols-3">
-					<Card elevation={3} className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800">
+					<Card
+						elevation={3}
+						className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800"
+						data-testid="balance-card"
+					>
 						<CardHeader
 							title={
 								<Typography
@@ -68,7 +72,11 @@ const Dashboard: FC = () => {
 						</CardContent>
 					</Card>
 
-					<Card elevation={3} className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800">
+					<Card
+						elevation={3}
+						className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800"
+						data-testid="income-card"
+					>
 						<CardHeader
 							title={
 								<Typography
@@ -85,14 +93,18 @@ const Dashboard: FC = () => {
 							<Typography
 								variant="h5"
 								component="h3"
-								className="font-semibold text-green-600 dark:text-green-400"
+								className="font-semibold text-green-700 dark:text-green-400"
 							>
 								{totalIncome.toFixed(2)}
 							</Typography>
 						</CardContent>
 					</Card>
 
-					<Card elevation={3} className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800">
+					<Card
+						elevation={3}
+						className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800"
+						data-testid="expense-card"
+					>
 						<CardHeader
 							title={
 								<Typography
@@ -109,7 +121,7 @@ const Dashboard: FC = () => {
 							<Typography
 								variant="h5"
 								component="h3"
-								className="font-semibold text-red-600 dark:text-red-400"
+								className="font-semibold text-red-700 dark:text-red-400"
 							>
 								{totalExpense.toFixed(2)}
 							</Typography>
@@ -131,7 +143,11 @@ const Dashboard: FC = () => {
 						</CardContent>
 					</Card>
 
-					<Card elevation={3} className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800">
+					<Card
+						elevation={3}
+						className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800"
+						data-testid="recent-transactions-card"
+					>
 						<CardHeader
 							title={
 								<Typography
@@ -163,8 +179,8 @@ const Dashboard: FC = () => {
 											className={clsx(
 												"font-bold",
 												transaction.type === "EXPENSE"
-													? "text-red-600 dark:text-red-400"
-													: "text-green-600 dark:text-green-400",
+													? "text-red-700 dark:text-red-400"
+													: "text-green-700 dark:text-green-400",
 											)}
 										>
 											{transaction.type === "INCOME" ? "+" : "-"}

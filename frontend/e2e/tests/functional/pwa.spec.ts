@@ -10,7 +10,8 @@ test.describe("PWA", () => {
 		const swRegistration = await page.evaluate(async () => {
 			if (!("serviceWorker" in navigator)) return null;
 			const registration = await navigator.serviceWorker.getRegistration();
-			return registration ? { active: !!registration.active } : null;
+			if (!registration) return null;
+			return { active: !!registration.active };
 		});
 		expect(swRegistration).not.toBeNull();
 		expect(swRegistration?.active).toBe(true);
