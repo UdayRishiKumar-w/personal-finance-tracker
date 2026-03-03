@@ -11,7 +11,7 @@ export default defineConfig({
 	testDir: "e2e/tests",
 	timeout: 60_000,
 	workers: IS_CI ? 4 : undefined,
-	retries: IS_CI ? 2 : 1,
+	retries: IS_CI ? 2 : 0,
 	fullyParallel: true,
 	outputDir: "test-results",
 	forbidOnly: IS_CI,

@@ -1,12 +1,11 @@
 # Ignore Maven/Gradle build output
 target/
 build/
-.mvn
 data/
 
-# Ignore Maven wrapper
-mvnw
-mvnw.cmd
+# # Ignore Maven wrapper
+# mvnw
+# mvnw.cmd
 
 # Ignore IDE files
 *.iml
