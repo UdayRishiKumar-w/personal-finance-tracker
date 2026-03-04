@@ -15,7 +15,7 @@ test.describe("Routing and protection", () => {
 		await page.goto("/dashboard");
 		await expect(page.getByRole("heading", { name: /dashboard/i })).toBeVisible();
 		await page.goto("/transactions");
-		await expect(page.getByText(/transactions/i)).toBeVisible();
+		await expect(page.getByRole("heading", { name: /^transactions$/i })).toBeVisible();
 	});
 
 	test("root path redirects to dashboard", async ({ page }) => {

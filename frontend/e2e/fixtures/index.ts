@@ -36,7 +36,7 @@ export const test = base.extend<MyFixtures>({
 				await menuButton.click();
 
 				// Wait for the theme button inside the mobile menu to be visible
-				const mobileThemeButton = page.getByTestId("mobile-menu").getByLabel(/button to toggle theme/i);
+				const mobileThemeButton = page.getByRole("button", { name: /button to toggle theme/i });
 				await expect(mobileThemeButton).toBeVisible({ timeout: 10000 });
 				await mobileThemeButton.click();
 
@@ -44,7 +44,7 @@ export const test = base.extend<MyFixtures>({
 				await menuButton.click();
 				await expect(mobileThemeButton).toBeHidden();
 			} else {
-				const desktopThemeButton = page.getByTestId("desktop-nav").getByLabel(/button to toggle theme/i);
+				const desktopThemeButton = page.getByRole("button", { name: /button to toggle theme/i }).first();
 				await expect(desktopThemeButton).toBeVisible();
 				await desktopThemeButton.click();
 			}
@@ -64,15 +64,13 @@ export const test = base.extend<MyFixtures>({
 				await expect(menuButton).toBeVisible();
 				await menuButton.click();
 
-				const mobileLangSelector = page
-					.getByTestId("mobile-menu")
-					.getByRole("combobox", { name: /select the localization language/i });
+				const mobileLangSelector = page.getByRole("combobox", { name: /select the localization language/i });
 				await expect(mobileLangSelector).toBeVisible({ timeout: 10000 });
 				await mobileLangSelector.click();
 			} else {
 				const desktopLangSelector = page
-					.getByTestId("desktop-nav")
-					.getByRole("combobox", { name: /select the localization language/i });
+					.getByRole("combobox", { name: /select the localization language/i })
+					.first();
 				await expect(desktopLangSelector).toBeVisible();
 				await desktopLangSelector.click();
 			}

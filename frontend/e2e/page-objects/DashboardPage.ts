@@ -11,10 +11,10 @@ export class DashboardPage extends BasePage {
 	constructor(page: Page) {
 		super(page);
 		this.heading = page.getByRole("heading", { name: /dashboard/i });
-		this.balanceLabel = page.getByTestId("balance-card").getByText(/balance/i);
-		this.incomeLabel = page.getByTestId("income-card").getByText(/total income/i);
-		this.expenseLabel = page.getByTestId("expense-card").getByText(/total expense/i);
-		this.logoutButton = page.getByTestId("desktop-logout-button").or(page.getByTestId("mobile-logout-button"));
+		this.balanceLabel = page.getByRole("heading", { name: /balance/i });
+		this.incomeLabel = page.getByRole("heading", { name: /total income/i });
+		this.expenseLabel = page.getByRole("heading", { name: /total expense/i });
+		this.logoutButton = page.getByRole("button", { name: /logout/i });
 	}
 
 	async goto() {
@@ -22,16 +22,18 @@ export class DashboardPage extends BasePage {
 	}
 
 	async logout() {
-		const desktopLogout = this.page.getByTestId("desktop-logout-button");
-		if (await desktopLogout.isVisible()) {
-			await desktopLogout.click();
+		const logoutBtn = this.page.getByRole("button", { name: /logout/i });
+
+		// Check if logout button is visible (desktop)
+		if (await logoutBtn.isVisible()) {
+			await logoutBtn.click();
 			return;
 		}
 
-		// Mobile flow
+		// Mobile flow - open menu first
 		const menuButton = this.page.getByLabel(/toggle menu/i);
 		await menuButton.click();
-		await this.page.getByTestId("mobile-logout-button").click();
+		await this.page.getByRole("button", { name: /logout/i }).click();
 	}
 
 	getCardValue(label: "balance" | "income" | "expense") {

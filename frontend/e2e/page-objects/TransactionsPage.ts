@@ -19,8 +19,8 @@ export class TransactionsPage extends BasePage {
 
 	constructor(page: Page) {
 		super(page);
-		this.heading = page.getByTestId("transactions-heading");
-		this.addTransactionButton = page.getByTestId("add-transaction-button");
+		this.heading = page.getByRole("heading", { name: /transactions/i });
+		this.addTransactionButton = page.getByRole("button", { name: /add new transaction/i });
 		this.dialog = page.getByRole("dialog");
 		this.titleInput = this.dialog.getByLabel(/title/i);
 		this.typeSelect = this.dialog.getByLabel(/type/i);
