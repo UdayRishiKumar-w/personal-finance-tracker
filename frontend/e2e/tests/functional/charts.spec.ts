@@ -1,6 +1,6 @@
+import { defaultUser, ensureAuthenticated } from "@fixtures/auth";
+import { mockTransactions } from "@fixtures/routes";
 import { expect, test } from "@playwright/test";
-import { defaultUser, ensureAuthenticated } from "../../fixtures/auth";
-import { mockTransactions } from "../../fixtures/routes";
 
 test.describe("Charts visibility", () => {
 	test("monthly chart canvas renders", async ({ page }) => {

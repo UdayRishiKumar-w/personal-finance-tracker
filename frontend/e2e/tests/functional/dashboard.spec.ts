@@ -1,8 +1,8 @@
 import type { TransactionData } from "@/types/globalTypes";
-import { defaultUser, ensureAuthenticated } from "../../fixtures/auth";
-import { expect, test } from "../../fixtures/index";
-import { mockTransactions } from "../../fixtures/routes";
-import { analyzeA11y } from "../../utils/accessibility";
+import { defaultUser, ensureAuthenticated } from "@fixtures/auth";
+import { expect, test } from "@fixtures/index";
+import { mockTransactions } from "@fixtures/routes";
+import { analyzeA11y } from "@utils/accessibility";
 
 const sampleTx: TransactionData[] = [
 	{ id: 1, title: "Salary", amount: 5000, date: "2026-01-01", category: "Income", type: "INCOME" },

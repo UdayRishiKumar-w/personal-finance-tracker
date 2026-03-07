@@ -1,8 +1,8 @@
+import { DashboardPage } from "@page-objects/DashboardPage";
+import { LoginPage } from "@page-objects/LoginPage";
+import { SignupPage } from "@page-objects/SignupPage";
+import { TransactionsPage } from "@page-objects/TransactionsPage";
 import { test as base, expect } from "@playwright/test";
-import { DashboardPage } from "../page-objects/DashboardPage";
-import { LoginPage } from "../page-objects/LoginPage";
-import { SignupPage } from "../page-objects/SignupPage";
-import { TransactionsPage } from "../page-objects/TransactionsPage";
 
 type MyFixtures = {
 	loginPage: LoginPage;

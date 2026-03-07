@@ -109,7 +109,6 @@ const TransactionForm: FC<TransactionFormProps> = ({ open, onClose, editTransact
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<DialogContent className="space-y-4">
 					<TextField
-						autoFocus
 						fullWidth
 						label="Title"
 						{...register("title")}

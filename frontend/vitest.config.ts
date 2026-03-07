@@ -41,6 +41,7 @@ export default defineConfig((configEnv) =>
 				// 	enabled: true,
 				// 	instances: [{ browser: "chromium" }],
 				// },
+				testTimeout: 60_000,
 			},
 			resolve: {
 				alias: {

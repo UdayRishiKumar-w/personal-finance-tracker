@@ -2,7 +2,8 @@ import { languageOptions } from "@/Constants";
 import type { BackendError } from "@/types/globalTypes";
 import { isAxiosError, type AxiosError } from "axios";
 
-export const getLangSupported = (lang: string): (typeof languageOptions)[number]["code"] => {
+export const getLangSupported = (lang: string | undefined | null): (typeof languageOptions)[number]["code"] => {
+	if (!lang) return "en";
 	const langSupported = languageOptions.find(({ code }) => lang === code || lang.startsWith(`${code}-`));
 
 	return langSupported ? langSupported.code : "en";

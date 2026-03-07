@@ -89,3 +89,13 @@ export async function ensureAuthenticated(page: Page, user: TestUser = defaultUs
 	}, user);
 	await mockMe(page, user);
 }
+
+export async function mockSessionExpiry(page: Page) {
+	await page.route(`${apiBasePattern}/auth/me`, async (route) => {
+		await route.fulfill({
+			status: 401,
+			contentType: "application/json",
+			body: JSON.stringify({ message: "Session expired" }),
+		});
+	});
+}

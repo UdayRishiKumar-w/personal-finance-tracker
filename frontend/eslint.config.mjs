@@ -27,6 +27,7 @@ export default defineConfig([
 
 	// TypeScript rules
 	tseslint.configs.recommendedTypeChecked,
+	eslintPluginJsxA11y.flatConfigs.strict,
 	// ...eslintPluginTailwindcss.configs["flat/recommended"],
 
 	{
@@ -78,7 +79,6 @@ export default defineConfig([
 		plugins: {
 			react: eslintPluginReact,
 			"react-hooks": eslintPluginReactHooks,
-			"jsx-a11y": eslintPluginJsxA11y,
 			prettier: eslintPluginPrettier,
 			"@tanstack/query": pluginQuery,
 		},

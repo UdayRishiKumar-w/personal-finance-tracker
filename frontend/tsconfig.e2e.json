@@ -2,6 +2,15 @@
 	"extends": "./tsconfig.app.json",
 	"include": ["e2e"],
 	"compilerOptions": {
-		"types": ["@playwright/test", "node"]
+		"types": ["@playwright/test", "node"],
+		"strict": true,
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["src/*"],
+			"@e2e/*": ["e2e/*"],
+			"@fixtures/*": ["e2e/fixtures/*"],
+			"@page-objects/*": ["e2e/page-objects/*"],
+			"@utils/*": ["e2e/utils/*"]
+		}
 	}
 }

@@ -27,7 +27,6 @@ export default defineConfig({
 	use: {
 		baseURL: BASE_URL,
 		headless: IS_CI,
-		viewport: { width: 1280, height: 720 },
 		actionTimeout: 30_000,
 		navigationTimeout: 30_000,
 		trace: "retain-on-failure",
