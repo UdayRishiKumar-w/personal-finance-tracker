@@ -312,6 +312,126 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.12</version>
+				<executions>
+					<!-- Prepare JaCoCo agent before tests run -->
+					<execution>
+						<id>prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<!-- Generate HTML and XML reports after tests -->
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<formats>
+								<format>HTML</format>
+								<format>XML</format>
+							</formats>
+							<outputDirectory>${project.build.directory}/jacoco-report</outputDirectory>
+						</configuration>
+					</execution>
+					<!-- Enforce code coverage quality gates -->
+					<execution>
+						<id>check</id>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<!-- Bundle-level coverage requirements -->
+								<rule>
+									<element>BUNDLE</element>
+									<limits>
+										<limit>
+											<counter>LINE</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.85</minimum>
+										</limit>
+										<!-- <limit>
+											<counter>BRANCH</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.75</minimum>
+										</limit>
+										<limit>
+											<counter>METHOD</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.85</minimum>
+										</limit>
+										<limit>
+											<counter>CLASS</counter>
+											<value>MISSEDCOUNT</value>
+											<maximum>5</maximum>
+										</limit> -->
+									</limits>
+								</rule>
+								<!-- Class-level requirements for critical business logic -->
+								<!-- <rule>
+									<element>CLASS</element>
+									<includes>
+										<include>com.example.pft.service.*</include>
+										<include>com.example.pft.controller.*</include>
+									</includes>
+									<limits>
+										<limit>
+											<counter>LINE</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.90</minimum>
+										</limit>
+										<limit>
+											<counter>BRANCH</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.80</minimum>
+										</limit>
+									</limits>
+									<excludes>
+										<exclude>com.example.pft.service.RedisService</exclude>
+									</excludes>
+								</rule> -->
+								<!-- Method-level requirements for complex methods -->
+								<!-- <rule>
+									<element>METHOD</element>
+									<includes>
+										<include>com.example.pft.service.*Service.*</include>
+										<include>com.example.pft.exception.GlobalExceptionHandler.*</include>
+									</includes>
+									<limits>
+										<limit>
+											<counter>LINE</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.80</minimum>
+										</limit>
+										<limit>
+											<counter>BRANCH</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.70</minimum>
+										</limit>
+									</limits>
+								</rule> -->
+							</rules>
+							<excludes>
+								<exclude>com/example/pft/config/**</exclude>
+								<exclude>com/example/pft/security/**</exclude>
+								<exclude>com/example/pft/component/**</exclude>
+								<exclude>com/example/pft/mapper/**</exclude>
+								<exclude>com/example/pft/entity/**</exclude>
+								<exclude>com/example/pft/dto/**</exclude>
+								<exclude>com/example/pft/enums/**</exclude>
+								<exclude>com/example/pft/util/**</exclude>
+								<exclude>com/example/pft/PersonalFinanceTrackerApplication*</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<!-- <plugin>
 				<groupId>com.spotify.fmt</groupId>
 				<artifactId>fmt-maven-plugin</artifactId>
