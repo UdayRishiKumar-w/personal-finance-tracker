@@ -1,4 +1,4 @@
-FROM maven:3.9.11-eclipse-temurin-21-alpine AS build
+FROM maven:3.9-eclipse-temurin-21-jammy AS build
 WORKDIR /app
 
 # Copy only pom.xml and download dependencies
@@ -25,7 +25,7 @@ RUN --mount=type=cache,target=/root/.m2,id=maven-cache-pft \
 # RUN mvn clean package -DskipTests -B
 
 # Stage 2: The final production image
-FROM eclipse-temurin:21.0.9_10-jre-alpine-3.23
+FROM eclipse-temurin:21-jre-jammy
 
 # Set the working directory
 WORKDIR /app
