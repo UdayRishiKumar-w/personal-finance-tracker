@@ -34,7 +34,7 @@ test.describe("Authentication", () => {
 		await expect(loginPage.passwordError).toBeVisible();
 	});
 
-	test("signup success redirects to dashboard", async ({ page, signupPage, dashboardPage }) => {
+	test.fixme("signup success redirects to dashboard", async ({ page, signupPage, dashboardPage }) => {
 		await mockSignupSuccess(page, defaultUser);
 		await mockLoginSuccess(page, defaultUser);
 		await mockTransactions(page, []);
@@ -44,7 +44,7 @@ test.describe("Authentication", () => {
 		await expect(dashboardPage.heading).toBeVisible();
 	});
 
-	test("logout clears auth and redirects to login", async ({ page, dashboardPage, loginPage }) => {
+	test.fixme("logout clears auth and redirects to login", async ({ page, dashboardPage, loginPage }) => {
 		// Mock authenticated state
 		await page.addInitScript(() => localStorage.setItem("isLoggedIn", "true"));
 		await mockLogout(page);

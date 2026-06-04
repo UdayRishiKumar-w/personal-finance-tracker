@@ -3,6 +3,7 @@ package com.example.pft.service;
 import java.util.List;
 
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,6 +33,7 @@ public class UserService {
 
 	@Transactional
 	@CachePut(value = "users", key = "#user.email")
+	@CacheEvict(value = "users", key = "#user.email", beforeInvocation = true)
 	public User saveUser(@NonNull final User user) {
 		return this.userRepository.save(user);
 	}

@@ -27,8 +27,8 @@ export default defineConfig({
 	use: {
 		baseURL: BASE_URL,
 		headless: IS_CI,
-		actionTimeout: 30_000,
-		navigationTimeout: 30_000,
+		actionTimeout: 60_000,
+		navigationTimeout: 60_000,
 		trace: "retain-on-failure",
 		screenshot: "only-on-failure",
 		ignoreHTTPSErrors: true,

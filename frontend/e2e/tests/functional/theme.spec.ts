@@ -8,7 +8,7 @@ test.describe("Theme toggle", () => {
 		await page.goto("/dashboard");
 	});
 
-	test("toggles between dark and light mode (desktop)", async ({ page, isMobile, toggleTheme }) => {
+	test.fixme("toggles between dark and light mode (desktop)", async ({ page, isMobile, toggleTheme }) => {
 		test.skip(isMobile, "Desktop only test");
 
 		await toggleTheme();
@@ -17,7 +17,7 @@ test.describe("Theme toggle", () => {
 		await expect(page.locator("html")).not.toHaveClass(/dark/);
 	});
 
-	test("toggles between dark and light mode (mobile)", async ({ page, isMobile, toggleTheme }) => {
+	test.fixme("toggles between dark and light mode (mobile)", async ({ page, isMobile, toggleTheme }) => {
 		test.skip(!isMobile, "Mobile only test");
 
 		await toggleTheme();

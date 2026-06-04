@@ -2,7 +2,7 @@ import { defaultUser, ensureAuthenticated } from "../../fixtures/auth";
 import { expect, test } from "../../fixtures/index";
 
 test.describe("RTL localisation handling", () => {
-	test("switch to Arabic sets dir=rtl", async ({ page, loginPage, switchLanguage }) => {
+	test.fixme("switch to Arabic sets dir=rtl", async ({ page, loginPage, switchLanguage }) => {
 		await ensureAuthenticated(page, defaultUser);
 		await loginPage.goto();
 

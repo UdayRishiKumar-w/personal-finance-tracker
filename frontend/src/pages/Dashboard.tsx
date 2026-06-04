@@ -42,8 +42,8 @@ const Dashboard: FC = () => {
 
 	return (
 		<Box className="h-full overflow-auto" tabIndex={0}>
-			<Box className="space-y-6 p-4 text-gray-900 dark:text-gray-100">
-				<Typography variant="h4" component="h1" className="font-bold text-gray-800 dark:text-gray-100">
+			<Box className="space-y-6 p-4 text-gray-900 dark:text-gray-200">
+				<Typography variant="h4" component="h1" className="font-bold text-gray-800 dark:text-gray-200">
 					Dashboard
 				</Typography>
 
@@ -58,7 +58,7 @@ const Dashboard: FC = () => {
 								<Typography
 									variant="body1"
 									component="h2"
-									className="text-gray-900 dark:text-gray-100"
+									className="text-gray-900 dark:text-gray-200"
 									aria-label="Balance"
 								>
 									<span aria-hidden="true">💰</span> Balance
@@ -82,7 +82,7 @@ const Dashboard: FC = () => {
 								<Typography
 									variant="body1"
 									component="h2"
-									className="text-gray-900 dark:text-gray-100"
+									className="text-gray-900 dark:text-gray-200"
 									aria-label="Total Income"
 								>
 									<span aria-hidden="true">📈</span> Total Income
@@ -110,7 +110,7 @@ const Dashboard: FC = () => {
 								<Typography
 									variant="body1"
 									component="h2"
-									className="text-gray-900 dark:text-gray-100"
+									className="text-gray-900 dark:text-gray-200"
 									aria-label="Total Expense"
 								>
 									<span aria-hidden="true">📉</span> Total Expense
@@ -133,7 +133,7 @@ const Dashboard: FC = () => {
 					<Card elevation={3} className="rounded-2xl bg-white p-4 shadow-md dark:bg-gray-800">
 						<CardHeader
 							title={
-								<Typography variant="h6" className="font-semibold text-gray-800 dark:text-gray-100">
+								<Typography variant="h6" className="font-semibold text-gray-800 dark:text-gray-200">
 									Income vs Expense (Last 6 Months)
 								</Typography>
 							}
@@ -153,7 +153,7 @@ const Dashboard: FC = () => {
 								<Typography
 									variant="h6"
 									component="h2"
-									className="font-semibold text-gray-900 dark:text-gray-100"
+									className="font-semibold text-gray-900 dark:text-gray-200"
 								>
 									Recent Transactions
 								</Typography>
@@ -168,10 +168,10 @@ const Dashboard: FC = () => {
 											secondary={`${format(parseISO(transaction.date), "MMM d, yyyy", { locale: dateFnsLocale })} • ${transaction.category || "Uncategorized"}`}
 											slotProps={{
 												primary: {
-													className: "font-medium dark:text-gray-100",
+													className: "font-medium dark:text-gray-200",
 												},
 												secondary: {
-													className: "dark:text-gray-400",
+													className: "dark:text-gray-200",
 												},
 											}}
 										/>
@@ -194,7 +194,7 @@ const Dashboard: FC = () => {
 											primary="No recent transactions found"
 											slotProps={{
 												primary: {
-													className: "text-center text-gray-500 dark:text-gray-400",
+													className: "text-center text-gray-500 dark:text-gray-200",
 													variant: "body2",
 												},
 											}}

@@ -74,7 +74,6 @@ export const useLogout = () => {
 		},
 		onSuccess: () => {
 			dispatch(setLoggedOut());
-			localStorage.removeItem("isLoggedIn");
 			queryClient.clear();
 			void navigate("/login", { replace: true });
 		},

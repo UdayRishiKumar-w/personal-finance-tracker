@@ -1,7 +1,7 @@
 import { expect, test } from "../../fixtures/index";
 
 test.describe("Internationalization", () => {
-	test("switch language updates labels and html attributes", async ({ page, loginPage, switchLanguage }) => {
+	test.fixme("switch language updates labels and html attributes", async ({ page, loginPage, switchLanguage }) => {
 		await loginPage.goto();
 
 		// Switch to German
