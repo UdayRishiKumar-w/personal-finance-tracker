@@ -46,11 +46,8 @@
 		"source.organizeImports": "explicit",
 		"source.addMissingImports.ts": "explicit"
 	},
-	"typescript.preferences.importModuleSpecifier": "non-relative",
-	"javascript.preferences.importModuleSpecifier": "non-relative",
-	"typescript.preferences.autoImportSpecifierExcludeRegexes": [
-		"^@mui/[^/]+$"
-	],
+	"js/ts.preferences.importModuleSpecifier": "non-relative",
+	"js/ts.preferences.autoImportSpecifierExcludeRegexes": ["^@mui/[^/]+$"],
 	"java.format.settings.url": ".vscode/eclipse-java-google-style.xml",
 	"java.format.settings.profile": "GoogleStyle"
 }

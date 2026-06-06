@@ -26,7 +26,8 @@
 		"i18n:extract": " npx i18next-cli extract",
 		"i18n:types": " npx i18next-cli types",
 		"i18n:lint": "npx i18next-cli lint",
-		"commit": "commit"
+		"commit": "commit",
+		"browser-install": "npx playwright install --with-deps"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.14.0",

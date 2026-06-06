@@ -2,15 +2,14 @@ import { expect, test } from "@playwright/test";
 import { defaultUser, ensureAuthenticated } from "../../fixtures/auth";
 
 test.describe("PWA", () => {
-	test.fixme("manifest present and SW API available", async ({ page }) => {
+	test("manifest present and SW API available", async ({ page }) => {
 		await ensureAuthenticated(page, defaultUser);
 		await page.goto("/dashboard");
 		const hasManifest = await page.evaluate(() => !!document.querySelector('link[rel="manifest"]'));
 		expect(hasManifest).toBeTruthy();
 		const swRegistration = await page.evaluate(async () => {
 			if (!("serviceWorker" in navigator)) return null;
-			const registration = await navigator.serviceWorker.getRegistration();
-			if (!registration) return null;
+			const registration = await navigator.serviceWorker.ready;
 			return { active: !!registration.active };
 		});
 		expect(swRegistration).not.toBeNull();
