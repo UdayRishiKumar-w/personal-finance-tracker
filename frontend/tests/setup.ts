@@ -1,5 +1,23 @@
 import "@testing-library/jest-dom/vitest";
 import { cleanup } from "@testing-library/react";
+
+class ProgressEvent extends Event {
+	lengthComputable: boolean;
+	loaded: number;
+	total: number;
+	constructor(type: string, init?: ProgressEventInit) {
+		super(type);
+		this.lengthComputable = init?.lengthComputable ?? false;
+		this.loaded = init?.loaded ?? 0;
+		this.total = init?.total ?? 0;
+	}
+}
+Object.defineProperty(globalThis, "ProgressEvent", {
+	value: ProgressEvent,
+	writable: true,
+	configurable: true,
+});
+
 import { server } from "@tests/mocks/server";
 import { toHaveNoViolations } from "jest-axe";
 import { createElement } from "react";

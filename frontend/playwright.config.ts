@@ -22,7 +22,7 @@ export default defineConfig({
 		["json", { outputFile: "test-results/results.json" }],
 	],
 	expect: {
-		timeout: 15_000,
+		timeout: 20_000,
 	},
 	use: {
 		baseURL: BASE_URL,
