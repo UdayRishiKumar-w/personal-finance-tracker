@@ -15,6 +15,12 @@ Thumbs.db
 .env.production.local
 .env.development.local
 
+
+# Playwright
 playwright-report
+/playwright-report/
 test-results
 /playwright/.cache/
+/blob-report/
+/playwright/.auth/
+
