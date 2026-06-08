@@ -106,4 +106,57 @@ class UserControllerTest {
 		verify(this.userRepository).findAll();
 		verifyNoMoreInteractions(this.userMapper);
 	}
+
+	// ── Regression tests: deprecated @MockBean → @MockitoBean migration ──
+
+	@Test
+	@DisplayName("Regression: no field should use the deprecated @MockBean annotation")
+	void regression_noFieldShouldUseDeprecatedMockBean() {
+		for (final java.lang.reflect.Field field : UserControllerTest.class.getDeclaredFields()) {
+			for (final java.lang.annotation.Annotation annotation : field.getAnnotations()) {
+				org.assertj.core.api.Assertions.assertThat(annotation.annotationType().getName())
+					.as("Field '%s' must not use deprecated @MockBean", field.getName())
+					.isNotEqualTo("org.springframework.boot.test.mock.mockito.MockBean");
+			}
+		}
+	}
+
+	@Test
+	@DisplayName("Regression: all mock fields should use @MockitoBean annotation")
+	void regression_allMockFieldsShouldUseMockitoBean() {
+		final java.util.List<java.lang.reflect.Field> mockitoBeanFields = java.util.Arrays.stream(UserControllerTest.class.getDeclaredFields())
+			.filter(f -> f.isAnnotationPresent(MockitoBean.class))
+			.toList();
+
+		org.assertj.core.api.Assertions.assertThat(mockitoBeanFields)
+			.as("Expected @MockitoBean-annotated fields for all mocked dependencies")
+			.hasSizeGreaterThanOrEqualTo(3);
+
+		final java.util.List<String> expectedTypes = java.util.List.of(
+			"UserRepository", "UserMapper", "JwtTokenProvider"
+		);
+		final java.util.List<String> actualTypes = mockitoBeanFields.stream()
+			.map(f -> f.getType().getSimpleName())
+			.toList();
+
+		org.assertj.core.api.Assertions.assertThat(actualTypes)
+			.as("All required dependencies should be annotated with @MockitoBean")
+			.containsAll(expectedTypes);
+	}
+
+	@Test
+	@DisplayName("Regression: @MockitoBean-injected mocks should be functional Mockito proxies")
+	void regression_mockitoBeansAreProperlyInjectedMocks() {
+		org.assertj.core.api.Assertions.assertThat(this.userRepository).isNotNull();
+		org.assertj.core.api.Assertions.assertThat(org.mockito.Mockito.mockingDetails(this.userRepository).isMock())
+			.as("userRepository should be a Mockito mock").isTrue();
+
+		org.assertj.core.api.Assertions.assertThat(this.userMapper).isNotNull();
+		org.assertj.core.api.Assertions.assertThat(org.mockito.Mockito.mockingDetails(this.userMapper).isMock())
+			.as("userMapper should be a Mockito mock").isTrue();
+
+		org.assertj.core.api.Assertions.assertThat(this.jwtTokenProvider).isNotNull();
+		org.assertj.core.api.Assertions.assertThat(org.mockito.Mockito.mockingDetails(this.jwtTokenProvider).isMock())
+			.as("jwtTokenProvider should be a Mockito mock").isTrue();
+	}
 }
