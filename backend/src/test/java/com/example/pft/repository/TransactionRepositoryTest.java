@@ -42,10 +42,8 @@ class TransactionRepositoryTest {
 		this.transactionRepository.saveAll(List.of(first, second));
 		this.entityManager.flush();
 
-		final Page<Transaction> page = this.transactionRepository.findByUserId(
-			user.getId(),
-			PageRequest.of(0, 10, Sort.by("date").descending())
-		);
+		final Page<Transaction> page =
+			this.transactionRepository.findByUserId(user.getId(), PageRequest.of(0, 10, Sort.by("date").descending()));
 
 		assertThat(page.getContent()).hasSize(2);
 	}
@@ -61,11 +59,12 @@ class TransactionRepositoryTest {
 		this.transactionRepository.saveAll(List.of(feb, jan));
 		this.entityManager.flush();
 
-		final List<Transaction> result = this.transactionRepository.findByUserIdAndDateBetweenOrderByDateAsc(
-			user.getId(),
-			LocalDate.of(2025, 1, 1),
-			LocalDate.of(2025, 2, 15)
-		);
+		final List<Transaction> result = this.transactionRepository
+			.findByUserIdAndDateBetweenOrderByDateAsc(
+				user.getId(),
+				LocalDate.of(2025, 1, 1),
+				LocalDate.of(2025, 2, 15)
+			);
 
 		assertThat(result).hasSize(2);
 		assertThat(result.get(0).getDate()).isBefore(result.get(1).getDate());

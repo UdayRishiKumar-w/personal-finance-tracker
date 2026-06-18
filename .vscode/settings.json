@@ -48,6 +48,6 @@
 	},
 	"js/ts.preferences.importModuleSpecifier": "non-relative",
 	"js/ts.preferences.autoImportSpecifierExcludeRegexes": ["^@mui/[^/]+$"],
-	"java.format.settings.url": ".vscode/eclipse-java-google-style.xml",
+	"java.format.settings.url": "backend/eclipse-java-google-style.xml",
 	"java.format.settings.profile": "GoogleStyle"
 }

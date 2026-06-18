@@ -25,7 +25,6 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -185,8 +184,7 @@ class TransactionControllerTest {
 		final User user = TestDataFactory.createUser("ava@example.com");
 		final TransactionDTO dto = TestDataFactory.createTransactionDto();
 		dto.setId(7L);
-		final PaginatedResponse<TransactionDTO> response =
-			new PaginatedResponse<>(List.of(dto), 1, 1, 0, 20);
+		final PaginatedResponse<TransactionDTO> response = new PaginatedResponse<>(List.of(dto), 1, 1, 0, 20);
 
 		when(this.userRepository.findByEmail("ava@example.com")).thenReturn(Optional.of(user));
 		when(this.transactionService.transactionsList(user, 0, 20, "date", "DESC")).thenReturn(response);

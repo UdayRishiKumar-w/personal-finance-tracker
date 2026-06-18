@@ -2,8 +2,6 @@ package com.example.pft.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -115,8 +113,7 @@ class RefreshTokenServiceTest {
 	@DisplayName("Should update token value and extend expiry for valid token")
 	void updateRefreshToken_validToken_updatesUserToken() {
 		final User user = TestDataFactory.createUser("ava@example.com");
-		final RefreshToken token =
-			TestDataFactory.createRefreshToken(user, "old", Instant.now().minusSeconds(60));
+		final RefreshToken token = TestDataFactory.createRefreshToken(user, "old", Instant.now().minusSeconds(60));
 		user.setRefreshToken(token);
 
 		when(this.refreshTokenRepository.findByToken("old")).thenReturn(Optional.of(token));
@@ -142,8 +139,7 @@ class RefreshTokenServiceTest {
 	@DisplayName("Should clear user refresh token and set cookie headers on successful logout")
 	void clearRefreshToken_validToken_clearsUserAndCookies() {
 		final User user = TestDataFactory.createUser("ava@example.com");
-		final RefreshToken token =
-			TestDataFactory.createRefreshToken(user, "refresh", Instant.now().plusSeconds(600));
+		final RefreshToken token = TestDataFactory.createRefreshToken(user, "refresh", Instant.now().plusSeconds(600));
 		user.setRefreshToken(token);
 		final MockHttpServletResponse response = new MockHttpServletResponse();
 
@@ -172,8 +168,7 @@ class RefreshTokenServiceTest {
 	@DisplayName("Should throw UnauthorizedException and clear token when token is expired")
 	void isValidRefreshToken_expiredToken_throwsUnauthorizedAndClears() {
 		final User user = TestDataFactory.createUser("ava@example.com");
-		final RefreshToken token =
-			TestDataFactory.createRefreshToken(user, "refresh", Instant.now().minusSeconds(10));
+		final RefreshToken token = TestDataFactory.createRefreshToken(user, "refresh", Instant.now().minusSeconds(10));
 		user.setRefreshToken(token);
 
 		when(this.refreshTokenRepository.findByToken("refresh")).thenReturn(Optional.of(token));
@@ -191,8 +186,7 @@ class RefreshTokenServiceTest {
 	@DisplayName("Should return true when refresh token exists and is not expired")
 	void isValidRefreshToken_validToken_returnsTrue() {
 		final User user = TestDataFactory.createUser("ava@example.com");
-		final RefreshToken token =
-			TestDataFactory.createRefreshToken(user, "refresh", Instant.now().plusSeconds(3600));
+		final RefreshToken token = TestDataFactory.createRefreshToken(user, "refresh", Instant.now().plusSeconds(3600));
 
 		when(this.refreshTokenRepository.findByToken("refresh")).thenReturn(Optional.of(token));
 

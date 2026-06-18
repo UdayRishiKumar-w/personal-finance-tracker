@@ -59,8 +59,7 @@ class RedisServiceTest {
 		doThrow(new DataAccessException("fail") {
 		}).when(this.valueOperations).set("key", "value", 5, TimeUnit.MINUTES);
 
-		assertThatThrownBy(() -> this.redisService.save("key", "value", 5))
-			.isInstanceOf(InvalidateException.class);
+		assertThatThrownBy(() -> this.redisService.save("key", "value", 5)).isInstanceOf(InvalidateException.class);
 	}
 
 	@Test
@@ -70,8 +69,7 @@ class RedisServiceTest {
 		when(this.valueOperations.get("key")).thenThrow(new DataAccessException("fail") {
 		});
 
-		assertThatThrownBy(() -> this.redisService.get("key"))
-			.isInstanceOf(InvalidateException.class);
+		assertThatThrownBy(() -> this.redisService.get("key")).isInstanceOf(InvalidateException.class);
 	}
 
 	@Test
@@ -80,8 +78,7 @@ class RedisServiceTest {
 		when(this.redisTemplate.delete("key")).thenThrow(new DataAccessException("fail") {
 		});
 
-		assertThatThrownBy(() -> this.redisService.delete("key"))
-			.isInstanceOf(InvalidateException.class);
+		assertThatThrownBy(() -> this.redisService.delete("key")).isInstanceOf(InvalidateException.class);
 	}
 
 	@ParameterizedTest(name = "Should throw IllegalArgumentException when pattern is null or empty - {index}")
@@ -94,9 +91,8 @@ class RedisServiceTest {
 	@Test
 	@DisplayName("Should throw InvalidateException when DataAccessException occurs during pattern eviction")
 	void evictByPattern_dataAccessException_throwsInvalidate() {
-		when(this.redisTemplate.execute(any(RedisCallback.class)))
-			.thenThrow(new DataAccessException("fail") {
-			});
+		when(this.redisTemplate.execute(any(RedisCallback.class))).thenThrow(new DataAccessException("fail") {
+		});
 
 		assertThatThrownBy(() -> this.redisService.evictByPattern("transactions*"))
 			.isInstanceOf(InvalidateException.class);

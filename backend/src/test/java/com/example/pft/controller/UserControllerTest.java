@@ -72,7 +72,9 @@ class UserControllerTest {
 	@Test
 	@DisplayName("Should return forbidden when non-admin user requests all users")
 	void getAllUsers_withNonAdminRole_shouldReturnForbidden() throws Exception {
-		this.mockMvc.perform(get("/api/users").with(user("user@example.com").roles("USER"))).andExpect(status().isForbidden());
+		this.mockMvc
+			.perform(get("/api/users").with(user("user@example.com").roles("USER")))
+			.andExpect(status().isForbidden());
 	}
 
 	@Test

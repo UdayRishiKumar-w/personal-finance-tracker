@@ -3,6 +3,7 @@ WORKDIR /app
 
 # Copy only pom.xml and download dependencies
 COPY pom.xml ./
+COPY eclipse-java-google-style.xml ./
 
 # The target is typically /root/.m2 for the root user in the container
 # The id is a unique identifier for this cache mount

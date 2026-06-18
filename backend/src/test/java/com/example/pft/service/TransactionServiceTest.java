@@ -97,7 +97,8 @@ class TransactionServiceTest {
 	void getTransaction_differentOwner_throwsForbidden() {
 		final User other = TestDataFactory.createUser("other@example.com");
 		other.setId(2L);
-		final Transaction transaction = TestDataFactory.createTransaction(other, LocalDate.now(), new BigDecimal("10.00"));
+		final Transaction transaction =
+			TestDataFactory.createTransaction(other, LocalDate.now(), new BigDecimal("10.00"));
 
 		when(this.transactionRepository.findById(1L)).thenReturn(Optional.of(transaction));
 
@@ -135,7 +136,8 @@ class TransactionServiceTest {
 	void updateTransaction_differentOwner_throwsAccessDenied() {
 		final User other = TestDataFactory.createUser("other@example.com");
 		other.setId(2L);
-		final Transaction transaction = TestDataFactory.createTransaction(other, LocalDate.now(), new BigDecimal("10.00"));
+		final Transaction transaction =
+			TestDataFactory.createTransaction(other, LocalDate.now(), new BigDecimal("10.00"));
 
 		when(this.transactionRepository.findById(5L)).thenReturn(Optional.of(transaction));
 
@@ -195,7 +197,8 @@ class TransactionServiceTest {
 	void deleteTransaction_differentOwner_throwsAccessDenied() {
 		final User other = TestDataFactory.createUser("other@example.com");
 		other.setId(2L);
-		final Transaction transaction = TestDataFactory.createTransaction(other, LocalDate.now(), new BigDecimal("10.00"));
+		final Transaction transaction =
+			TestDataFactory.createTransaction(other, LocalDate.now(), new BigDecimal("10.00"));
 
 		when(this.transactionRepository.findById(7L)).thenReturn(Optional.of(transaction));
 
@@ -221,7 +224,8 @@ class TransactionServiceTest {
 	@Test
 	@DisplayName("Should return paginated transaction list sorted by date descending")
 	void transactionsList_returnsPaginatedResponse() {
-		final Transaction first = TestDataFactory.createTransaction(this.user, LocalDate.now(), new BigDecimal("12.00"));
+		final Transaction first =
+			TestDataFactory.createTransaction(this.user, LocalDate.now(), new BigDecimal("12.00"));
 		final Transaction second =
 			TestDataFactory.createTransaction(this.user, LocalDate.now().minusDays(1), new BigDecimal("15.00"));
 		final List<Transaction> transactions = List.of(first, second);
@@ -259,8 +263,7 @@ class TransactionServiceTest {
 			.thenReturn(transactions);
 		when(this.transactionMapper.toDtoList(transactions)).thenReturn(dtos);
 
-		final List<TransactionDTO> result =
-			this.transactionService.fetchTransactionsBetween(this.user, from, to);
+		final List<TransactionDTO> result = this.transactionService.fetchTransactionsBetween(this.user, from, to);
 
 		assertThat(result).isEqualTo(dtos);
 	}

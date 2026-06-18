@@ -21,7 +21,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.Instant;
 
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -62,38 +61,29 @@ import jakarta.servlet.http.Cookie;
  */
 class TestDataBuilder {
 
-    static SignUpRequestDTO buildValidSignupRequest() {
-        return new SignUpRequestDTO(
-            "test" + System.currentTimeMillis() + "@example.com",
-            "Password1!",
-            "Test",
-            "User"
-        );
-    }
+	static SignUpRequestDTO buildValidSignupRequest() {
+		return new SignUpRequestDTO("test" + System.currentTimeMillis() + "@example.com", "Password1!", "Test", "User");
+	}
 
-    static LoginRequestDTO buildValidLoginRequest(String email) {
-        return new LoginRequestDTO(email, "Password1!");
-    }
+	static LoginRequestDTO buildValidLoginRequest(String email) {
+		return new LoginRequestDTO(email, "Password1!");
+	}
 
-    static SignUpRequestDTO buildInvalidEmailSignupRequest() {
-        return new SignUpRequestDTO("invalid-email", "Password1!", "Test", "User");
-    }
+	static SignUpRequestDTO buildInvalidEmailSignupRequest() {
+		return new SignUpRequestDTO("invalid-email", "Password1!", "Test", "User");
+	}
 
-    static SignUpRequestDTO buildWeakPasswordSignupRequest() {
-        return new SignUpRequestDTO("test@example.com", "weak", "Test", "User");
-    }
+	static SignUpRequestDTO buildWeakPasswordSignupRequest() {
+		return new SignUpRequestDTO("test@example.com", "weak", "Test", "User");
+	}
 }
+
 
 @WebMvcTest(AuthController.class)
 @Import(GlobalExceptionHandler.class)
 @TestPropertySource(
-	properties = {
-		"jwt.expiration=3600000",
-		"jwt.refresh-expiration=86400000",
-		"app.cookie.sameSite=Lax",
-		"app.cookie.secure=true",
-		"app.security.public-urls=/api/auth/**,/api/public/**"
-	}
+	properties = {"jwt.expiration=3600000", "jwt.refresh-expiration=86400000", "app.cookie.sameSite=Lax",
+		"app.cookie.secure=true", "app.security.public-urls=/api/auth/**,/api/public/**"}
 )
 @AutoConfigureMockMvc(addFilters = false)
 class AuthControllerTest {
@@ -132,7 +122,8 @@ class AuthControllerTest {
 		final User newUser = TestDataFactory.createUser(request.email());
 		newUser.setRole(null);
 		final UserDTO userDto = TestDataFactory.createUserDto(request.email());
-		final RefreshToken refreshToken = TestDataFactory.createRefreshToken(newUser, "refresh-token", Instant.now().plusSeconds(3600));
+		final RefreshToken refreshToken =
+			TestDataFactory.createRefreshToken(newUser, "refresh-token", Instant.now().plusSeconds(3600));
 
 		when(this.userRepository.existsByEmail(request.email())).thenReturn(false);
 		when(this.userMapper.toEntity(request)).thenReturn(newUser);
@@ -143,14 +134,19 @@ class AuthControllerTest {
 		when(this.userMapper.toDto(newUser)).thenReturn(userDto);
 
 		this.mockMvc
-			.perform(post("/api/auth/signup").contentType("application/json").content(this.objectMapper.writeValueAsString(request)))
+			.perform(
+				post("/api/auth/signup")
+					.contentType("application/json")
+					.content(this.objectMapper.writeValueAsString(request))
+			)
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.user.email").value("ava@example.com"))
 			.andExpect(
-				header().stringValues(
-					HttpHeaders.SET_COOKIE,
-					hasItems(containsString("accessToken="), containsString("refreshToken="))
-				)
+				header()
+					.stringValues(
+						HttpHeaders.SET_COOKIE,
+						hasItems(containsString("accessToken="), containsString("refreshToken="))
+					)
 			);
 
 		final ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
@@ -175,13 +171,23 @@ class AuthControllerTest {
 		when(this.userRepository.existsByEmail(request.email())).thenReturn(true);
 
 		this.mockMvc
-			.perform(post("/api/auth/signup").contentType("application/json").content(this.objectMapper.writeValueAsString(request)))
+			.perform(
+				post("/api/auth/signup")
+					.contentType("application/json")
+					.content(this.objectMapper.writeValueAsString(request))
+			)
 			.andExpect(status().isConflict())
 			.andExpect(jsonPath("$.message").value(containsString("already exists")));
 
 		verify(this.userRepository).existsByEmail(request.email());
 		verifyNoMoreInteractions(this.userRepository);
-		verifyNoInteractions(this.userService, this.userMapper, this.passwordEncoder, this.tokenProvider, this.refreshTokenService);
+		verifyNoInteractions(
+			this.userService,
+			this.userMapper,
+			this.passwordEncoder,
+			this.tokenProvider,
+			this.refreshTokenService
+		);
 	}
 
 	@Test
@@ -189,10 +195,15 @@ class AuthControllerTest {
 	void login_withValidCredentials_shouldReturnUserAndSetAuthCookies() throws Exception {
 		final LoginRequestDTO request = new LoginRequestDTO("ava@example.com", "Password1!");
 		final Authentication authentication = org.mockito.Mockito.mock(Authentication.class);
-		final UserDetails principal = org.springframework.security.core.userdetails.User.withUsername(request.email()).password("x").authorities("ROLE_USER").build();
+		final UserDetails principal = org.springframework.security.core.userdetails.User
+			.withUsername(request.email())
+			.password("x")
+			.authorities("ROLE_USER")
+			.build();
 		final User user = TestDataFactory.createUser(request.email());
 		final UserDTO userDto = TestDataFactory.createUserDto(request.email());
-		final RefreshToken refreshToken = TestDataFactory.createRefreshToken(user, "refresh-token", Instant.now().plusSeconds(3600));
+		final RefreshToken refreshToken =
+			TestDataFactory.createRefreshToken(user, "refresh-token", Instant.now().plusSeconds(3600));
 
 		when(this.authenticationManager.authenticate(any())).thenReturn(authentication);
 		when(authentication.getPrincipal()).thenReturn(principal);
@@ -202,14 +213,19 @@ class AuthControllerTest {
 		when(this.refreshTokenService.createOrUpdateRefreshToken(request.email())).thenReturn(refreshToken);
 
 		this.mockMvc
-			.perform(post("/api/auth/login").contentType("application/json").content(this.objectMapper.writeValueAsString(request)))
+			.perform(
+				post("/api/auth/login")
+					.contentType("application/json")
+					.content(this.objectMapper.writeValueAsString(request))
+			)
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.user.email").value("ava@example.com"))
 			.andExpect(
-				header().stringValues(
-					HttpHeaders.SET_COOKIE,
-					hasItems(containsString("accessToken="), containsString("refreshToken="))
-				)
+				header()
+					.stringValues(
+						HttpHeaders.SET_COOKIE,
+						hasItems(containsString("accessToken="), containsString("refreshToken="))
+					)
 			);
 
 		verify(this.authenticationManager).authenticate(any());
@@ -225,7 +241,11 @@ class AuthControllerTest {
 		final LoginRequestDTO request = new LoginRequestDTO("not-an-email", "Password1!");
 
 		this.mockMvc
-			.perform(post("/api/auth/login").contentType("application/json").content(this.objectMapper.writeValueAsString(request)))
+			.perform(
+				post("/api/auth/login")
+					.contentType("application/json")
+					.content(this.objectMapper.writeValueAsString(request))
+			)
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errors").isArray())
 			.andExpect(jsonPath("$.errors[0]").value(containsString("email")));
@@ -276,13 +296,14 @@ class AuthControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.message").value("Token refreshed"))
 			.andExpect(
-				header().stringValues(
-					HttpHeaders.SET_COOKIE,
-					allOf(
-						hasItem(containsString("accessToken=" + newAccessToken)),
-						hasItem(containsString("refreshToken=" + newRefreshToken))
+				header()
+					.stringValues(
+						HttpHeaders.SET_COOKIE,
+						allOf(
+							hasItem(containsString("accessToken=" + newAccessToken)),
+							hasItem(containsString("refreshToken=" + newRefreshToken))
+						)
 					)
-				)
 			);
 
 		// Verify service interactions
@@ -305,12 +326,17 @@ class AuthControllerTest {
 	@DisplayName("Should clear refresh token and return success on logout with valid token")
 	void logout_withValidRefreshToken_shouldClearToken() throws Exception {
 		doReturn(ResponseEntity.ok("Logged out successfully."))
-			.when(this.refreshTokenService).clearRefreshToken(any(), eq("refresh-token"));
+			.when(this.refreshTokenService)
+			.clearRefreshToken(any(), eq("refresh-token"));
 
 		this.mockMvc
 			.perform(post("/api/auth/logout").cookie(new Cookie("refreshToken", "refresh-token")))
 			.andExpect(status().isOk())
-			.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content().string("Logged out successfully."));
+			.andExpect(
+				org.springframework.test.web.servlet.result.MockMvcResultMatchers
+					.content()
+					.string("Logged out successfully.")
+			);
 
 		verify(this.refreshTokenService).clearRefreshToken(any(), eq("refresh-token"));
 	}
@@ -339,7 +365,11 @@ class AuthControllerTest {
 
 		// When: POST to signup endpoint
 		this.mockMvc
-			.perform(post("/api/auth/signup").contentType("application/json").content(this.objectMapper.writeValueAsString(request)))
+			.perform(
+				post("/api/auth/signup")
+					.contentType("application/json")
+					.content(this.objectMapper.writeValueAsString(request))
+			)
 			// Then: Should return 400 Bad Request with email validation error
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errors").isArray())
@@ -347,8 +377,14 @@ class AuthControllerTest {
 			.andExpect(jsonPath("$.status").value(400));
 
 		// And: Should not interact with any services (validation fails before service layer)
-		verifyNoInteractions(this.userRepository, this.userService, this.userMapper, this.passwordEncoder,
-				this.tokenProvider, this.refreshTokenService);
+		verifyNoInteractions(
+			this.userRepository,
+			this.userService,
+			this.userMapper,
+			this.passwordEncoder,
+			this.tokenProvider,
+			this.refreshTokenService
+		);
 	}
 
 	@Test
@@ -357,13 +393,23 @@ class AuthControllerTest {
 		final SignUpRequestDTO request = new SignUpRequestDTO("ava@example.com", "weak", "Ava", "Nguyen");
 
 		this.mockMvc
-			.perform(post("/api/auth/signup").contentType("application/json").content(this.objectMapper.writeValueAsString(request)))
+			.perform(
+				post("/api/auth/signup")
+					.contentType("application/json")
+					.content(this.objectMapper.writeValueAsString(request))
+			)
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.errors").isArray())
 			.andExpect(jsonPath("$.errors[0]").value(containsString("password")));
 
-		verifyNoInteractions(this.userRepository, this.userService, this.userMapper, this.passwordEncoder,
-				this.tokenProvider, this.refreshTokenService);
+		verifyNoInteractions(
+			this.userRepository,
+			this.userService,
+			this.userMapper,
+			this.passwordEncoder,
+			this.tokenProvider,
+			this.refreshTokenService
+		);
 	}
 
 	@Test
@@ -374,7 +420,11 @@ class AuthControllerTest {
 		when(this.authenticationManager.authenticate(any())).thenThrow(new BadCredentialsException("Bad credentials"));
 
 		this.mockMvc
-			.perform(post("/api/auth/login").contentType("application/json").content(this.objectMapper.writeValueAsString(request)))
+			.perform(
+				post("/api/auth/login")
+					.contentType("application/json")
+					.content(this.objectMapper.writeValueAsString(request))
+			)
 			.andExpect(status().isUnauthorized());
 
 		verify(this.authenticationManager).authenticate(any());
@@ -388,8 +438,14 @@ class AuthControllerTest {
 			.perform(post("/api/auth/signup").contentType("application/json"))
 			.andExpect(status().isBadRequest());
 
-		verifyNoInteractions(this.userRepository, this.userService, this.userMapper, this.passwordEncoder,
-				this.tokenProvider, this.refreshTokenService);
+		verifyNoInteractions(
+			this.userRepository,
+			this.userService,
+			this.userMapper,
+			this.passwordEncoder,
+			this.tokenProvider,
+			this.refreshTokenService
+		);
 	}
 
 	@Test
@@ -399,7 +455,12 @@ class AuthControllerTest {
 			.perform(post("/api/auth/login").contentType("application/json"))
 			.andExpect(status().isBadRequest());
 
-		verifyNoInteractions(this.authenticationManager, this.userService, this.userMapper,
-				this.tokenProvider, this.refreshTokenService);
+		verifyNoInteractions(
+			this.authenticationManager,
+			this.userService,
+			this.userMapper,
+			this.tokenProvider,
+			this.refreshTokenService
+		);
 	}
 }

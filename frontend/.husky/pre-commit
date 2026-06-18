@@ -6,9 +6,10 @@ npx lint-staged || exit 1
 
 echo "Frontend linting and formatting completed."
 
-# # Go to backend
-# cd ../backend || exit 1
+# Go to backend
+cd ../backend || exit 1
 
+mvn spotless:check || exit 1
 # echo "Running Java formatter on staged files..."
 
 # # Get list of staged Java files (relative to backend/)
@@ -33,4 +34,5 @@ echo "Frontend linting and formatting completed."
 #     echo "$STAGED_FILES" | xargs -I {} git add "{}"
 # fi
 
+cd ../ || exit 1
 echo "Pre-commit hook completed successfully."

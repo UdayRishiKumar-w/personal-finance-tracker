@@ -3,8 +3,8 @@
 	"include": ["tests"],
 	"compilerOptions": {
 		"paths": {
-			"@/*": ["src/*"],
-			"@tests/*": ["tests/*"]
+			"@/*": ["./src/*"],
+			"@tests/*": ["./tests/*"]
 		},
 		"types": ["vitest/globals", "vite/client", "vitest/jsdom", "node", "@testing-library/jest-dom"]
 	}

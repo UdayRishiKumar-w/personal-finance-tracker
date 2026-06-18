@@ -167,9 +167,9 @@ class GlobalExceptionHandlerTest {
 	@Test
 	@DisplayName("Should return bad request with 'Malformed request body' for HttpMessageNotReadableException")
 	void handleUnreadableMessage_returnsBadRequestResponse() {
-		final MockHttpInputMessage inputMessage = new MockHttpInputMessage("{}".getBytes(java.nio.charset.StandardCharsets.UTF_8));
-		final HttpMessageNotReadableException ex =
-			new HttpMessageNotReadableException("bad", inputMessage);
+		final MockHttpInputMessage inputMessage =
+			new MockHttpInputMessage("{}".getBytes(java.nio.charset.StandardCharsets.UTF_8));
+		final HttpMessageNotReadableException ex = new HttpMessageNotReadableException("bad", inputMessage);
 
 		final ResponseEntity<Map<String, Object>> response = this.handler.handleUnreadableMessage(ex);
 
