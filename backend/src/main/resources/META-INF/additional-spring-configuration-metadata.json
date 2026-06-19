@@ -34,6 +34,16 @@
 			"name": "cors.allowed-origins",
 			"type": "java.lang.String",
 			"description": "A comma-separated list of allowed origins for Cross-Origin Resource Sharing (CORS) requests."
+		},
+		{
+			"name": "logging.loki.enabled",
+			"type": "java.lang.Boolean",
+			"description": "Loki log export enabled or not"
+		},
+		{
+			"name": "loki.url",
+			"type": "java.lang.String",
+			"description": "Loki URL endpoint'"
 		}
 	]
 }
