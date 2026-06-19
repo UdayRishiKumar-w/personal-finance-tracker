@@ -463,4 +463,74 @@ class AuthControllerTest {
 			this.refreshTokenService
 		);
 	}
+
+	// ── Regression tests: deprecated @MockBean → @MockitoBean migration ──
+
+	@Test
+	@DisplayName("Regression: no field should use the deprecated @MockBean annotation")
+	void regression_noFieldShouldUseDeprecatedMockBean() {
+		for (final java.lang.reflect.Field field : AuthControllerTest.class.getDeclaredFields()) {
+			for (final java.lang.annotation.Annotation annotation : field.getAnnotations()) {
+				org.assertj.core.api.Assertions.assertThat(annotation.annotationType().getName())
+					.as("Field '%s' must not use deprecated @MockBean", field.getName())
+					.isNotEqualTo("org.springframework.boot.test.mock.mockito.MockBean");
+			}
+		}
+	}
+
+	@Test
+	@DisplayName("Regression: all mock fields should use @MockitoBean annotation")
+	void regression_allMockFieldsShouldUseMockitoBean() {
+		final java.util.List<java.lang.reflect.Field> mockitoBeanFields = java.util.Arrays.stream(AuthControllerTest.class.getDeclaredFields())
+			.filter(f -> f.isAnnotationPresent(MockitoBean.class))
+			.toList();
+
+		org.assertj.core.api.Assertions.assertThat(mockitoBeanFields)
+			.as("Expected @MockitoBean-annotated fields for all mocked dependencies")
+			.hasSizeGreaterThanOrEqualTo(7);
+
+		final java.util.List<String> expectedTypes = java.util.List.of(
+			"UserRepository", "RefreshTokenService", "UserService",
+			"JwtTokenProvider", "PasswordEncoder", "UserMapper", "AuthenticationManager"
+		);
+		final java.util.List<String> actualTypes = mockitoBeanFields.stream()
+			.map(f -> f.getType().getSimpleName())
+			.toList();
+
+		org.assertj.core.api.Assertions.assertThat(actualTypes)
+			.as("All required dependencies should be annotated with @MockitoBean")
+			.containsAll(expectedTypes);
+	}
+
+	@Test
+	@DisplayName("Regression: @MockitoBean-injected mocks should be functional Mockito proxies")
+	void regression_mockitoBeansAreProperlyInjectedMocks() {
+		org.assertj.core.api.Assertions.assertThat(this.userRepository).isNotNull();
+		org.assertj.core.api.Assertions.assertThat(org.mockito.Mockito.mockingDetails(this.userRepository).isMock())
+			.as("userRepository should be a Mockito mock").isTrue();
+
+		org.assertj.core.api.Assertions.assertThat(this.refreshTokenService).isNotNull();
+		org.assertj.core.api.Assertions.assertThat(org.mockito.Mockito.mockingDetails(this.refreshTokenService).isMock())
+			.as("refreshTokenService should be a Mockito mock").isTrue();
+
+		org.assertj.core.api.Assertions.assertThat(this.userService).isNotNull();
+		org.assertj.core.api.Assertions.assertThat(org.mockito.Mockito.mockingDetails(this.userService).isMock())
+			.as("userService should be a Mockito mock").isTrue();
+
+		org.assertj.core.api.Assertions.assertThat(this.tokenProvider).isNotNull();
+		org.assertj.core.api.Assertions.assertThat(org.mockito.Mockito.mockingDetails(this.tokenProvider).isMock())
+			.as("tokenProvider should be a Mockito mock").isTrue();
+
+		org.assertj.core.api.Assertions.assertThat(this.passwordEncoder).isNotNull();
+		org.assertj.core.api.Assertions.assertThat(org.mockito.Mockito.mockingDetails(this.passwordEncoder).isMock())
+			.as("passwordEncoder should be a Mockito mock").isTrue();
+
+		org.assertj.core.api.Assertions.assertThat(this.userMapper).isNotNull();
+		org.assertj.core.api.Assertions.assertThat(org.mockito.Mockito.mockingDetails(this.userMapper).isMock())
+			.as("userMapper should be a Mockito mock").isTrue();
+
+		org.assertj.core.api.Assertions.assertThat(this.authenticationManager).isNotNull();
+		org.assertj.core.api.Assertions.assertThat(org.mockito.Mockito.mockingDetails(this.authenticationManager).isMock())
+			.as("authenticationManager should be a Mockito mock").isTrue();
+	}
 }
