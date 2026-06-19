@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds">
-
-	<property name="APP_NAME" value="pft" />
-	<property name="LOKI_URL" value="${LOKI_URL:-http://loki:3100}" />
+	<springProperty name="APP_NAME" source="spring.application.name" defaultValue="pft" />
+	<springProperty name="LOKI_ENABLED" source="logging.loki.enabled" defaultValue="false" />
+	<springProperty name="LOKI_URL" source="loki.url" defaultValue="http://loki:3100" />
 
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder class="net.logstash.logback.encoder.LogstashEncoder">
@@ -10,31 +10,40 @@
 		</encoder>
 	</appender>
 
-	<springProfile name="prod">
-		<appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
-			<http>
-				<url>${LOKI_URL}/loki/api/v1/push</url>
-			</http>
-			<format>
-				<label>
-					<pattern>app=${APP_NAME},level=%level,logger=%logger</pattern>
-				</label>
-				<message>
-					<pattern>%msg%n%ex</pattern>
-				</message>
-			</format>
-		</appender>
+	<!-- Loki appender only when enabled -->
+	<if condition='"${LOKI_ENABLED}".equals("true")'>
+		<then>
+			<appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+				<http>
+					<url>${LOKI_URL}/loki/api/v1/push</url>
+					<!-- Prevent app impact when Loki is slow/down -->
+					<connectionTimeoutMs>3000</connectionTimeoutMs>
+					<requestTimeoutMs>5000</requestTimeoutMs>
+				</http>
+				<format>
+					<label>
+						<pattern> app=${APP_NAME},level=%level,logger=%logger</pattern>
+					</label>
+					<message>
+						<pattern>%msg%n%ex</pattern>
+					</message>
+				</format>
+			</appender>
+			<appender name="ASYNC_LOKI" class="ch.qos.logback.classic.AsyncAppender">
+				<queueSize>5000</queueSize>
+				<discardingThreshold>0</discardingThreshold>
+				<appender-ref ref="LOKI" />
+			</appender>
+		</then>
+	</if>
 
-		<root level="INFO">
-			<appender-ref ref="CONSOLE" />
-			<appender-ref ref="LOKI" />
-		</root>
-	</springProfile>
+	<root level="INFO">
+		<appender-ref ref="CONSOLE" />
+	</root>
 
-	<springProfile name="!prod">
-		<root level="INFO">
-			<appender-ref ref="CONSOLE" />
-		</root>
-	</springProfile>
-
+	<if condition='"${LOKI_ENABLED}".equals("true")'>
+		<then>
+			<appender-ref ref="ASYNC_LOKI" />
+		</then>
+	</if>
 </configuration>

@@ -96,6 +96,8 @@ services:
             SPRING_REDIS_PORT: 6379
             SPRING_REDIS_PASSWORD: ${REDIS_PASSWORD:-my_redis_password}
             SPRING_PROFILES_ACTIVE: prod
+            LOGGING_LOKI_ENABLED: true
+            LOKI_URL: http://loki:3100
         depends_on:
             db:
                 condition: service_healthy
